@@ -86,4 +86,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Repos -->
+    <repositories>
+        <repository>
+            <id>reflections-repo</id>
+            <name>Reflections Maven2 Repository</name>
+            <url>http://reflections.googlecode.com/svn/repo</url>
+        </repository>
+    </repositories>
+
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
