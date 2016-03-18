@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.betasterren.bsrpg</groupId>
+    <artifactId>BSRPG</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <url>https://hetbaarnschlyceum.me/Tim/bsrpg</url>
+    <description>
+        Top down 2D RPG spel in Java voor betasterren en NLT
+    </description>
+    <inceptionYear>2016</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>GNU License</name>
+            <url>LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>TheNLGamerZone</id>
+            <name>Tim Anema</name>
+            <email>timanema@hetbaarnschlyceum.nl</email>
+            <roles>
+                <role>Head Developer / Composer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>EradurGwath</id>
+            <name>Tip ten Brink</name>
+            <email>tipbrink@hetbaarnschlyceum.nl</email>
+            <roles>
+                <role>Developer / Graphics designer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Sigmato</id>
+            <name>Sigert van den Eede</name>
+            <email>sigerteede@hetbaarnschlyceum.nl</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <!-- Packaging -->
+    <packaging>jar</packaging>
+    <name>me.betasterren.bsgame.BSGame</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <defaultGoal>clean package install</defaultGoal>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>me.betasterren.bsgame.BSGae</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
