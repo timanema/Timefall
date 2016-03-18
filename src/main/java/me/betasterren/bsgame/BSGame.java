@@ -11,7 +11,7 @@ public class BSGame {
     private Set<Object> listeners;
 
     public static void main(String args[]) {
-    	// Test
+    	// Test, ja zekers zwaar kool
         new BSGame();
     }
 
