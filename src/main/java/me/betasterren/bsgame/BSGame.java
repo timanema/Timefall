@@ -3,6 +3,7 @@ package me.betasterren.bsgame;
 import me.betasterren.bsgame.display.Display;
 import me.betasterren.bsgame.events.KeyHandler;
 import me.betasterren.bsgame.files.FileManager;
+import me.betasterren.bsgame.game.GameThread;
 
 import java.awt.*;
 
@@ -20,7 +21,7 @@ public class BSGame {
 
         EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
 
-        //fileManager.test();
+        new GameThread().start();
     }
 
     public static Display getMainDisplay() {
