@@ -13,7 +13,7 @@ public class Settings {
     public enum ScreenSize {
         SMALL(640, 360, false, 0),
         MEDIUM(960, 540, false, 1),
-        NORMAl(1280, 720, false, 2),
+        NORMAL(1280, 720, false, 2),
         LARGE(1920, 1080, false, 3),
         FULLSCREEN(1920, 1080, true, 4);
 
@@ -53,7 +53,7 @@ public class Settings {
         maxFPS = 60;
         soundSetting = 100;
         musicSetting = 100;
-        screenSize = ScreenSize.NORMAl;
+        screenSize = ScreenSize.NORMAL;
     }
 
     public void setMaxFPS(int maxFPS) {
