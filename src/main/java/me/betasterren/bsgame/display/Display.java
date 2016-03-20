@@ -1,5 +1,8 @@
 package me.betasterren.bsgame.display;
 
+import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.game.MoveListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -62,6 +65,10 @@ public class Display {
         // Show frame
         jFrame.pack();
         jFrame.setVisible(true);
+
+        // Add listeners
+        jFrame.addKeyListener(BSGame.getKeyHandler());
+        BSGame.getKeyHandler().addListener(new MoveListener());
     }
 
     /**

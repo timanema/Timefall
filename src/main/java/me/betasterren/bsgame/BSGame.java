@@ -1,31 +1,31 @@
 package me.betasterren.bsgame;
 
 import me.betasterren.bsgame.display.Display;
+import me.betasterren.bsgame.events.KeyHandler;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BSGame {
     private static Display mainDisplay;
-    private Set<Object> listeners;
+
+    private static KeyHandler keyHandler;
 
     public static void main(String args[]) {
         new BSGame();
-        EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", 500, 500));
+        keyHandler = new KeyHandler();
 
+        EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", 480, 480 / 12 * 9));
     }
 
     public BSGame() {
-        listeners = new HashSet<>();
 
-    }
-
-    public void registerListener(Object listener) {
-        listeners.add(listener);
     }
 
     public static Display getMainDisplay() {
         return mainDisplay;
+    }
+
+    public static KeyHandler getKeyHandler() {
+        return keyHandler;
     }
 }

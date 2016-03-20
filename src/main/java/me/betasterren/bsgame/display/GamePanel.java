@@ -14,6 +14,7 @@ public class GamePanel extends JPanel {
 
     private void initComponents() {
         setMinimumSize(dimension);
+        setMaximumSize(dimension);
         setPreferredSize(dimension);
     }
 }

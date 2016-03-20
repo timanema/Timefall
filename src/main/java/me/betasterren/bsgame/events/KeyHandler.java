@@ -1,30 +1,55 @@
 package me.betasterren.bsgame.events;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Set;
+public class KeyHandler implements KeyListener {
+    private List<Listener> listeners = new ArrayList<Listener>();
 
-public class KeyHandler {
-    private Set<Object> listeners;
+    public static final int PRESSED = 0;
+    public static final int RELEASED = 1;
 
-    public KeyHandler(Set<Object> listeners) {
-        this.listeners = listeners;
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Do nothing
     }
 
-    public Set<Class<?>> findAllListeners() {
-        final Reflections reflections = new Reflections("org.projectx", new TypeAnnotationsScanner());
-        Set<Class<?>> allMessageDrivens = reflections.getTypesAnnotatedWith(KeyListener.class);
-        return allMessageDrivens;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Keys key = getKey(e.getKeyCode());
+
+        // Check if the key exists
+        if (key == null) return;
+
+        // Trigger event
+        triggerEvent(key, PRESSED);
     }
 
-    public void runEvent() {
-        Set<Class<?>> possibleListeners = findAllListeners();
+    @Override
+    public void keyReleased(KeyEvent e) {
+        Keys key = getKey(e.getKeyCode());
 
-        for (Object o : listeners) {
-            if (possibleListeners.contains(o.getClass())) {
-                // TODO: komt nog
-            }
-        }
+        // Check if the key exists
+        if (key == null) return;
+
+        // Trigger event
+        triggerEvent(key, RELEASED);
+    }
+
+    public void addListener(Listener listener) {
+        if (!listeners.contains(listener)) listeners.add(listener);
+    }
+
+    public void triggerEvent(Keys key, int eventCode) {
+        for (Listener listener : listeners)
+            listener.onKeyEvent(key, eventCode);
+    }
+
+    public Keys getKey(int keyID) {
+        for (Keys key : Keys.values())
+            if (key.getKeyID() == keyID) return key;
+        return null;
     }
 }
