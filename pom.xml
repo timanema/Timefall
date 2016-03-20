@@ -92,7 +92,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.betasterren.bsgame.BSGae</mainClass>
+                            <mainClass>me.betasterren.bsgame.BSGame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
