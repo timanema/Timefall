@@ -25,7 +25,7 @@ public class Display {
 
         dimension = new Dimension(width, height);
 
-        initDisplay();
+        EventQueue.invokeLater(() -> initDisplay());
     }
 
     /**
@@ -36,6 +36,7 @@ public class Display {
         jFrame = new JFrame();
 
         // TODO: Add layouts
+        jFrame.setLayout(new BorderLayout());
 
         // Set dimensions
         jFrame.setSize(width, height);
@@ -45,7 +46,7 @@ public class Display {
 
 
         // Set close operation
-        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -57,7 +58,7 @@ public class Display {
 
         // TODO: Add components
         // Create components
-        gamePanel = new GamePanel(dimension);
+        gamePanel = new GamePanel(width, height, dimension);
 
         // Add components
         jFrame.add(gamePanel);
@@ -80,5 +81,9 @@ public class Display {
 
         // Exit the program
         System.exit(0);
+    }
+
+    public JPanel getGamePanel() {
+        return gamePanel;
     }
 }

@@ -3,14 +3,16 @@ package me.betasterren.bsgame.game;
 import me.betasterren.bsgame.BSGame;
 
 public class GameThread implements Runnable {
+    private boolean started = false;
     private boolean isRunning;
-
-    public GameThread() {
-        new Thread(this).start();
-    }
 
     @Override
     public void run() {
+        if (!started) {
+            isRunning = true;
+            started = true;
+        }
+
         long beginTime = System.nanoTime();
         double tickTime = 1000000000D / 30D;
 
@@ -26,7 +28,6 @@ public class GameThread implements Runnable {
             deltaTime += (currentTime - beginTime) / tickTime;
 
             beginTime = currentTime;
-            boolean render = false;
 
             while (deltaTime >= 1) {
                 ticksPassed++;
@@ -46,17 +47,12 @@ public class GameThread implements Runnable {
 
             if (System.currentTimeMillis() - currentFrameTimer >= 1000) {
                 currentFrameTimer += 1000;
-                System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn);
+                System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn + " (" + Thread.currentThread().getName() + ")");
 
                 framesDrawn = 0;
                 ticksPassed = 0;
             }
         }
-    }
-
-    public synchronized void start() {
-        isRunning = true;
-        run();
     }
 
     public synchronized void stop() {
@@ -67,6 +63,7 @@ public class GameThread implements Runnable {
      * Method for logic calculations of the game
      */
     private void tick() {
+
     }
 
     /**
