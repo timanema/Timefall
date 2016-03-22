@@ -2,6 +2,8 @@ package me.betasterren.bsgame.game;
 
 import me.betasterren.bsgame.BSGame;
 
+import java.awt.*;
+
 public class GameThread implements Runnable {
     private boolean started = false;
     private boolean isRunning;
@@ -70,6 +72,7 @@ public class GameThread implements Runnable {
      * Method to render all the logic calculations and show them to the user
      */
     private void render() {
+        EventQueue.invokeLater(() -> BSGame.getMainDisplay().getGameCanvas().render());
 
     }
 }

@@ -5,8 +5,10 @@ import me.betasterren.bsgame.events.KeyHandler;
 import me.betasterren.bsgame.files.FileManager;
 import me.betasterren.bsgame.game.ThreadManager;
 
+import java.awt.*;
+
 public class BSGame {
-    private static Display mainDisplay;
+    private static volatile Display mainDisplay;
 
     private static Settings settings;
     private static FileManager fileManager;
@@ -17,19 +19,15 @@ public class BSGame {
         keyHandler = new KeyHandler();
         settings = new Settings();
         fileManager = new FileManager(settings);
-        mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight());
+
+        EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
 
         // Start main thread
         BSGame.initThreads();
-        /*EventQueue.invokeLater(() -> {
-            mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight());
-            if (mainDisplay == null) System.out.println("rip");
-        });*/
-
     }
 
     public static void initThreads() {
-       threadManager = new ThreadManager(mainDisplay.getGamePanel());
+       threadManager = new ThreadManager();
     }
 
     public static Display getMainDisplay() {

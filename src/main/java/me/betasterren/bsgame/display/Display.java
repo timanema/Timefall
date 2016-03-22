@@ -2,6 +2,7 @@ package me.betasterren.bsgame.display;
 
 import me.betasterren.bsgame.BSGame;
 import me.betasterren.bsgame.game.MoveListener;
+import me.betasterren.bsgame.graphics.Screen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class Display {
     private Dimension dimension;
 
     private JFrame jFrame;
-    private JPanel gamePanel;
+    private GamePanel gameCanvas;
 
     public Display(String gameName, int width, int height) {
         this.width = width;
@@ -25,7 +26,7 @@ public class Display {
 
         dimension = new Dimension(width, height);
 
-        EventQueue.invokeLater(() -> initDisplay());
+        initDisplay();
     }
 
     /**
@@ -44,9 +45,8 @@ public class Display {
         jFrame.setLocationRelativeTo(null);
         jFrame.setTitle(gameName);
 
-
         // Set close operation
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -56,12 +56,11 @@ public class Display {
         });
 
 
-        // TODO: Add components
         // Create components
-        gamePanel = new GamePanel(width, height, dimension);
+        gameCanvas = new GamePanel(width, height, dimension, new Screen(width, height));
 
         // Add components
-        jFrame.add(gamePanel);
+        jFrame.add(gameCanvas);
 
         // Show frame
         jFrame.pack();
@@ -83,7 +82,7 @@ public class Display {
         System.exit(0);
     }
 
-    public JPanel getGamePanel() {
-        return gamePanel;
+    public GamePanel getGameCanvas() {
+        return gameCanvas;
     }
 }
