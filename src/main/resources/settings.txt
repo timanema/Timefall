@@ -1,4 +1,4 @@
 max_fps: 60
 sound: 100
 music: 100
-screen_size: 1
+screen_size: 2
