@@ -57,7 +57,7 @@ public class Display {
 
 
         // Create components
-        gameCanvas = new GamePanel(width, height, dimension, new Screen(1280, 720));
+        gameCanvas = new GamePanel(width, height, dimension, new Screen(960, 540));
 
         // Add components
         jFrame.add(gameCanvas);

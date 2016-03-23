@@ -40,7 +40,7 @@ public class GamePanel extends Canvas {
 
         // Render sprites
         //TODO: Remove debug sprites
-        for (int i = 0; i < 26; i++) {
+        for (int i = 0; i < 20; i++) {
             for (int x = 0; x < 3; x++)
                 for (int y = 0; y < 3; y++)
                     screen.render(Sprite.sprites[x][y], i * 48 + (x * 16), y * 16);
