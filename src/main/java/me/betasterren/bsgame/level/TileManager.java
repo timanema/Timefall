@@ -27,7 +27,7 @@ public class TileManager {
     }
 
     private void initMap() {
-        //TODO: Load map.png and add blocks according to colours
+        //TODO: Load map.png and add blocks according to colour
         worldX = screenX;
         worldY = screenY;
     }
