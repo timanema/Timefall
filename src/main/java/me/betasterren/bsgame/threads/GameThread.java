@@ -33,9 +33,9 @@ public class GameThread implements Runnable {
 
             while (deltaTime >= 1) {
                 ticksPassed++;
-                deltaTime -= 1;
 
-                tick();
+                tick(deltaTime);
+                deltaTime -= 1;
             }
 
             try {
@@ -64,8 +64,8 @@ public class GameThread implements Runnable {
     /**
      * Method for logic calculations of the game
      */
-    private void tick() {
-        BSGame.getSettings().getCurrentState().tick();
+    private void tick(double deltaTime) {
+        BSGame.getSettings().getCurrentState().tick(deltaTime);
     }
 
     /**

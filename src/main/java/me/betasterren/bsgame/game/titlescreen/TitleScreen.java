@@ -28,12 +28,12 @@ public class TitleScreen extends GameState {
     }
 
     @Override
-    public void tick() {
+    public void tick(double deltaTime) {
         // Hier kan je dus selectedOption enzo aanpassen
     }
 
     @Override
     public void render(Screen screen) {
-
+        // En hier renderen, duh
     }
 }

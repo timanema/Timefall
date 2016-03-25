@@ -9,7 +9,7 @@ public abstract class GameState {
         this.settings = settings;
     }
 
-    public abstract void tick();
+    public abstract void tick(double deltaTime);
 
     public abstract void render(Screen screen);
 }
