@@ -1,4 +1,4 @@
-package me.betasterren.bsgame.game;
+package me.betasterren.bsgame.threads;
 
 import me.betasterren.bsgame.BSGame;
 
@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class GameThread implements Runnable {
     private boolean started = false;
-    private boolean isRunning;
+    private static boolean isRunning;
 
     @Override
     public void run() {
@@ -57,7 +57,7 @@ public class GameThread implements Runnable {
         }
     }
 
-    public synchronized void stop() {
+    public static synchronized void stop() {
         isRunning = false;
     }
 
@@ -65,7 +65,7 @@ public class GameThread implements Runnable {
      * Method for logic calculations of the game
      */
     private void tick() {
-
+        BSGame.getSettings().getCurrentState().tick();
     }
 
     /**
@@ -73,6 +73,5 @@ public class GameThread implements Runnable {
      */
     private void render() {
         EventQueue.invokeLater(() -> BSGame.getMainDisplay().getGameCanvas().render());
-
     }
 }

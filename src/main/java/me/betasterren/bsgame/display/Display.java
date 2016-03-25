@@ -1,7 +1,7 @@
 package me.betasterren.bsgame.display;
 
 import me.betasterren.bsgame.BSGame;
-import me.betasterren.bsgame.game.MoveListener;
+import me.betasterren.bsgame.game.game.MoveListener;
 import me.betasterren.bsgame.graphics.Screen;
 
 import javax.swing.*;

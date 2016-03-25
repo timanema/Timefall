@@ -1,4 +1,4 @@
-package me.betasterren.bsgame.game;
+package me.betasterren.bsgame.game.game;
 
 import me.betasterren.bsgame.events.KeyHandler;
 import me.betasterren.bsgame.events.Keys;

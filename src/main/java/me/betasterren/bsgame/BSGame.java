@@ -3,7 +3,8 @@ package me.betasterren.bsgame;
 import me.betasterren.bsgame.display.Display;
 import me.betasterren.bsgame.events.KeyHandler;
 import me.betasterren.bsgame.files.FileManager;
-import me.betasterren.bsgame.game.ThreadManager;
+import me.betasterren.bsgame.game.game.Game;
+import me.betasterren.bsgame.threads.ThreadManager;
 
 import java.awt.*;
 
@@ -19,6 +20,10 @@ public class BSGame {
         keyHandler = new KeyHandler();
         settings = new Settings();
         fileManager = new FileManager(settings);
+
+        // Add temp gamestate
+        // TODO: Remove this
+        settings.setState(new Game(settings));
 
         EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
 
@@ -44,5 +49,9 @@ public class BSGame {
 
     public static FileManager getFileManager() {
         return fileManager;
+    }
+
+    public static ThreadManager getThreadManager() {
+        return threadManager;
     }
 }

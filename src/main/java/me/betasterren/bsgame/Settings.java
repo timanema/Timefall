@@ -1,14 +1,14 @@
 package me.betasterren.bsgame;
 
+import java.util.Stack;
+
 public class Settings {
     private int maxFPS;
     private int soundSetting;
     private int musicSetting;
     private ScreenSize screenSize;
 
-    private GameState currentState;
-
-    public enum GameState {MAIN_MENU, PAUSE_MENU, PLAYING, CHATTING}
+    private Stack<GameState> states;
 
     public enum ScreenSize {
         SMALL(640, 360, false, 0),
@@ -54,6 +54,8 @@ public class Settings {
         soundSetting = 100;
         musicSetting = 100;
         screenSize = ScreenSize.NORMAL;
+
+        states = new Stack<>();
     }
 
     public void setMaxFPS(int maxFPS) {
@@ -72,8 +74,18 @@ public class Settings {
         this.screenSize = screenSize;
     }
 
-    public void setCurrentState(GameState gameState) {
-        this.currentState = gameState;
+    public void setState(GameState gameState) {
+        if (!states.isEmpty())
+            if (states.peek() == gameState) {
+                states.pop();
+                return;
+            }
+
+        states.push(gameState);
+    }
+
+    public void removeState(GameState gameState) {
+        this.setState(gameState);
     }
 
     public int getMaxFPS() {
@@ -93,11 +105,12 @@ public class Settings {
             if (screenSize.getID() == ID) return screenSize;
         return null;
     }
+
     public ScreenSize getScreenSize() {
         return screenSize;
     }
 
     public GameState getCurrentState() {
-        return currentState;
+        return states.peek();
     }
 }
