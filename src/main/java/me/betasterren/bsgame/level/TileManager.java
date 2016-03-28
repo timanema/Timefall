@@ -2,9 +2,11 @@ package me.betasterren.bsgame.level;
 
 import me.betasterren.bsgame.level.tiles.Block;
 import me.betasterren.bsgame.level.tiles.GrassTile;
+import me.betasterren.bsgame.level.tiles.WaterTile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TileManager {
     private int screenX, screenY, worldX, worldY;
@@ -15,8 +17,8 @@ public class TileManager {
     private List<Block> blocks;
 
     public TileManager() {
-        screenX = 40;
-        screenY = 23;
+        screenX = 60;
+        screenY = 60;
 
         initMap();
 
@@ -34,12 +36,16 @@ public class TileManager {
 
     private void initTiles() {
         blocks.add(new GrassTile());
+        blocks.add(new WaterTile());
+
+        Random random = new Random();
 
         // Debug code
         //TODO: Remove this
-        for (int x = 0; x < 40; x++) {
-            for (int y = 0; y < 23; y++)
-                tiles[x][y] = 0;
+        for (int x = 0; x < screenX; x++) {
+            for (int y = 0; y < screenY; y++) {
+                tiles[x][y] = (random.nextInt(100) > 30 ? 0 : 1);
+            }
         }
 
         initWorld();
@@ -65,5 +71,21 @@ public class TileManager {
             if (block.getBlockID() == ID)
                 return block;
         return null;
+    }
+
+    public Block getTileByLoc(int x, int y) {
+        int blockID;
+
+        try {
+            blockID = tiles[x][y];
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            return null;
+        }
+
+        return getTileByID(blockID);
+    }
+
+    public Block getTileByLoc(Vector vector) {
+        return getTileByLoc((int) vector.getX(), (int) vector.getY());
     }
 }

@@ -1,11 +1,13 @@
 package me.betasterren.bsgame.events;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyHandler implements KeyListener {
+public class KeyHandler implements KeyListener, FocusListener {
     private List<Listener> listeners = new ArrayList<Listener>();
 
     public static final int PRESSED = 0;
@@ -51,5 +53,16 @@ public class KeyHandler implements KeyListener {
         for (Keys key : Keys.values())
             if (key.getKeyID() == keyID) return key;
         return null;
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        for (Keys key : Keys.values())
+            key.togglePressed(false);
     }
 }

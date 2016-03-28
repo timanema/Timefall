@@ -26,6 +26,9 @@ public class GamePanel extends Canvas {
         setMinimumSize(dimension);
         setMaximumSize(dimension);
         setPreferredSize(dimension);
+
+        addKeyListener(BSGame.getKeyHandler());
+        addFocusListener(BSGame.getKeyHandler());
     }
 
     public void render() {

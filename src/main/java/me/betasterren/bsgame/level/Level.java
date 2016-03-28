@@ -2,6 +2,11 @@ package me.betasterren.bsgame.level;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Screen;
+import me.betasterren.bsgame.level.tiles.Block;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Level {
     private TileManager tileManager;
@@ -9,6 +14,9 @@ public class Level {
 
     private int screenX, screenY;
     private boolean playerMoved = false;
+
+    public int xOff = 0;
+    public int yOff = 0;
 
     public Level(TileManager tileManager, int screenX, int screenY) {
         this.tileManager = tileManager;
@@ -21,18 +29,9 @@ public class Level {
     }
 
     private void updateBitmap() {
-        int x = 0;
-
-        for (int[] row : tileManager.getTiles()) {
-            int y  = 0;
-            for (int column : row) {
-                groundTiles[x][y] = tileManager.getTileByID(column).getSprite();
-
-                y++;
-            }
-
-            x++;
-        }
+        for (int x = 0; x < screenX; x++)
+            for (int y = 0; y < screenY; y++)
+                groundTiles[x][y] = tileManager.getTileByLoc(x, y).getSprite();
     }
 
     public void render(Screen screen) {
@@ -40,16 +39,59 @@ public class Level {
 
         int x = 0;
 
-        for (int[] row : tileManager.getTiles()) {
-            int y  = 0;
-            for (int column : row) {
-                screen.render(groundTiles[x][y], x * 16, y * 16);
+        if (Vector.worldxPos % 16 == 0 && Vector.worldyPos % 16 == 0) {
+            for (int[] row : tileManager.getTiles()) {
+                int y = 0;
+                for (int column : row) {
+                    screen.render(groundTiles[x][y], x * 16 - xOff, y * 16 - yOff);
 
-                y++;
+                    y++;
+                }
+
+                x++;
             }
-
-            x++;
         }
     }
 
+    public Block getTile(Vector vector) {
+        return tileManager.getTileByLoc(vector);
+    }
+
+    public Block getFacingTile(Direction direction, Vector vector) {
+        return tileManager.getTileByLoc(((int) vector.getX()) + direction.getxChange(),
+                ((int) vector.getY()) + direction.getyChange());
+    }
+
+    public Block[] getFacingTiles(Direction direction, Vector vector, int range) {
+        if (range == 0)
+            return null;
+        else {
+            int xBase = (int) vector.getX();
+            int yBase = (int) vector.getY();
+
+            ArrayList<Block> blockList = new ArrayList<>();
+            Block[] tiles = new Block[range - 1];
+
+            for (int i = 1; i < range + 1; i++)
+                blockList.add(getFacingTile(direction, new Vector(xBase + (i * direction.getxChange()),
+                        yBase + (i * direction.getyChange()))));
+
+            tiles = blockList.toArray(tiles);
+            return tiles;
+        }
+    }
+
+    public Block[] getSurroundingTiles(Vector vector, int range) {
+        ArrayList<Block> blockList = new ArrayList<>();
+        Block[] tiles = new Block[range - 1];
+
+        for (Direction direction : Direction.values()) {
+            List tempBlockList = Arrays.asList(getFacingTiles(direction, vector, range));
+
+            blockList.addAll(tempBlockList);
+        }
+
+        tiles = blockList.toArray(tiles);
+        return tiles;
+    }
 }

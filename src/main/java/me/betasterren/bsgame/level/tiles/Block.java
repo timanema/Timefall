@@ -6,4 +6,5 @@ public interface Block {
     //public abstract Vector getPosition();
     public abstract Bitmap getSprite();
     public abstract int getBlockID();
+    public abstract boolean isSolid();
 }

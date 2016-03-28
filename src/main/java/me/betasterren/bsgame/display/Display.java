@@ -68,6 +68,8 @@ public class Display {
 
         // Add listeners
         jFrame.addKeyListener(BSGame.getKeyHandler());
+        jFrame.addFocusListener(BSGame.getKeyHandler());
+        jFrame.setFocusable(true);
         BSGame.getKeyHandler().addListener(new MoveListener());
     }
 

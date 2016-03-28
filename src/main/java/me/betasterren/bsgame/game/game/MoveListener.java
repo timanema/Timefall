@@ -17,8 +17,5 @@ public class MoveListener implements Listener {
             default:
                 break;
         }
-
-        // TODO: Remove debug code when done
-        System.out.println(key.isPressed());
     }
 }
