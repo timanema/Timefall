@@ -24,10 +24,10 @@ public class Game extends GameState {
     public void tick(double deltaTime) {
         Vector.setWorldVariables(xOff, yOff);
 
-        if (Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed()) BSGame.getTileManager().getLevel().xOff++;
-        if (Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed()) BSGame.getTileManager().getLevel().xOff--;
-        if (Keys.VK_W.isPressed() || Keys.VK_UP.isPressed()) BSGame.getTileManager().getLevel().yOff--;
-        if (Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed()) BSGame.getTileManager().getLevel().yOff++;
+        if ((Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed()) && BSGame.getTileManager().getLevel().xOff + 2 + 16 * 40 <= BSGame.getTileManager().worldX * 16) BSGame.getTileManager().getLevel().xOff += 2;
+        if ((Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed()) && BSGame.getTileManager().getLevel().xOff - 2 >= 0) BSGame.getTileManager().getLevel().xOff -= 2;
+        if ((Keys.VK_W.isPressed() || Keys.VK_UP.isPressed()) && BSGame.getTileManager().getLevel().yOff - 2 >= 0) BSGame.getTileManager().getLevel().yOff -= 2;
+        if ((Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed()) && BSGame.getTileManager().getLevel().yOff - 6 + 16 * 23 <= BSGame.getTileManager().worldY * 16) BSGame.getTileManager().getLevel().yOff += 2;
 
         // TODO: Tick game things
     }

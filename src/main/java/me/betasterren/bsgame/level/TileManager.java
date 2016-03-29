@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class TileManager {
-    private int screenX, screenY, worldX, worldY;
+    public int screenX, screenY, worldX, worldY;
 
     private int[][] tiles;
     private Level level;
@@ -17,8 +17,8 @@ public class TileManager {
     private List<Block> blocks;
 
     public TileManager() {
-        screenX = 60;
-        screenY = 60;
+        screenX = 45;
+        screenY = 23;
 
         initMap();
 
@@ -32,6 +32,9 @@ public class TileManager {
         //TODO: Load map.png and add blocks according to colour
         worldX = screenX;
         worldY = screenY;
+
+        System.out.println(worldX + " " + worldY);
+        System.out.println(screenX + " " + screenY);
     }
 
     private void initTiles() {
