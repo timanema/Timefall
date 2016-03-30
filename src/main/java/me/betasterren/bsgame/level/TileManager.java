@@ -1,5 +1,8 @@
 package me.betasterren.bsgame.level;
 
+import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.level.conflict.ConflictManager;
+import me.betasterren.bsgame.level.conflict.RenderConflictException;
 import me.betasterren.bsgame.level.tiles.*;
 
 import java.util.ArrayList;
@@ -7,6 +10,8 @@ import java.util.List;
 import java.util.Random;
 
 public class TileManager {
+    private ConflictManager conflictManager;
+
     public int screenX, screenY, worldX, worldY;
 
     private int[][] baseLayer;
@@ -20,6 +25,7 @@ public class TileManager {
     public TileManager() {
         screenX = 150;
         screenY = 150;
+        conflictManager = new ConflictManager(this, screenX, screenY, BSGame.getFileManager().getFloraConflicts());
 
         initMap();
 
@@ -36,9 +42,6 @@ public class TileManager {
         //TODO: Load map.png and add blocks according to colour
         worldX = screenX;
         worldY = screenY;
-
-        System.out.println(worldX + " " + worldY);
-        System.out.println(screenX + " " + screenY);
     }
 
     private void initTiles() {
@@ -86,17 +89,30 @@ public class TileManager {
             }
 
         yRem = 0;
-        for (int x = 0; x < trees.get(0).getWidth(); x++)
-            for (int y = 0; y < trees.get(0).getHeight(); y++) {
-                floraLayer[15 + x][13 + y] = 10 + yRem;
-                yRem++;
-            }
+        for (int i = 0; i < 2; i++) {
+            for (int x = 0; x < trees.get(0).getWidth(); x++)
+                for (int y = 0; y < trees.get(0).getHeight(); y++) {
+                    floraLayer[15 + x + i][13 + y + i * 2] = 10 + yRem;
+                    yRem++;
+                }
+            yRem = 0;
+        }
+
+        floraLayer[16][15] = 666999;
 
         //TODO: tot hier
         initWorld();
     }
 
     private void initWorld() {
+        try {
+            conflictManager.solveConflicts();
+        } catch (RenderConflictException exception) {
+            exception.printStackTrace();
+
+            System.exit(-1);
+        }
+
         level = new Level(this, screenX, screenY);
     }
 
@@ -104,9 +120,14 @@ public class TileManager {
         return level;
     }
 
+    public ConflictManager getConflictManager() {
+        return conflictManager;
+    }
+
     public int[][] getBaseLayer() {
         return baseLayer;
     }
+
     public int[][] getFloraLayer() {
         return floraLayer;
     }
@@ -153,6 +174,12 @@ public class TileManager {
     public Tree getTreeByLoc(int x, int y) {
         int treeID;
 
+        if (floraLayer[x][y] == 666999) {
+            treeID = conflictManager.getFloraID(x, y);
+
+            return getTreeByID(treeID);
+        }
+
         try {
             treeID = floraLayer[x][y];
         } catch (ArrayIndexOutOfBoundsException exception) {
@@ -160,5 +187,9 @@ public class TileManager {
         }
 
         return getTreeByID(treeID);
+    }
+
+    public boolean validID(int ID) {
+        return !(getTileByID(ID) == null && getTreeByID(ID) == null);
     }
 }

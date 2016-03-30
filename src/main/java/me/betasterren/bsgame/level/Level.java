@@ -14,7 +14,7 @@ public class Level {
     private Bitmap[][] groundTiles;
 
     private int screenX, screenY;
-    private boolean playerMoved = false;
+    public boolean playerMoved = true;
 
     public int xOff = 0;
     public int yOff = 0;
@@ -40,33 +40,41 @@ public class Level {
                 Tree tree = tileManager.getTreeByLoc(x, y);
 
                 if (tree != null) {
-                    Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
-                    Bitmap groundBitmap = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+                    if (tileManager.getFloraLayer()[x][y] == 666999) {
+                        groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer()[x][y];
+                    } else {
+                        Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
+                        Bitmap groundBitmap = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]).clone();
 
 
-                    groundBitmap.render(treeBitmap, 0, 0);
-                    groundTiles[x][y] = groundBitmap;
+                        groundBitmap.render(treeBitmap, 0, 0);
+                        groundTiles[x][y] = groundBitmap;
+                    }
                 }
             }
+
     }
 
     public void render(Screen screen) {
         updateBitmap();
 
+        if (!playerMoved)
+            return;
+
         int x = 0;
 
-        if (Vector.worldxPos % 16 == 0 && Vector.worldyPos % 16 == 0) {
-            for (int[] row : tileManager.getBaseLayer()) {
-                int y = 0;
-                for (int column : row) {
-                    screen.render(groundTiles[x][y], x * 16 - xOff, y * 16 - yOff);
+        for (int[] row : tileManager.getBaseLayer()) {
+            int y = 0;
+            for (int column : row) {
+                screen.render(groundTiles[x][y], x * 16 - xOff, y * 16 - yOff);
 
-                    y++;
-                }
-
-                x++;
+                y++;
             }
+
+            x++;
         }
+
+        playerMoved = false;
     }
 
     public Block getTile(Vector vector) {

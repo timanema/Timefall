@@ -31,5 +31,10 @@ public class HuisBoom implements Tree {
     public int getHeight() {
         return 5;
     }
+
+    @Override
+    public String getName() {
+        return "Huisboom";
+    }
 }
 

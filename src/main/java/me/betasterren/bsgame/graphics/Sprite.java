@@ -8,12 +8,12 @@ import java.io.IOException;
 
 public class Sprite {
     // Sprites
-    public static final Bitmap[][] sprites = getSubImage("spritesheet1", 16, 16, 0, 0);
-    public static final Bitmap[][] buildings = getSubImage("buildings", 16, 16, 0, 0);
+    public static final Bitmap[][] sprites = getSubImage("/spritesheet1.png", 16, 16, 0, 0);
+    public static final Bitmap[][] buildings = getSubImage("/buildings.png", 16, 16, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width , int height, int startX, int startY) {
         try {
-            BufferedImage sprite = ImageIO.read(BSGame.class.getResourceAsStream("/" + spriteName + ".png"));
+            BufferedImage sprite = ImageIO.read(BSGame.class.getResourceAsStream(spriteName));
             int xTiles = (sprite.getWidth() - startX) / width;
             int yTiles = (sprite.getHeight() - startY) / height;
 

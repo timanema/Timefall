@@ -4,9 +4,11 @@ import me.betasterren.bsgame.Settings;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 public class FileManager {
     private String settingsFile = "/settings.txt";
+    private String floraConflicFile = "/floraConflicts.txt";
     private String readLine = null;
 
     private Settings settings;
@@ -14,7 +16,6 @@ public class FileManager {
     public FileManager(Settings settings) {
         this.settings = settings;
 
-        //TODO: DEBUG CODE: changeSetting("screen_size", 2);
         readSettingsFile();
     }
 
@@ -84,5 +85,32 @@ public class FileManager {
         }
 
         System.out.println("Set '" + setting + "' to '" + value + "'");
+    }
+
+    public HashMap<String, String> getFloraConflicts() {
+        HashMap<String, String> floraConflicts = new HashMap<>();
+        String rawLine;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(floraConflicFile)));
+
+            while ((rawLine = bufferedReader.readLine()) != null) {
+                String[] values = rawLine.split(":");
+
+                if (values.length != 2) continue;
+
+                String coords = values[0].replaceAll("\\s", "");
+                String value = values[1].replaceAll("\\s", "");
+
+                floraConflicts.put(coords, value);
+            }
+        } catch (FileNotFoundException exception) {
+            System.out.println("Unable to open file '" + settingsFile + "'");
+        } catch (IOException exception) {
+            System.out.println("Error reading file '" + settingsFile + "'" + "\nError details");
+            exception.printStackTrace();
+        }
+
+        return floraConflicts;
     }
 }

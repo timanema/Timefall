@@ -7,4 +7,5 @@ public interface Tree {
     public abstract int[] getBlockID();
     public abstract int getWidth();
     public abstract int getHeight();
+    public abstract String getName();
 }
