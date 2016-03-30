@@ -61,4 +61,11 @@ public class Bitmap {
             }
         }
     }
+
+    public Bitmap clone() {
+        Bitmap clone = new Bitmap(width, height);
+
+        clone.render(this, 0, 0);
+        return clone;
+    }
 }

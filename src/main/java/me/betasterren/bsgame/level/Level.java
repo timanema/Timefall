@@ -3,6 +3,7 @@ package me.betasterren.bsgame.level;
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.level.tiles.Block;
+import me.betasterren.bsgame.level.tiles.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +31,23 @@ public class Level {
 
     private void updateBitmap() {
         for (int x = 0; x < screenX; x++)
-            for (int y = 0; y < screenY; y++)
-                groundTiles[x][y] = tileManager.getTileByLoc(x, y).getSprite();
+            for (int y = 0; y < screenY; y++) {
+                groundTiles[x][y] = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]);
+            }
+
+        for (int x = 0; x < screenX; x++)
+            for (int y = 0; y < screenY; y++) {
+                Tree tree = tileManager.getTreeByLoc(x, y);
+
+                if (tree != null) {
+                    Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
+                    Bitmap groundBitmap = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+
+
+                    groundBitmap.render(treeBitmap, 0, 0);
+                    groundTiles[x][y] = groundBitmap;
+                }
+            }
     }
 
     public void render(Screen screen) {
@@ -40,7 +56,7 @@ public class Level {
         int x = 0;
 
         if (Vector.worldxPos % 16 == 0 && Vector.worldyPos % 16 == 0) {
-            for (int[] row : tileManager.getTiles()) {
+            for (int[] row : tileManager.getBaseLayer()) {
                 int y = 0;
                 for (int column : row) {
                     screen.render(groundTiles[x][y], x * 16 - xOff, y * 16 - yOff);

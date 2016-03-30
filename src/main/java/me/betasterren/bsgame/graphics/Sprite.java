@@ -9,6 +9,7 @@ import java.io.IOException;
 public class Sprite {
     // Sprites
     public static final Bitmap[][] sprites = getSubImage("spritesheet1", 16, 16, 0, 0);
+    public static final Bitmap[][] buildings = getSubImage("buildings", 16, 16, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width , int height, int startX, int startY) {
         try {
