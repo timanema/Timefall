@@ -19,10 +19,12 @@ public class Level {
     public int xOff = 0;
     public int yOff = 0;
 
-    public Level(TileManager tileManager, int screenX, int screenY) {
+    public Level(TileManager tileManager, int screenX, int screenY, int xOff, int yOff) {
         this.tileManager = tileManager;
         this.screenX = screenX;
         this.screenY = screenY;
+        this.xOff = xOff;
+        this.yOff = yOff;
 
         this.groundTiles = new Bitmap[screenX][screenY];
 

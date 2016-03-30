@@ -113,7 +113,7 @@ public class TileManager {
             System.exit(-1);
         }
 
-        level = new Level(this, screenX, screenY);
+        level = new Level(this, screenX, screenY, (int) Vector.worldxPos, (int) Vector.worldyPos);
     }
 
     public Level getLevel() {

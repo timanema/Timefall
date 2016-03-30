@@ -2,3 +2,5 @@ max_fps: 60
 sound: 100
 music: 100
 screen_size: 2
+xOff: 0
+yOff: 0

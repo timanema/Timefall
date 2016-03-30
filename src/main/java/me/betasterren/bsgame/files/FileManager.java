@@ -1,52 +1,117 @@
 package me.betasterren.bsgame.files;
 
+import me.betasterren.bsgame.BSGame;
 import me.betasterren.bsgame.Settings;
+import me.betasterren.bsgame.level.Vector;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class FileManager {
-    private String settingsFile = "/settings.txt";
-    private String floraConflicFile = "/floraConflicts.txt";
+    private String settingsPath = "";
+    private String floraConflictPath = "/floraConflicts.txt";
     private String readLine = null;
+    private String mainDir = "";
 
+    private File settingFile;
     private Settings settings;
 
     public FileManager(Settings settings) {
         this.settings = settings;
 
+        try {
+            mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
+            settingFile = new File(mainDir + "/settings.txt/");
+
+            if (!settingFile.exists()) {
+                System.out.println("Creating file: " + mainDir + "/settings.txt ...");
+
+                settingFile.getParentFile().mkdirs();
+                settingFile.createNewFile();
+
+                settingsPath = exportSettingsFile();
+
+                settingFile = new File(mainDir + settingsPath);
+
+                changeSetting("xOff", 0);
+            }
+
+            settingsPath = mainDir + "/settings.txt";
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
+        }
+
         readSettingsFile();
     }
 
     public void changeSetting(String setting, int value) {
+        BufferedWriter bufferedWriter = null;
+
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(getClass().getResource(settingsFile).toURI()))));
+            FileWriter fileWriter = new FileWriter(new File(settingsPath));
+            bufferedWriter = new BufferedWriter(fileWriter);
 
             bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
             bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
             bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
-            bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()));
+            bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
+            bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().xOff)) + "\n");
+            bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().yOff)));
 
             bufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            System.out.println("Unable to open file '" + settingsFile + "'");
-            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void readSettingsFile() {
+    private String exportSettingsFile() throws Exception {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        String mainDirectory;
+
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(settingsFile)));
+            inputStream = FileManager.class.getResourceAsStream(settingsPath);
+
+            if (inputStream == null)
+                throw new Exception("Cannot fetch settings.txt from Jar");
+
+            int readBytes;
+            byte[] byteBuffer = new byte[4096];
+            mainDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
+            outputStream = new FileOutputStream(mainDirectory + "/settings.txt");
+
+            while ((readBytes = inputStream.read(byteBuffer)) > 0) {
+                outputStream.write(byteBuffer, 0, readBytes);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw exception;
+        } finally {
+            inputStream.close();
+            outputStream.close();
+        }
+
+        return mainDirectory + "/settings.txt";
+    }
+
+    private void readSettingsFile() {
+        System.out.println("Reading from: " + mainDir + "/settings.txt ...");
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(settingsPath)));
 
             while ((readLine = bufferedReader.readLine()) != null)
                 processSettings(readLine);
         } catch (FileNotFoundException exception) {
-            System.out.println("Unable to open file '" + settingsFile + "'");
+            System.out.println("Unable to open file '" + mainDir + settingsPath + "'");
         } catch (IOException exception) {
-            System.out.println("Error reading file '" + settingsFile + "'" + "\nError details");
+            System.out.println("Error reading file '" + mainDir + settingsPath + "'" + "\nError details");
             exception.printStackTrace();
         }
     }
@@ -80,6 +145,12 @@ public class FileManager {
             case "screen_size":
                 settings.setScreenSize(settings.getScreenSize(intValue));
                 break;
+            case "xOff":
+                Vector.setWorldVariables(intValue, Vector.worldyPos);
+                break;
+            case "yOff":
+                Vector.setWorldVariables(Vector.worldxPos, intValue);
+                break;
             default:
                 break;
         }
@@ -92,7 +163,7 @@ public class FileManager {
         String rawLine;
 
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(floraConflicFile)));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(floraConflictPath)));
 
             while ((rawLine = bufferedReader.readLine()) != null) {
                 String[] values = rawLine.split(":");
@@ -105,9 +176,9 @@ public class FileManager {
                 floraConflicts.put(coords, value);
             }
         } catch (FileNotFoundException exception) {
-            System.out.println("Unable to open file '" + settingsFile + "'");
+            System.out.println("Unable to open file '" + settingsPath + "'");
         } catch (IOException exception) {
-            System.out.println("Error reading file '" + settingsFile + "'" + "\nError details");
+            System.out.println("Error reading file '" + settingsPath + "'" + "\nError details");
             exception.printStackTrace();
         }
 
