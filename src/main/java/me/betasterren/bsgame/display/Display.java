@@ -78,8 +78,14 @@ public class Display {
      * This way everything can be saved before exiting
      */
     private void onClose() {
-        BSGame.getFileManager().changeSetting("xOff", BSGame.getTileManager().getLevel().xOff);
-        BSGame.getFileManager().changeSetting("yOff", BSGame.getTileManager().getLevel().yOff);
+        System.out.println("\nSaving game data ...");
+
+        BSGame.getFileManager().changeSetting("settings", "xOff", BSGame.getTileManager().getLevel().xOff);
+        BSGame.getFileManager().changeSetting("settings", "yOff", BSGame.getTileManager().getLevel().yOff);
+        BSGame.getFileManager().changeSetting("lvl", "xOff", BSGame.getTileManager().getEntityManager().getPlayer().getxOff());
+        BSGame.getFileManager().changeSetting("lvl", "yOff", BSGame.getTileManager().getEntityManager().getPlayer().getyOff());
+
+        System.out.println("Saved game data!");
 
         // Exit the program
         System.exit(0);

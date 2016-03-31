@@ -24,6 +24,8 @@ public class ConflictManager {
     }
 
     public void solveConflicts() throws RenderConflictException {
+        System.out.println("  Looking for conflicts to solve ...");
+
         for (String locationString : floraConflicts.keySet()) {
             String[] parsedLocation = locationString.split(",");
             String[] parsedIDs = floraConflicts.get(locationString).split(">");
@@ -68,7 +70,7 @@ public class ConflictManager {
             floraLayer[x][y] = groundBitmap;
             impFloraLayer[x][y] = secondLayer;
 
-            System.out.println("Solved conflict at (" + x + "," + y + ")!");
+            System.out.println("   Solved conflict at (" + x + "," + y + ": flora)!");
         }
     }
 

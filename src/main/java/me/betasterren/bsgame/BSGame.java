@@ -18,6 +18,7 @@ public class BSGame {
     private static TileManager tileManager;
 
     public static void main(String args[]) {
+        System.out.println("Loading BS RPG components ...");
         keyHandler = new KeyHandler();
         settings = new Settings();
         fileManager = new FileManager(settings);
@@ -28,10 +29,16 @@ public class BSGame {
 
         tileManager = new TileManager();
 
+        System.out.println(" Initializing display ...");
         EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
+
+        System.out.println(" Initializing game threads ...");
 
         // Start main thread
         BSGame.initThreads();
+
+        System.out.println("All BS RPG components loaded!");
+        System.out.println("\nTick updates:");
     }
 
     public static void initThreads() {

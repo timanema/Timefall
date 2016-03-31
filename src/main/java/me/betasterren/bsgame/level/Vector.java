@@ -2,7 +2,7 @@ package me.betasterren.bsgame.level;
 
 public class Vector {
     private float xPos, yPos;
-    public static float worldxPos, worldyPos;
+    public static float worldxPos, worldyPos, playerxPos, playeryPos;
 
     public Vector() {
         this.xPos = 0.0F;
@@ -33,21 +33,22 @@ public class Vector {
         return (xPos == vector.xPos && yPos == vector.yPos);
     }
 
-    public Vector add(Vector vector) {
+    public void add(Vector vector) {
         xPos += vector.xPos;
         yPos += vector.yPos;
-
-        return new Vector(xPos, yPos);
     }
 
-    public Vector subtract(Vector vector) {
+    public void add(float xOff, float yOff) {
+        xPos += xOff;
+        yPos += yOff;
+    }
+
+    public void subtract(Vector vector) {
         xPos -= vector.xPos;
         yPos -= vector.yPos;
-
-        return new Vector(xPos, yPos);
     }
 
-    public Vector copy(Vector vector) {
+    public Vector clone(Vector vector) {
         xPos = vector.xPos;
         yPos = vector.yPos;
 
@@ -57,6 +58,11 @@ public class Vector {
     public static void setWorldVariables(float xPos, float yPos) {
         worldxPos = xPos;
         worldyPos = yPos;
+    }
+
+    public static void setPlayerVariables(float xPos, float yPos) {
+        playerxPos = xPos;
+        playeryPos = yPos;
     }
 
     public double getDistance(Vector vector) {

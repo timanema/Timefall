@@ -1,6 +1,7 @@
 package me.betasterren.bsgame.level;
 
 import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.entities.EntityManager;
 import me.betasterren.bsgame.level.conflict.ConflictManager;
 import me.betasterren.bsgame.level.conflict.RenderConflictException;
 import me.betasterren.bsgame.level.tiles.*;
@@ -11,6 +12,7 @@ import java.util.Random;
 
 public class TileManager {
     private ConflictManager conflictManager;
+    private EntityManager entityManager;
 
     public int screenX, screenY, worldX, worldY;
 
@@ -23,6 +25,8 @@ public class TileManager {
     private List<Tree> trees;
 
     public TileManager() {
+        System.out.println(" Loading game tiles ... ");
+
         screenX = 150;
         screenY = 150;
         conflictManager = new ConflictManager(this, screenX, screenY, BSGame.getFileManager().getFloraConflicts());
@@ -40,11 +44,15 @@ public class TileManager {
 
     private void initMap() {
         //TODO: Load map.png and add blocks according to colour
+        System.out.println("  Loading map ...");
+
         worldX = screenX;
         worldY = screenY;
     }
 
     private void initTiles() {
+        System.out.println("  Creating world ...");
+
         blocks.add(new GrassTile());
         blocks.add(new WaterTile());
 
@@ -113,7 +121,10 @@ public class TileManager {
             System.exit(-1);
         }
 
+        System.out.println("  Initializing level ...");
+
         level = new Level(this, screenX, screenY, (int) Vector.worldxPos, (int) Vector.worldyPos);
+        entityManager = new EntityManager(worldX, worldY);
     }
 
     public Level getLevel() {
@@ -122,6 +133,10 @@ public class TileManager {
 
     public ConflictManager getConflictManager() {
         return conflictManager;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     public int[][] getBaseLayer() {
