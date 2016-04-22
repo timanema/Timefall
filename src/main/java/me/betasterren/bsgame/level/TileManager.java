@@ -27,8 +27,8 @@ public class TileManager {
     public TileManager() {
         System.out.println(" Loading game tiles ... ");
 
-        screenX = 150;
-        screenY = 150;
+        screenX = 50;
+        screenY = 50;
         conflictManager = new ConflictManager(this, screenX, screenY, BSGame.getFileManager().getFloraConflicts());
 
         initMap();

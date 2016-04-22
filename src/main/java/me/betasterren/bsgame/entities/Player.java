@@ -68,11 +68,26 @@ public class Player implements Entity {
     }
 
     private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer) {
-        if ((xPlayer < 320 && yPlayer < 180) ||
-                (xPlayer > xMax - 320 && yPlayer < 180) ||
-                (xPlayer > xMax - 320 && yPlayer > yMax - 180) ||
-                (xPlayer < 320 && yPlayer > yMax - 180)) {
+        if (xPlayer < 320 && yPlayer < 180) {
             xOff = xPlayer;
+            yOff = yPlayer;
+
+            xCen = false;
+            yCen = false;
+        } else if (xPlayer > xMax - 320 && yPlayer > yMax - 180) {
+            xOff = 320 + (xPlayer - (xMax - 320));
+            yOff = 180 + (yPlayer - (yMax - 180));
+
+            xCen = false;
+            yCen = false;
+        } else if (xPlayer < 320 && yPlayer > yMax - 180) {
+            xOff = xPlayer;
+            yOff = 180 + (yPlayer - (yMax - 180));
+
+            xCen = false;
+            yCen = false;
+        } else if (xPlayer > xMax - 320 && yPlayer < 180) {
+            xOff = 320 + (xPlayer - (xMax - 320));
             yOff = yPlayer;
 
             xCen = false;
@@ -81,13 +96,13 @@ public class Player implements Entity {
             if (yPlayer < 180 || yPlayer > yMax - 180) {
                 // Player is X centered, not Y centered
                 xOff = 320;
-                yOff = yPlayer;
+                yOff = (yPlayer < 180 ? yPlayer : 180 + (yPlayer - (yMax - 180)));
 
                 xCen = true;
                 yCen = false;
             } else if (xPlayer < 320 || xPlayer > xMax - 320) {
                 // Player is Y centered, not X centered
-                xOff = xPlayer;
+                xOff = (xPlayer < 320 ? xPlayer : 320 + (xPlayer - (xMax - 320)));
                 yOff = 180;
 
                 xCen = false;
