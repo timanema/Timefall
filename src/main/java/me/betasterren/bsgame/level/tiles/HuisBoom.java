@@ -2,6 +2,7 @@ package me.betasterren.bsgame.level.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Sprite;
+import me.betasterren.bsgame.level.tiles.base.Tree;
 
 public class HuisBoom implements Tree {
     @Override
@@ -35,6 +36,11 @@ public class HuisBoom implements Tree {
     @Override
     public String getName() {
         return "Huisboom";
+    }
+
+    @Override
+    public void tick() {
+
     }
 }
 

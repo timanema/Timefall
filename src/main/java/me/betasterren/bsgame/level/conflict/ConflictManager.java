@@ -56,9 +56,9 @@ public class ConflictManager {
             if (!tileManager.validID(firstLayer) || !tileManager.validID(secondLayer))
                 throw new RenderConflictException("ID: " + firstLayer + ", ID: " + secondLayer + " are invalid IDs!");
 
-            Bitmap groundBitmap = tileManager.getTileByID(tileManager.getBaseLayer()[x][y]).getSprite(tileManager.getBaseLayer()[x][y]).clone();
-            Bitmap firstLayerBitmap = tileManager.getTreeByID(firstLayer).getSprite(firstLayer).clone();
-            Bitmap secondLayerBitmap = tileManager.getTreeByID(secondLayer).getSprite(secondLayer).clone();
+            Bitmap groundBitmap = tileManager.getMapObjectByID(tileManager.getBaseLayer()[x][y]).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+            Bitmap firstLayerBitmap = tileManager.getMapObjectByID(firstLayer).getSprite(firstLayer).clone();
+            Bitmap secondLayerBitmap = tileManager.getMapObjectByID(secondLayer).getSprite(secondLayer).clone();
 
             // Shouldn't happen but who knows
             if (groundBitmap == null || firstLayerBitmap == null || secondLayerBitmap == null)

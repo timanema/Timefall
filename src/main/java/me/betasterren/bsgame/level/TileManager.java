@@ -5,6 +5,9 @@ import me.betasterren.bsgame.entities.EntityManager;
 import me.betasterren.bsgame.level.conflict.ConflictManager;
 import me.betasterren.bsgame.level.conflict.RenderConflictException;
 import me.betasterren.bsgame.level.tiles.*;
+import me.betasterren.bsgame.level.tiles.base.Block;
+import me.betasterren.bsgame.level.tiles.base.MapObject;
+import me.betasterren.bsgame.level.tiles.base.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,64 +150,62 @@ public class TileManager {
         return floraLayer;
     }
 
-    public Block getTileByID(int ID) {
-        if (blocks.isEmpty())
-            return null;
+    public MapObject getMapObjectByID(int ID) {
+        // Check block array for given ID
+        if (!blocks.isEmpty())
+            for (Block block : blocks)
+                for (int blockID : block.getBlockID())
+                    if (blockID == ID)
+                        return block;
 
-        for (Block block : blocks)
-            for (int blockID : block.getBlockID())
-                if (blockID == ID)
-                    return block;
+        // Check tree array for given ID
+        if (!trees.isEmpty())
+            for (Tree tree : trees)
+                for (int treeID : tree.getBlockID())
+                    if (treeID == ID)
+                        return tree;
         return null;
     }
 
-    public Block getTileByLoc(int x, int y) {
+    public MapObject getMapObjectByLoc(int x, int y, int layer) {
         int blockID;
 
         try {
-            blockID = baseLayer[x][y];
-        } catch (ArrayIndexOutOfBoundsException exception) {
+            switch (layer) {
+                case 0:
+                    // Base layer
+                    blockID = baseLayer[x][y];
+                    break;
+                case 1:
+                    // Flora layer
+                    blockID = floraLayer[x][y];
+
+                    if (blockID == 666999)
+                        blockID = conflictManager.getFloraID(x, y);
+                    break;
+                default:
+                    return null;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
 
-        return getTileByID(blockID);
+        return getMapObjectByID(blockID);
     }
 
-    public Block getTileByLoc(Vector vector) {
-        return getTileByLoc((int) vector.getX(), (int) vector.getY());
+    public MapObject getMapObjectByLoc(Vector vector, int layer) {
+        return getMapObjectByLoc((int) vector.getX(), (int) vector.getY(), layer);
     }
 
-    public Tree getTreeByID(int ID) {
-        if (trees.isEmpty())
-            return null;
-
-        for (Tree tree : trees)
-            for (int treeID : tree.getBlockID())
-                if (treeID == ID)
-                    return tree;
-
-        return null;
+    public boolean checkBlock(MapObject mapObject) {
+        return mapObject instanceof Block;
     }
 
-    public Tree getTreeByLoc(int x, int y) {
-        int treeID;
-
-        if (floraLayer[x][y] == 666999) {
-            treeID = conflictManager.getFloraID(x, y);
-
-            return getTreeByID(treeID);
-        }
-
-        try {
-            treeID = floraLayer[x][y];
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            return null;
-        }
-
-        return getTreeByID(treeID);
+    public boolean checkTree(MapObject mapObject) {
+        return mapObject instanceof Tree;
     }
 
     public boolean validID(int ID) {
-        return !(getTileByID(ID) == null && getTreeByID(ID) == null);
+        return getMapObjectByID(ID) != null;
     }
 }

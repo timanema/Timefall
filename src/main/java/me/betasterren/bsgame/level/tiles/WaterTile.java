@@ -2,6 +2,7 @@ package me.betasterren.bsgame.level.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Sprite;
+import me.betasterren.bsgame.level.tiles.base.Block;
 
 public class WaterTile implements Block {
     @Override
@@ -33,6 +34,21 @@ public class WaterTile implements Block {
     @Override
     public int[] getBlockID() {
         return new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
+
+    @Override
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 
     @Override

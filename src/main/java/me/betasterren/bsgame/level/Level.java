@@ -2,8 +2,9 @@ package me.betasterren.bsgame.level;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Screen;
-import me.betasterren.bsgame.level.tiles.Block;
-import me.betasterren.bsgame.level.tiles.Tree;
+import me.betasterren.bsgame.level.tiles.base.Block;
+import me.betasterren.bsgame.level.tiles.base.MapObject;
+import me.betasterren.bsgame.level.tiles.base.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,23 +35,27 @@ public class Level {
     private void updateBitmap() {
         for (int x = 0; x < screenX; x++)
             for (int y = 0; y < screenY; y++) {
-                groundTiles[x][y] = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]);
+                groundTiles[x][y] = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]);
             }
 
         for (int x = 0; x < screenX; x++)
             for (int y = 0; y < screenY; y++) {
-                Tree tree = tileManager.getTreeByLoc(x, y);
+                MapObject mapObject = tileManager.getMapObjectByLoc(x, y, 1);
+                Tree tree = null;
 
-                if (tree != null) {
-                    if (tileManager.getFloraLayer()[x][y] == 666999) {
-                        groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer()[x][y];
-                    } else {
-                        Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
-                        Bitmap groundBitmap = tileManager.getTileByLoc(x, y).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+                if (tileManager.checkTree(mapObject)) {
+                    tree = (Tree) mapObject;
+                    if (tree != null) {
+                        if (tileManager.getFloraLayer()[x][y] == 666999) {
+                            groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer()[x][y];
+                        } else {
+                            Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
+                            Bitmap groundBitmap = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]).clone();
 
 
-                        groundBitmap.render(treeBitmap, 0, 0);
-                        groundTiles[x][y] = groundBitmap;
+                            groundBitmap.render(treeBitmap, 0, 0);
+                            groundTiles[x][y] = groundBitmap;
+                        }
                     }
                 }
             }
@@ -79,13 +84,9 @@ public class Level {
         playerMoved = false;
     }
 
-    public Block getTile(Vector vector) {
-        return tileManager.getTileByLoc(vector);
-    }
-
     public Block getFacingTile(Direction direction, Vector vector) {
-        return tileManager.getTileByLoc(((int) vector.getX()) + direction.getxChange(),
-                ((int) vector.getY()) + direction.getyChange());
+        return (Block) tileManager.getMapObjectByLoc(((int) vector.getX()) + direction.getxChange(),
+                ((int) vector.getY()) + direction.getyChange(), 0);
     }
 
     public Block[] getFacingTiles(Direction direction, Vector vector, int range) {

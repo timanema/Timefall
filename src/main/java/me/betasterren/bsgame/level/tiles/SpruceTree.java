@@ -2,6 +2,7 @@ package me.betasterren.bsgame.level.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Sprite;
+import me.betasterren.bsgame.level.tiles.base.Tree;
 
 public class SpruceTree implements Tree {
     @Override
@@ -30,6 +31,11 @@ public class SpruceTree implements Tree {
     @Override
     public String getName() {
         return "Spruce Tree";
+    }
+
+    @Override
+    public void tick() {
+
     }
 
 }
