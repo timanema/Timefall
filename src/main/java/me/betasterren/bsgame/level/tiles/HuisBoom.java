@@ -15,7 +15,6 @@ public class HuisBoom implements Tree {
 
     @Override
     public int[] getBlockID() {
-        int start = 16;
         int[] IDs = new int[25];
 
         for (int i = 16; i < 16 + 25; i++)
@@ -36,6 +35,11 @@ public class HuisBoom implements Tree {
     @Override
     public String getName() {
         return "Huisboom";
+    }
+
+    @Override
+    public int[] getHex() {
+        return new int[]{0x34D332};
     }
 
     @Override

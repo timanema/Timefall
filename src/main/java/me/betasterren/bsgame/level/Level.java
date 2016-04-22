@@ -47,7 +47,7 @@ public class Level {
                     tree = (Tree) mapObject;
                     if (tree != null) {
                         if (tileManager.getFloraLayer()[x][y] == 666999) {
-                            groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer()[x][y];
+                            groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
                         } else {
                             Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
                             Bitmap groundBitmap = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]).clone();

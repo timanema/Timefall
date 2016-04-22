@@ -19,7 +19,6 @@ public class Game extends GameState {
         BSGame.getTileManager().getEntityManager().tickEntities();
 
         //TODO: Clean this up plz
-        //TODO: Add something we know if the player moved alone or with the screen
         if ((Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed())) {
             if (BSGame.getTileManager().getLevel().xOff + 2 + 16 * 40 <= BSGame.getTileManager().worldX * 16 && BSGame.getTileManager().getEntityManager().getPlayer().isXCentred()) {
                 BSGame.getTileManager().getLevel().xOff += 2;

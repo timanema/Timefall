@@ -66,9 +66,9 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>*.txt</include>
-                    <include>*.png</include>
-                    <include>*.mp3</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.png</include>
+                    <include>**/*.mp3</include>
                 </includes>
             </resource>
         </resources>

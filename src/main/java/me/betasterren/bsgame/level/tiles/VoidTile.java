@@ -1,23 +1,32 @@
 package me.betasterren.bsgame.level.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
-import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.tiles.base.Block;
 
-public class GrassTile implements Block {
+public class VoidTile implements Block {
     @Override
     public Bitmap[] getAnimations() {
+        return new Bitmap[0];
+    }
+
+    @Override
+    public boolean isSolid() {
+        return false;
+    }
+
+    @Override
+    public boolean isAnimated() {
+        return false;
+    }
+
+    @Override
+    public Bitmap getSprite(int id) {
         return null;
     }
 
     @Override
-    public Bitmap getSprite(int ID) {
-        return Sprite.sprites[4][1];
-    }
-
-    @Override
     public int[] getBlockID() {
-        return new int[]{0};
+        return new int[]{123456789};
     }
 
     @Override
@@ -32,22 +41,12 @@ public class GrassTile implements Block {
 
     @Override
     public String getName() {
-        return "Grass";
+        return "Void";
     }
 
     @Override
     public int[] getHex() {
-        return new int[]{0x808080};
-    }
-
-    @Override
-    public boolean isSolid() {
-        return true;
-    }
-
-    @Override
-    public boolean isAnimated() {
-        return false;
+        return new int[]{0x000000};
     }
 
     @Override

@@ -33,22 +33,27 @@ public class WaterTile implements Block {
 
     @Override
     public int[] getBlockID() {
-        return new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        return new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return 1;
     }
 
     @Override
     public int getWidth() {
-        return 0;
+        return 1;
     }
 
     @Override
     public String getName() {
-        return null;
+        return "Water";
+    }
+
+    @Override
+    public int[] getHex() {
+        return new int[]{0x839521, 0x839522, 0x839523, 0x839524, 0x839525, 0x839526, 0x839527, 0x839528, 0x839529};
     }
 
     @Override

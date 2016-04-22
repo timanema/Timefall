@@ -5,25 +5,37 @@ import me.betasterren.bsgame.Settings;
 import me.betasterren.bsgame.level.Vector;
 
 import java.io.*;
+import java.net.URL;
+import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class FileManager {
     private String settingsPath = "";
     private String lvlPath = "";
-    private String floraConflictPath = "/floraConflicts.txt";
     private String readLine = null;
     private String mainDir = "";
 
+    private File mainDirectory;
     private File settingFile;
     private File lvlFile;
     private Settings settings;
 
+
+    public ArrayList<String> worldFiles;
+
     public FileManager(Settings settings) {
         this.settings = settings;
+        worldFiles = new ArrayList<>();
+
         System.out.println(" Loading files ...");
 
         try {
             mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
+
+            mainDirectory = new File(mainDir);
             settingFile = new File(mainDir + "/settings.txt/");
             lvlFile = new File(mainDir + "/lvl.txt/");
 
@@ -55,6 +67,8 @@ public class FileManager {
 
             lvlPath = mainDir + "/lvl.txt";
             settingsPath = mainDir + "/settings.txt";
+
+            readWorldFiles();
         } catch (Exception exception) {
             exception.printStackTrace();
             return;
@@ -80,6 +94,7 @@ public class FileManager {
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().xOff)) + "\n");
                 bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().yOff)));
             } else if (file.equals("lvl")) {
+                bufferedWriter.write("world: " + (setting.equals("world") ? value : (BSGame.getTileManager() == null ? "world" : BSGame.getTileManager().getCurrentWorld().getWorldName())) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
                 bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getEntityManager().getPlayer().getyOff())));
             }
@@ -147,13 +162,15 @@ public class FileManager {
         if (stringValues.length != 2) return;
         String setting = stringValues[0].replaceAll("\\s", "");
         String value = stringValues[1].replaceAll("\\s", "");
-        int intValue;
+        int intValue = 0;
 
-        try {
-            intValue = Integer.parseInt(value);
-        } catch (NumberFormatException exception) {
-            System.out.println("Failed to parse '" + value + "' into a integer!");
-            return;
+        if (!setting.equals("world")) {
+            try {
+                intValue = Integer.parseInt(value);
+            } catch (NumberFormatException exception) {
+                System.out.println("Failed to parse '" + value + "' into a integer!");
+                return;
+            }
         }
 
         if (file.equals("settings")) {
@@ -181,6 +198,9 @@ public class FileManager {
             }
         } else if (file.equals("lvl")) {
             switch (setting) {
+                case "world":
+                    Vector.setWorldName(value);
+                    break;
                 case "xOff":
                     Vector.setPlayerVariables(intValue, Vector.playeryPos);
                     break;
@@ -195,30 +215,75 @@ public class FileManager {
         System.out.println("   Set '" + setting + "' from '" + file + ".txt' to '" + value + "'");
     }
 
-    public HashMap<String, String> getFloraConflicts() {
-        HashMap<String, String> floraConflicts = new HashMap<>();
+    public HashMap<String, HashMap<String, String>> getFloraConflicts() {
+        HashMap<String, HashMap<String, String>> floraConflicts = new HashMap<>();
         String rawLine;
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(floraConflictPath)));
+        for (String worldName : worldFiles) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt")));
+                HashMap<String, String> conflicts = new HashMap<>();
 
-            while ((rawLine = bufferedReader.readLine()) != null) {
-                String[] values = rawLine.split(":");
+                while ((rawLine = bufferedReader.readLine()) != null) {
+                    String[] values = rawLine.split(":");
 
-                if (values.length != 2) continue;
+                    if (values.length != 2) continue;
 
-                String coords = values[0].replaceAll("\\s", "");
-                String value = values[1].replaceAll("\\s", "");
+                    String coords = values[0].replaceAll("\\s", "");
+                    String value = values[1].replaceAll("\\s", "");
 
-                floraConflicts.put(coords, value);
+                    conflicts.put(coords, value);
+                    floraConflicts.put(worldName, conflicts);
+                }
+            } catch (FileNotFoundException exception) {
+                System.out.println("Unable to open file '" + settingsPath + "'");
+            } catch (IOException exception) {
+                System.out.println("Error reading file '" + settingsPath + "'" + "\nError details");
+                exception.printStackTrace();
             }
-        } catch (FileNotFoundException exception) {
-            System.out.println("Unable to open file '" + settingsPath + "'");
-        } catch (IOException exception) {
-            System.out.println("Error reading file '" + settingsPath + "'" + "\nError details");
-            exception.printStackTrace();
         }
 
         return floraConflicts;
+    }
+
+    private void readWorldFiles() throws IOException {
+        System.out.println("  Looking for world files ...");
+
+        CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
+
+        if (codeSource != null) {
+            URL jar = codeSource.getLocation();
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+
+            while (true) {
+                ZipEntry e = zip.getNextEntry();
+
+                if (e == null)
+                    break;
+
+                String fileName = e.getName();
+
+                if (fileName.startsWith("worlds/")
+                        && !fileName.equals("worlds/")
+                        && fileName.contains(".png")) {
+                    String worldName = fileName.replaceAll("worlds/", "").replaceAll(".png", "");
+
+                    System.out.println("   Found world: " + worldName);
+                    System.out.println("    Looking for entities ...");
+                    System.out.println("    Looking for conflicts ...");
+
+                    if (getClass().getResourceAsStream("/entities/" + worldName + ".txt") != null &&
+                            getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt") != null)
+                        worldFiles.add(worldName);
+                    else
+                        System.out.println("   Failed to find entities/conflicts for world '" + worldName + "'!");
+                }
+            }
+        } else {
+            System.out.println("Error while loading worlds!");
+            System.exit(-1);
+        }
+
+        System.out.println(" ");
     }
 }

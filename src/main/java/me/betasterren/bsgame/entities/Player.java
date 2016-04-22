@@ -6,6 +6,7 @@ import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.Direction;
 import me.betasterren.bsgame.level.Vector;
+import me.betasterren.bsgame.level.world.World;
 
 public class Player implements Entity {
     public int xOff = 0;
@@ -150,7 +151,70 @@ public class Player implements Entity {
         float xDif = direction.getxChange() * .125F;
         float yDif = direction.getyChange() * .125F;
 
-        BSGame.getTileManager().getEntityManager().getPlayer().getLocation().add(xDif, yDif);
+        getLocation().add(xDif, yDif);
+    }
+
+    @Override
+    public void spawn(int x, int y) {
+    }
+
+    @Override
+    public void despawn() {
+    }
+
+    @Override
+    public boolean isAlive() {
+        return true;
+    }
+
+    @Override
+    public void teleport(World world, float x, float y) {
+        // TODO: Change world in worldmanager on teleport
+        // World gaan we later iets mee doen
+        float currentX = playerLocation.getX();
+        float currentY = playerLocation.getY();
+
+        // Make sure x and y are multiplications of .125
+        x = x - (((int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
+        y = y - (((int) Math.round((y * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
+
+        float xDif = -currentX + x;
+        float yDif = -currentY + y;
+
+        // Update player location
+        getLocation().add(xDif, yDif);
+
+        int playerxOff = getxOff();
+        int playeryOff = getyOff();
+        int xOffWorld = 0;
+        int yOffWorld = 0;
+
+        int xMax = 16 * BSGame.getTileManager().worldX;
+        int yMax = 16 * BSGame.getTileManager().worldY - 8;
+
+        // Update checkCentered();
+        tick();
+
+        if (xCen && yCen) {
+            // Both X and Y are centered
+            xOffWorld = playerxOff - 320;
+            yOffWorld = playeryOff - 180;
+        } else if (xCen && !yCen) {
+            // Only X is centered
+            xOffWorld = playerxOff - 320;
+            yOffWorld = (playeryOff < 180 ? 0 : yMax - 360);
+        } else if (!xCen && yCen) {
+            // Only Y is centered
+            xOffWorld = (playerxOff < 320 ? 0 : xMax - 640);
+            yOffWorld = playeryOff - 180;
+        } else {
+            // Both X and Y are not centered
+            xOffWorld = (playerxOff < 320 ? 0 : xMax - 640);
+            yOffWorld = (playeryOff < 180 ? 0 : yMax - 360);
+        }
+
+        // Update world offsets
+        world.setOffset(xOffWorld, yOffWorld);
     }
 
     public int getxOff() {

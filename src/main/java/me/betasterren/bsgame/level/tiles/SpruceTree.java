@@ -15,7 +15,7 @@ public class SpruceTree implements Tree {
 
     @Override
     public int[] getBlockID() {
-        return new int[] {10, 11, 12, 13, 14, 15};
+        return new int[]{10, 11, 12, 13, 14, 15};
     }
 
     @Override
@@ -31,6 +31,11 @@ public class SpruceTree implements Tree {
     @Override
     public String getName() {
         return "Spruce Tree";
+    }
+
+    @Override
+    public int[] getHex() {
+        return new int[]{0x732363, 0x732364, 0x732365, 0x732366, 0x732367, 0x732368};
     }
 
     @Override

@@ -2,36 +2,47 @@ package me.betasterren.bsgame.level.conflict;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.level.TileManager;
+import me.betasterren.bsgame.level.world.World;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConflictManager {
     private TileManager tileManager;
-    private int worldX, worldY;
 
-    private Bitmap[][] floraLayer;
-    private int[][] impFloraLayer;
-    private HashMap<String, String> floraConflicts;
+    private HashMap<String, Bitmap[][]> floraLayer;
+    private HashMap<String, int[][]> impFloraLayer;
+    private HashMap<String, HashMap<String, String>> floraConflicts;
 
-    public ConflictManager(TileManager tileManager, int worldX, int worldY, HashMap<String, String> floraConflicts) {
+    public ConflictManager(TileManager tileManager, ArrayList<World> worlds, HashMap<String, HashMap<String, String>> floraConflicts) {
         this.tileManager = tileManager;
-        this.worldX = worldX;
-        this.worldY = worldY;
+        floraLayer = new HashMap<>();
+        impFloraLayer = new HashMap<>();
+        this.floraConflicts = new HashMap<>();
 
-        this.floraLayer = new Bitmap[worldX][worldY];
-        this.impFloraLayer = new int[worldX][worldY];
-        this.floraConflicts = floraConflicts;
+        for (World world : worlds) {
+            floraLayer.put(world.getWorldName(), new Bitmap[world.getWidth()][world.getHeight()]);
+            impFloraLayer.put(world.getWorldName(), new int[world.getWidth()][world.getHeight()]);
+        }
+
+        for (String worldName : floraConflicts.keySet())
+            this.floraConflicts.put(worldName, floraConflicts.get(worldName));
     }
 
-    public void solveConflicts() throws RenderConflictException {
+    public void solveConflicts(World world) throws RenderConflictException {
         System.out.println("  Looking for conflicts to solve ...");
 
-        for (String locationString : floraConflicts.keySet()) {
+        HashMap<String, String> conflicts = floraConflicts.get(world.getWorldName());
+
+        if (conflicts == null || conflicts.isEmpty())
+            return;
+
+        for (String locationString : conflicts.keySet()) {
             String[] parsedLocation = locationString.split(",");
-            String[] parsedIDs = floraConflicts.get(locationString).split(">");
+            String[] parsedIDs = conflicts.get(locationString).split(">");
 
             if (parsedLocation.length != 2 || parsedIDs.length != 2) {
-                System.out.println("Error occurred while trying to process '" + locationString + ": " + floraConflicts.get(locationString) + "'! Format: x,y: ID1>ID2");
+                System.out.println("Error occurred while trying to process '" + locationString + ": " + conflicts.get(locationString) + "'! Format: x,y: ID1>ID2");
                 throw new RenderConflictException(-1, -1, "flora");
             }
 
@@ -46,12 +57,12 @@ public class ConflictManager {
                 firstLayer = Integer.parseInt(parsedIDs[0]);
                 secondLayer = Integer.parseInt(parsedIDs[1]);
             } catch (NumberFormatException exception) {
-                System.out.println("Error occurred while trying to process '" + (!coordsParsed ? locationString + "' to coordinates!" : floraConflicts.get(locationString) + "' to IDs!") + " Format: x,y: ID1>ID2");
+                System.out.println("Error occurred while trying to process '" + (!coordsParsed ? locationString + "' to coordinates!" : conflicts.get(locationString) + "' to IDs!") + " Format: x,y: ID1>ID2");
                 throw new RenderConflictException(x, y, "flora");
             }
 
-            if (x < 0 || y < 0 || x > worldX || y > worldY)
-                throw new RenderConflictException("X: " + x + ", Y: " + y + " are invalid coordinates! (MinX: 0, MinY: 0, MaxX: " + worldX + ", MaxY: " + worldY + ")");
+            if (x < 0 || y < 0 || x > world.getWidth() || y > world.getHeight())
+                throw new RenderConflictException("X: " + x + ", Y: " + y + " are invalid coordinates! (MinX: 0, MinY: 0, MaxX: " + world.getWidth() + ", MaxY: " + world.getHeight() + ")");
 
             if (!tileManager.validID(firstLayer) || !tileManager.validID(secondLayer))
                 throw new RenderConflictException("ID: " + firstLayer + ", ID: " + secondLayer + " are invalid IDs!");
@@ -67,18 +78,18 @@ public class ConflictManager {
             groundBitmap.render(firstLayerBitmap, 0, 0);
             groundBitmap.render(secondLayerBitmap, 0, 0);
 
-            floraLayer[x][y] = groundBitmap;
-            impFloraLayer[x][y] = secondLayer;
+            floraLayer.get(world.getWorldName())[x][y] = groundBitmap;
+            impFloraLayer.get(world.getWorldName())[x][y] = secondLayer;
 
             System.out.println("   Solved conflict at (" + x + "," + y + ": flora)!");
         }
     }
 
-    public Bitmap[][] getFloraLayer() {
-        return floraLayer;
+    public Bitmap[][] getFloraLayer(World world) {
+        return floraLayer.get(world.getWorldName());
     }
 
-    public int getFloraID(int x, int y) {
-        return impFloraLayer[x][y];
+    public int getFloraID(World world, int x, int y) {
+        return impFloraLayer.get(world.getWorldName())[x][y];
     }
 }
