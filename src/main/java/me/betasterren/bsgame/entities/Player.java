@@ -168,6 +168,8 @@ public class Player implements Entity {
             animationCount = 0;
             animationStatus = 0;
         }
+
+        //if (animationCount == 2) System.out.println("Anim status: " + animationStatus);
     }
 
     @Override

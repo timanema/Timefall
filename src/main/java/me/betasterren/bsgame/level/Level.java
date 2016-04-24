@@ -15,7 +15,6 @@ public class Level {
     private Bitmap[][] groundTiles;
 
     private int screenX, screenY;
-    public boolean playerMoved = true;
 
     public Level(TileManager tileManager, int screenX, int screenY) {
         this.tileManager = tileManager;
@@ -74,9 +73,6 @@ public class Level {
     public void render(Screen screen) {
         updateBitmap();
 
-        if (!playerMoved)
-            return;
-
         int x = 0;
 
         for (int[] row : tileManager.getBaseLayer()) {
@@ -89,8 +85,6 @@ public class Level {
 
             x++;
         }
-
-        playerMoved = false;
     }
 
     public Block getFacingTile(Direction direction, Vector vector) {

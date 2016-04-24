@@ -79,7 +79,6 @@ public class Game extends GameState {
             BSGame.getTileManager().getEntityManager().getPlayer().move(
                     (northDirection && eastDirection ? Direction.NORTHEAST : (northDirection && westDirection ? Direction.NORTHWEST : (southDirection && eastDirection ? Direction.SOUTHEAST : (southDirection && westDirection ? Direction.SOUTHWEST : (northDirection ? Direction.NORTH : (southDirection ? Direction.SOUTH : (eastDirection ? Direction.EAST : Direction.WEST)))))))
             );
-            BSGame.getTileManager().getLevel().playerMoved = true;
         } else {
             // Player didn't issue move command this tick so the player entity stops moving
             BSGame.getTileManager().getEntityManager().getPlayer().currentlyMoving = false;
