@@ -16,13 +16,16 @@ public class Game extends GameState {
 
     @Override
     public void tick(double deltaTime) {
+        // Tick all entities
         BSGame.getTileManager().getEntityManager().tickEntities();
 
+        // Get which keys are pressed
         boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed();
         boolean leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed();
         boolean upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed();
         boolean downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();
 
+        // 'Make' directions of the above data
         boolean northDirection = upKey && !downKey;
         boolean southDirection = downKey && !upKey;
         boolean westDirection = leftKey && !rightKey;
@@ -30,11 +33,13 @@ public class Game extends GameState {
 
         boolean moveCommand = rightKey || leftKey || upKey || downKey;
 
+        // Check if the screen can move any further
         boolean withinXEast = BSGame.getTileManager().getCurrentWorld().getX() + 2 + 16 * 40 <= BSGame.getTileManager().worldX * 16;
         boolean withinXWest = BSGame.getTileManager().getCurrentWorld().getX() - 2 >= 0;
         boolean withinYNorth = BSGame.getTileManager().getCurrentWorld().getY() - 2 >= 0;
         boolean withinYSouth = BSGame.getTileManager().getCurrentWorld().getY() - 6 + 16 * 23 <= BSGame.getTileManager().worldY * 16;
 
+        // Check if the player is X or Y centered
         boolean xCen = BSGame.getTileManager().getEntityManager().getPlayer().isXCentred();
         boolean yCen = BSGame.getTileManager().getEntityManager().getPlayer().isYCentred();
 
@@ -89,6 +94,7 @@ public class Game extends GameState {
 
     @Override
     public void render(Screen screen) {
+        // Render the current world and render the entities in that world
         BSGame.getTileManager().getLevel().render(screen);
         BSGame.getTileManager().getEntityManager().renderEntities(screen);
     }

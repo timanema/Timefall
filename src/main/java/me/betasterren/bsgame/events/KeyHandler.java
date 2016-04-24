@@ -50,18 +50,21 @@ public class KeyHandler implements KeyListener, FocusListener {
     }
 
     public Keys getKey(int keyID) {
+        // Loop through all keys and check for ID 'hits'
         for (Keys key : Keys.values())
-            if (key.getKeyID() == keyID) return key;
+            if (key.getKeyID() == keyID)
+                return key;
         return null;
     }
 
     @Override
     public void focusGained(FocusEvent e) {
-
+        // Nothing
     }
 
     @Override
     public void focusLost(FocusEvent e) {
+        // Releases all keys when focus is lost
         for (Keys key : Keys.values())
             key.togglePressed(false);
     }

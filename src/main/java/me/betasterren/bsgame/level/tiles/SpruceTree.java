@@ -35,7 +35,7 @@ public class SpruceTree implements Tree {
 
     @Override
     public int[] getHex() {
-        return new int[]{0x732363, 0x732364, 0x732365, 0x732366, 0x732367, 0x732368};
+        return new int[]{0x2A7D3B, 0x2A7D3C, 0x2A7D4B, 0x2A7D5A, 0x1A7D3B, 0x3A7D3B};
     }
 
     @Override

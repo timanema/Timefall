@@ -37,10 +37,14 @@ public class World {
     }
 
     private void initWorld(String mapPath, String enityPath) {
+        // Trying to read the image
         try {
             System.out.println("    Trying to load map file ...");
 
-            BufferedImage mapImage = ImageIO.read(BSGame.class.getResourceAsStream(mapPath));
+            BufferedImage[] bufferedImages = new BufferedImage[]{ImageIO.read(BSGame.class.getResourceAsStream(mapPath)), ImageIO.read(BSGame.class.getResourceAsStream(mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")))};
+            BufferedImage mapImage = bufferedImages[0];
+            BufferedImage floraImage = bufferedImages[1];
+
             this.width = mapImage.getWidth();
             this.height = mapImage.getHeight();
 
@@ -49,39 +53,61 @@ public class World {
 
             System.out.println("    Getting tiles from hex codes ...");
 
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++) {
-                    int rgbCode = mapImage.getRGB(x, y);
-                    int hexCode = rgbCode & 0xFFFFFF;
-                    MapObject mapObject = tileManager.getMapObjectByHex(hexCode);
+            // Checking if the images are the same size
+            if (floraImage.getWidth() != width || floraImage.getHeight() != height) {
+                System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
 
-                    if (tileManager.checkBlock(mapObject)) {
-                        Block block = (Block) mapObject;
-                        int[] blockID = block.getBlockID();
-                        int[] blockHex = block.getHex();
+                BSGame.getFileManager().worldFiles.remove(worldName);
 
-                        for (int i = 0; i < blockID.length; i++)
-                            if (blockHex[i] == hexCode) {
-                                baseLayer[x][y] = blockID[i];
-                                break;
-                            }
-
-                    } else if (tileManager.checkTree(mapObject)) {
-                        Tree tree = (Tree) mapObject;
-                        int[] blockID = tree.getBlockID();
-                        int[] blockHex = tree.getHex();
-
-                        for (int i = 0; i < blockID.length; i++)
-                            if (blockHex[i] == hexCode) {
-                                floraLayer[x][y] = blockID[i];
-                                break;
-                            }
-                    } else {
-                        // MapObject has an unknown hex value
-                        baseLayer[x][y] = 123456789;
-                    }
+                // Check if there are any other worlds left
+                if (BSGame.getFileManager().worldFiles.isEmpty()) {
+                    System.out.println("NO WORLDS LEFT, ABORTING!");
+                    System.exit(-1);
                 }
+            }
 
+            // Loop through all the images
+            for (BufferedImage image : bufferedImages) {
+                // Looping through the base image
+                for (int x = 0; x < width; x++)
+                    for (int y = 0; y < height; y++) {
+                        // Getting the hex code and the MapObject
+                        int rgbCode = image.getRGB(x, y);
+                        int hexCode = rgbCode & 0xFFFFFF;
+                        MapObject mapObject = tileManager.getMapObjectByHex(hexCode);
+
+                        // Check if the MapObject is a block
+                        if (tileManager.checkBlock(mapObject)) {
+                            Block block = (Block) mapObject;
+                            int[] blockID = block.getBlockID();
+                            int[] blockHex = block.getHex();
+
+                            // Get the correct ID and set it in the base layer
+                            for (int i = 0; i < blockID.length; i++)
+                                if (blockHex[i] == hexCode) {
+                                    baseLayer[x][y] = blockID[i];
+                                    break;
+                                }
+                            // Check if the MapObject is a tree
+                        } else if (tileManager.checkTree(mapObject)) {
+                            Tree block = (Tree) mapObject;
+                            int[] blockID = block.getBlockID();
+                            int[] blockHex = block.getHex();
+
+                            // Get the correct ID and set it in the base layer
+                            for (int i = 0; i < blockID.length; i++)
+                                if (blockHex[i] == hexCode) {
+                                    floraLayer[x][y] = blockID[i];
+                                    break;
+                                }
+                        } else if (hexCode == 0x002D2A) {
+                            // Do nothing, no flora on this tile
+                        } else {
+                            // MapObject has an unknown hex value
+                            baseLayer[x][y] = 123456789;
+                        }
+                    }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

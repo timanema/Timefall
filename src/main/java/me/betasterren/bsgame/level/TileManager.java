@@ -156,7 +156,7 @@ public class TileManager {
                     break;
                 case 1:
                     // Flora layer
-                    blockID = getBaseLayer()[x][y];
+                    blockID = getFloraLayer()[x][y];
 
                     if (blockID == 666999)
                         blockID = conflictManager.getFloraID(currentWorld, x, y);

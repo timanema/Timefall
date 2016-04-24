@@ -13,6 +13,7 @@ public class Sprite {
     public static final Bitmap[][] buildings = getSubImage("/spritesheets/buildings.png", 16, 16, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width , int height, int startX, int startY) {
+        // Trying to read the image and get its width and height
         try {
             BufferedImage sprite = ImageIO.read(BSGame.class.getResourceAsStream(spriteName));
             int xTiles = (sprite.getWidth() - startX) / width;
@@ -20,6 +21,7 @@ public class Sprite {
 
             Bitmap[][] bitResult = new Bitmap[xTiles][yTiles];
 
+            // Loop through the image and set the colour codes
             for (int x = 0; x < xTiles; x++)
                 for (int y = 0; y < yTiles; y++) {
                     bitResult[x][y] = new Bitmap(width, height);

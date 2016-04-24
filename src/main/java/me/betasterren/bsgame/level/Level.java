@@ -53,6 +53,7 @@ public class Level {
                 if (tileManager.checkTree(mapObject)) {
                     tree = (Tree) mapObject;
 
+
                     // Check if the current location is a conflict location
                     if (tileManager.getFloraLayer()[x][y] == 666999) {
                         groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
@@ -75,6 +76,7 @@ public class Level {
 
         int x = 0;
 
+        // Loop through the base layer and render it
         for (int[] row : tileManager.getBaseLayer()) {
             int y = 0;
             for (int column : row) {

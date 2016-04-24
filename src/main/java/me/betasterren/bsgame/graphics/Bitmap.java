@@ -29,9 +29,11 @@ public class Bitmap {
 
         int absoluteWidth = endX - startX;
 
+        // Check if the bitmap has to be flipped before it's drawn
         if ((mirrorY)) {
             flipDraw(bitmap, x, y);
         } else {
+            // Loop through the bitmap
             for (int yy = startY; yy < endY; yy++) {
                 int startPoint = (yy - y) * bitmap.width + (startX - x);
                 int endPoint = yy * width + startX;
@@ -40,6 +42,7 @@ public class Bitmap {
                 for (int xx = startPoint; xx < startPoint + absoluteWidth; xx++) {
                     int colour = bitmap.pixels[xx];
 
+                    // Set the colour code
                     if (colour < 0) pixels[endPoint + xx] = colour;
                 }
             }
@@ -47,6 +50,7 @@ public class Bitmap {
     }
 
     public void flipDraw(Bitmap bitmap, int xOffs, int yOffs) {
+        // Loop through the bitmap if reverse
         for (int y = 0; y < bitmap.height; y++) {
             int yPix = y + yOffs;
             if (yPix < 0 || yPix >= height) continue;
@@ -57,14 +61,17 @@ public class Bitmap {
 
                 int colour = bitmap.pixels[x + y * bitmap.width];
 
+                // Set the colour code
                 if (colour < 0) pixels[xPix + yPix * width] = colour;
             }
         }
     }
 
     public Bitmap flip() {
+        // Create a new bitmap
         Bitmap bitmap = new Bitmap(width, height);
 
+        // Loop through the bitmap in reverse
         for (int y = 0; y < bitmap.height; y++) {
             int yPix = y;
             if (yPix < 0 || yPix >= bitmap.height) continue;
@@ -75,6 +82,7 @@ public class Bitmap {
 
                 int colour = pixels[x + y * bitmap.width];
 
+                // Set the colour code
                 if (colour < 0) bitmap.pixels[xPix + yPix * bitmap.width] = colour;
             }
         }
@@ -83,8 +91,10 @@ public class Bitmap {
     }
 
     public Bitmap clone() {
+        // Create a new bitmap
         Bitmap clone = new Bitmap(width, height);
 
+        // Render the current pixels onto the clone and return it
         clone.render(this, 0, 0);
         return clone;
     }

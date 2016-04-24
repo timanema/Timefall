@@ -80,6 +80,7 @@ public class Display {
     private void onClose() {
         System.out.println("\nSaving game data ...");
 
+        // Save all necessary data
         BSGame.getFileManager().changeSetting("settings", "xOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getX()));
         BSGame.getFileManager().changeSetting("settings", "yOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getY()));
         BSGame.getFileManager().changeSetting("lvl", "world", BSGame.getTileManager().getCurrentWorld().getWorldName());

@@ -23,6 +23,7 @@ public class GamePanel extends Canvas {
     }
 
     private void initComponents() {
+        // Initialize components and set some settings
         setMinimumSize(dimension);
         setMaximumSize(dimension);
         setPreferredSize(dimension);
@@ -32,6 +33,7 @@ public class GamePanel extends Canvas {
     }
 
     public void render() {
+        // Change BufferStrategy so we use double buffering
         BufferStrategy bufferStrategy = getBufferStrategy();
 
         if (bufferStrategy == null) {
@@ -42,11 +44,12 @@ public class GamePanel extends Canvas {
         Graphics graphics = bufferStrategy.getDrawGraphics();
 
         // Render sprites
-        //TODO: Remove debug sprites
         BSGame.getSettings().getCurrentState().render(screen);
 
+        // Draw the image on the screen
         graphics.drawImage(screen.bufferedImage, 0, 0, width, height, null);
 
+        // Dispose of the current graphics and issue the new buffer
         graphics.dispose();
         bufferStrategy.show();
     }

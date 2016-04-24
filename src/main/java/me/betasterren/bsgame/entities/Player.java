@@ -8,7 +8,7 @@ import me.betasterren.bsgame.level.Direction;
 import me.betasterren.bsgame.level.Vector;
 import me.betasterren.bsgame.level.world.World;
 
-public class Player implements Entity {
+public class Player implements Mob {
     public int xOff = 0;
     public int yOff = 0;
 
@@ -30,6 +30,7 @@ public class Player implements Entity {
 
         this.currentlyMoving = false;
 
+        // Calculate max and current values and use these for center calculations
         int xMax = 16 * worldX;
         int yMax = 16 * worldY - 8;
         int xPlayer = (int) Vector.playerxPos;
@@ -59,6 +60,7 @@ public class Player implements Entity {
 
     @Override
     public Bitmap getCurrentBitmap() {
+        // Returns appropriate bitmap
         switch (getDirection()) {
             case NORTH:
                 return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
@@ -87,25 +89,30 @@ public class Player implements Entity {
     }
 
     private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer) {
+        // Check if the player is in one of the four corners
         if (xPlayer < 320 && yPlayer < 180) {
+            // Player is in upper left corner
             xOff = xPlayer;
             yOff = yPlayer;
 
             xCen = false;
             yCen = false;
         } else if (xPlayer > xMax - 320 && yPlayer > yMax - 180) {
+            // Player is in lower right corner
             xOff = 320 + (xPlayer - (xMax - 320));
             yOff = 180 + (yPlayer - (yMax - 180));
 
             xCen = false;
             yCen = false;
         } else if (xPlayer < 320 && yPlayer > yMax - 180) {
+            // Player is in lower left corner
             xOff = xPlayer;
             yOff = 180 + (yPlayer - (yMax - 180));
 
             xCen = false;
             yCen = false;
         } else if (xPlayer > xMax - 320 && yPlayer < 180) {
+            // Player is in upper right corner
             xOff = 320 + (xPlayer - (xMax - 320));
             yOff = yPlayer;
 
@@ -147,6 +154,7 @@ public class Player implements Entity {
 
     @Override
     public void tick() {
+        // Calculate max and current values and use these for center calculations
         int xMax = 16 * BSGame.getTileManager().worldX;
         int yMax = 16 * BSGame.getTileManager().worldY - 8;
         int xPlayer = getxOff();
@@ -154,6 +162,7 @@ public class Player implements Entity {
 
         this.checkCentred(xMax, yMax, xPlayer, yPlayer);
 
+        // Update the current animationCount to set the correct animationStatus
         if (isMoving()) {
             animationCount++;
 
@@ -168,8 +177,6 @@ public class Player implements Entity {
             animationCount = 0;
             animationStatus = 0;
         }
-
-        //if (animationCount == 2) System.out.println("Anim status: " + animationStatus);
     }
 
     @Override
@@ -179,9 +186,11 @@ public class Player implements Entity {
 
     @Override
     public void move(Direction direction) {
+        // Move the player in a direction
         this.playerDirection = direction;
         this.currentlyMoving = true;
 
+        // Calculating needed change in X-axis and Y-axis to move correctly
         float xDif = direction.getxChange() * .125F;
         float yDif = direction.getyChange() * .125F;
 
@@ -204,7 +213,7 @@ public class Player implements Entity {
     @Override
     public void teleport(World world, float x, float y) {
         // TODO: Change world in worldmanager on teleport
-        // World gaan we later iets mee doen
+        // get current location
         float currentX = playerLocation.getX();
         float currentY = playerLocation.getY();
 
@@ -218,17 +227,20 @@ public class Player implements Entity {
         // Update player location
         getLocation().add(xDif, yDif);
 
+        // Get current offsets
         int playerxOff = getxOff();
         int playeryOff = getyOff();
         int xOffWorld = 0;
         int yOffWorld = 0;
 
+        // Calculate max offsets
         int xMax = 16 * BSGame.getTileManager().worldX;
         int yMax = 16 * BSGame.getTileManager().worldY - 8;
 
         // Update checkCentered();
         tick();
 
+        // Calculate what the next offsets should be
         if (xCen && yCen) {
             // Both X and Y are centered
             xOffWorld = playerxOff - 320;
@@ -252,6 +264,7 @@ public class Player implements Entity {
     }
 
     public int getxOff() {
+        // Get the current offset based on the location of the player
         int remainderX = (int) Math.round((playerLocation.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
         int xPos = (int) playerLocation.getX();
 
@@ -259,6 +272,7 @@ public class Player implements Entity {
     }
 
     public int getyOff() {
+        // Get the current offset based on the location of the player
         int remainderY = (int) Math.round((playerLocation.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
         int yPos = (int) playerLocation.getY();
 

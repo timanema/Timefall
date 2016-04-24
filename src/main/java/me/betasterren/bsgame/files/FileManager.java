@@ -33,12 +33,14 @@ public class FileManager {
         System.out.println(" Loading files ...");
 
         try {
+            // Create files
             mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
 
             mainDirectory = new File(mainDir);
             settingFile = new File(mainDir + "/settings.txt/");
             lvlFile = new File(mainDir + "/lvl.txt/");
 
+            // Check if setting file exists, if not create it
             if (!settingFile.exists()) {
                 System.out.println("  Creating file: " + mainDir + "/settings.txt ...");
 
@@ -52,6 +54,7 @@ public class FileManager {
                 changeSetting("settings", "xOff", "0");
             }
 
+            // Check if level file exists, if not create it
             if (!lvlFile.exists()) {
                 System.out.println("  Creating file: " + mainDir + "/lvl.txt ...");
 
@@ -65,15 +68,18 @@ public class FileManager {
                 changeSetting("lvl", "xOff", "0");
             }
 
+            // Set paths
             lvlPath = mainDir + "/lvl.txt";
             settingsPath = mainDir + "/settings.txt";
 
+            // Start reading world files
             readWorldFiles();
         } catch (Exception exception) {
             exception.printStackTrace();
             return;
         }
 
+        // Read setting and level files
         readSettingsFile("settings");
         System.out.println("\n");
         readSettingsFile("lvl");
@@ -82,10 +88,12 @@ public class FileManager {
     public void changeSetting(String file, String setting, String value) {
         BufferedWriter bufferedWriter = null;
 
+        // Try to open a BufferedWriter using the file paths set in the constructor
         try {
             FileWriter fileWriter = new FileWriter(new File((file.equals("settings") ? settingsPath : lvlPath)));
             bufferedWriter = new BufferedWriter(fileWriter);
 
+            // Check which file we're writing to
             if (file.equals("settings")) {
                 bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
                 bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
@@ -117,17 +125,20 @@ public class FileManager {
         OutputStream outputStream = null;
         String mainDirectory;
 
+        // Trying to open an InputStream using the paths set in the constructor and export them
         try {
             inputStream = FileManager.class.getResourceAsStream((file.equals("settings") ? settingsPath : lvlPath));
 
             if (inputStream == null)
                 throw new Exception("Cannot fetch " + file + ".txt from Jar");
 
+            // Trying to get the path of the location of the JAR and creating the main directory and other files
             int readBytes;
             byte[] byteBuffer = new byte[4096];
             mainDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
             outputStream = new FileOutputStream(mainDirectory + "/" + file + ".txt");
 
+            // Write bytes to the files in the main directory from the files provided by the JAR
             while ((readBytes = inputStream.read(byteBuffer)) > 0) {
                 outputStream.write(byteBuffer, 0, readBytes);
             }
@@ -147,11 +158,15 @@ public class FileManager {
 
     private void readSettingsFile(String file) {
         System.out.println("  Reading from: " + mainDir + "/" + file + ".txt ...");
+
+        // Trying to open a BufferedReader to read the files in the main directory outside the JAR
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(new File((file.equals("settings") ? settingsPath : lvlPath))));
 
+            // Read each line an process it
             while ((readLine = bufferedReader.readLine()) != null)
                 processSettings(file, readLine);
+
         } catch (FileNotFoundException exception) {
             System.out.println("Unable to open file '" + mainDir + (file.equals("settings") ? settingsPath : lvlPath) + "'");
         } catch (IOException exception) {
@@ -163,11 +178,13 @@ public class FileManager {
     private void processSettings(String file, String rawSetting) {
         String[] stringValues = rawSetting.split(":");
 
+        // Check if the string can be a setting string
         if (stringValues.length != 2) return;
         String setting = stringValues[0].replaceAll("\\s", "");
         String value = stringValues[1].replaceAll("\\s", "");
         int intValue = 0;
 
+        // Parse the string to an int if the setting isn't the 'world' setting
         if (!setting.equals("world")) {
             try {
                 intValue = Integer.parseInt(value);
@@ -177,6 +194,7 @@ public class FileManager {
             }
         }
 
+        // Check which in file the settings is and take appropriate 'action'
         if (file.equals("settings")) {
             switch (setting) {
                 case "max_fps":
@@ -223,11 +241,14 @@ public class FileManager {
         HashMap<String, HashMap<String, String>> floraConflicts = new HashMap<>();
         String rawLine;
 
+        // Loop through all the found worlds
         for (String worldName : worldFiles) {
+            // Trying to open a BufferedReader to read the file
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt")));
                 HashMap<String, String> conflicts = new HashMap<>();
 
+                // Read the strings from the file and process it
                 while ((rawLine = bufferedReader.readLine()) != null) {
                     String[] values = rawLine.split(":");
 
@@ -253,12 +274,16 @@ public class FileManager {
     private void readWorldFiles() throws IOException {
         System.out.println("  Looking for world files ...");
 
+        // Get the CodeSource of the JAR
         CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
 
+        // Check if the CodeSource isn't null
         if (codeSource != null) {
+            // Get the URL and open a ZipInputStream
             URL jar = codeSource.getLocation();
             ZipInputStream zip = new ZipInputStream(jar.openStream());
 
+            // Loop through all the zip entries (files in jar)
             while (true) {
                 ZipEntry e = zip.getNextEntry();
 
@@ -267,17 +292,21 @@ public class FileManager {
 
                 String fileName = e.getName();
 
+                // Check if the current file is a world map
                 if (fileName.startsWith("worlds/")
                         && !fileName.equals("worlds/")
-                        && fileName.contains(".png")) {
+                        && fileName.contains(".png")
+                        && !fileName.contains("_flora.png")) {
                     String worldName = fileName.replaceAll("worlds/", "").replaceAll(".png", "");
 
                     System.out.println("   Found world: " + worldName);
                     System.out.println("    Looking for entities ...");
                     System.out.println("    Looking for conflicts ...");
 
+                    // Check if there are entity and conflict files for this world (shouldn't happen but who knows)
                     if (getClass().getResourceAsStream("/entities/" + worldName + ".txt") != null &&
-                            getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt") != null)
+                            getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt") != null &&
+                            getClass().getResourceAsStream("/worlds/" + worldName + "_flora.png") != null)
                         worldFiles.add(worldName);
                     else
                         System.out.println("   Failed to find entities/conflicts for world '" + worldName + "'!");
@@ -285,6 +314,12 @@ public class FileManager {
             }
         } else {
             System.out.println("Error while loading worlds!");
+            System.exit(-1);
+        }
+
+        // Check if we have loaded worlds
+        if (worldFiles.isEmpty()) {
+            System.out.println("No worlds found!");
             System.exit(-1);
         }
 
