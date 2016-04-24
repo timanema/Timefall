@@ -62,6 +62,26 @@ public class Bitmap {
         }
     }
 
+    public Bitmap flip() {
+        Bitmap bitmap = new Bitmap(width, height);
+
+        for (int y = 0; y < bitmap.height; y++) {
+            int yPix = y;
+            if (yPix < 0 || yPix >= bitmap.height) continue;
+
+            for (int x = 0; x < bitmap.width; x++) {
+                int xPix = bitmap.width - x - 1;
+                if (xPix < 0 || xPix >= bitmap.width) continue;
+
+                int colour = pixels[x + y * bitmap.width];
+
+                if (colour < 0) bitmap.pixels[xPix + yPix * bitmap.width] = colour;
+            }
+        }
+
+        return bitmap;
+    }
+
     public Bitmap clone() {
         Bitmap clone = new Bitmap(width, height);
 

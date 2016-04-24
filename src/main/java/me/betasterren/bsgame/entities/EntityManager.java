@@ -1,5 +1,6 @@
 package me.betasterren.bsgame.entities;
 
+import me.betasterren.bsgame.BSGame;
 import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.level.Direction;
 import me.betasterren.bsgame.level.Vector;
@@ -17,19 +18,22 @@ public class EntityManager {
         entities = new ArrayList<>();
 
         System.out.println("   Creating player ...");
-        player = new Player("TestPlayer", new Vector(Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY);
+        player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY);
     }
 
     public void tickEntities() {
-        entities.forEach(me.betasterren.bsgame.entities.Entity::tick);
+        // Loop through all the entities and tick the entities in the current world
+        entities.stream().filter(entity -> entity.getLocation().getWorldName().equals(BSGame.getTileManager().getCurrentWorld().getWorldName())).forEach(me.betasterren.bsgame.entities.Entity::tick);
 
+        // Tick the player
         player.tick();
     }
 
     public void renderEntities(Screen screen) {
-        for (Entity entity : entities)
-            entity.render(screen);
+        // Loop through all the entities and render the entities in the current world
+        entities.stream().filter(entity -> entity.getLocation().getWorldName().equals(BSGame.getTileManager().getCurrentWorld().getWorldName())).forEach(entity -> entity.render(screen));
 
+        // Render the player
         player.render(screen);
     }
 

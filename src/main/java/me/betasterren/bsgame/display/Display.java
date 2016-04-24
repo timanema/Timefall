@@ -80,10 +80,11 @@ public class Display {
     private void onClose() {
         System.out.println("\nSaving game data ...");
 
-        BSGame.getFileManager().changeSetting("settings", "xOff", BSGame.getTileManager().getLevel().xOff);
-        BSGame.getFileManager().changeSetting("settings", "yOff", BSGame.getTileManager().getLevel().yOff);
-        BSGame.getFileManager().changeSetting("lvl", "xOff", BSGame.getTileManager().getEntityManager().getPlayer().getxOff());
-        BSGame.getFileManager().changeSetting("lvl", "yOff", BSGame.getTileManager().getEntityManager().getPlayer().getyOff());
+        BSGame.getFileManager().changeSetting("settings", "xOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getX()));
+        BSGame.getFileManager().changeSetting("settings", "yOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getY()));
+        BSGame.getFileManager().changeSetting("lvl", "world", BSGame.getTileManager().getCurrentWorld().getWorldName());
+        BSGame.getFileManager().changeSetting("lvl", "xOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getxOff()));
+        BSGame.getFileManager().changeSetting("lvl", "yOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getyOff()));
 
         System.out.println("Saved game data!");
 

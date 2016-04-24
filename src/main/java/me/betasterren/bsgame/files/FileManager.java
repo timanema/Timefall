@@ -49,7 +49,7 @@ public class FileManager {
 
                 settingFile = new File(mainDir + settingsPath);
 
-                changeSetting("settings", "xOff", 0);
+                changeSetting("settings", "xOff", "0");
             }
 
             if (!lvlFile.exists()) {
@@ -62,7 +62,7 @@ public class FileManager {
 
                 lvlFile = new File(mainDir + lvlPath);
 
-                changeSetting("lvl", "xOff", 0);
+                changeSetting("lvl", "xOff", "0");
             }
 
             lvlPath = mainDir + "/lvl.txt";
@@ -79,7 +79,7 @@ public class FileManager {
         readSettingsFile("lvl");
     }
 
-    public void changeSetting(String file, String setting, int value) {
+    public void changeSetting(String file, String setting, String value) {
         BufferedWriter bufferedWriter = null;
 
         try {
@@ -91,8 +91,8 @@ public class FileManager {
                 bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
                 bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
                 bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
-                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().xOff)) + "\n");
-                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getLevel().yOff)));
+                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getX())) + "\n");
+                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getY())));
             } else if (file.equals("lvl")) {
                 bufferedWriter.write("world: " + (setting.equals("world") ? value : (BSGame.getTileManager() == null ? "world" : BSGame.getTileManager().getCurrentWorld().getWorldName())) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
@@ -104,7 +104,8 @@ public class FileManager {
             e.printStackTrace();
         } finally {
             try {
-                bufferedWriter.close();
+                if (bufferedWriter != null)
+                    bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -134,8 +135,11 @@ public class FileManager {
             exception.printStackTrace();
             throw exception;
         } finally {
-            inputStream.close();
-            outputStream.close();
+            if (inputStream != null)
+                inputStream.close();
+
+            if (outputStream != null)
+                outputStream.close();
         }
 
         return mainDirectory + "/" + file + ".txt";
@@ -199,7 +203,7 @@ public class FileManager {
         } else if (file.equals("lvl")) {
             switch (setting) {
                 case "world":
-                    Vector.setWorldName(value);
+                    Vector.setGlobalWorldName(value);
                     break;
                 case "xOff":
                     Vector.setPlayerVariables(intValue, Vector.playeryPos);

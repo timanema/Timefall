@@ -46,7 +46,7 @@ public class TileManager {
             int xOff = 0;
             int yOff = 0;
 
-            if (Vector.worldName.equals(worldName)) {
+            if (Vector.globalWorldName.equals(worldName)) {
                 xOff = (int) Vector.worldxPos;
                 yOff = (int) Vector.worldyPos;
             }
@@ -54,7 +54,7 @@ public class TileManager {
             loadedWorlds.add(new World(this, worldName, xOff, yOff, "/worlds/" + worldName + ".png", "/entities/" + worldName + ".txt"));
         }
 
-        currentWorld = loadedWorlds.get(0);
+        currentWorld = getWorld(Vector.globalWorldName);
 
         worldX = currentWorld.getWidth();
         worldY = currentWorld.getHeight();
@@ -72,7 +72,6 @@ public class TileManager {
         blocks.add(new VoidTile());
 
         trees.add(new SpruceTree());
-        trees.add(new HuisBoom());
     }
 
     private void initWorld() {
@@ -87,7 +86,7 @@ public class TileManager {
 
         System.out.println("  Initializing level ...");
 
-        level = new Level(this, worldX, worldY, (int) Vector.worldxPos, (int) Vector.worldyPos);
+        level = new Level(this, worldX, worldY);
         entityManager = new EntityManager(worldX, worldY);
     }
 
@@ -190,5 +189,12 @@ public class TileManager {
 
     public World getCurrentWorld() {
         return currentWorld;
+    }
+
+    public World getWorld(String worldName) {
+        for (World world : loadedWorlds)
+            if (world.getWorldName().equals(worldName))
+                return world;
+        return null;
     }
 }

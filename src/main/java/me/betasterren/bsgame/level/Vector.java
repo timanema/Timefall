@@ -2,8 +2,10 @@ package me.betasterren.bsgame.level;
 
 public class Vector {
     private float xPos, yPos;
+    private String worldName;
+
     public static float worldxPos, worldyPos, playerxPos, playeryPos;
-    public static String worldName;
+    public static String globalWorldName;
 
     public Vector() {
         this.xPos = 0.0F;
@@ -11,6 +13,12 @@ public class Vector {
     }
 
     public Vector(float xPos, float yPos) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
+    public Vector(String worldName, float xPos, float yPos) {
+        this.worldName = worldName;
         this.xPos = xPos;
         this.yPos = yPos;
     }
@@ -56,8 +64,8 @@ public class Vector {
         return new Vector(xPos, yPos);
     }
 
-    public static void setWorldName(String newWorldName) {
-        worldName = newWorldName;
+    public static void setGlobalWorldName(String newWorldName) {
+        globalWorldName = newWorldName;
     }
 
     public static void setWorldVariables(float xPos, float yPos) {
@@ -87,5 +95,9 @@ public class Vector {
 
     public float getY() {
         return yPos;
+    }
+
+    public String getWorldName() {
+        return worldName;
     }
 }

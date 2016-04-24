@@ -12,9 +12,6 @@ public class Player implements Entity {
     public int xOff = 0;
     public int yOff = 0;
 
-    private int worldX;
-    private int worldY;
-
     public boolean xCen;
     public boolean yCen;
 
@@ -22,7 +19,9 @@ public class Player implements Entity {
     private Vector playerLocation;
     private Direction playerDirection;
 
-    private boolean currentlyMoving;
+    public boolean currentlyMoving;
+    private int animationCount = 0;
+    private int animationStatus = 0;
 
     public Player(String name, Vector location, Direction direction, int worldX, int worldY) {
         this.playerName = name;
@@ -60,7 +59,26 @@ public class Player implements Entity {
 
     @Override
     public Bitmap getCurrentBitmap() {
-        return Sprite.sprites[9][1];
+        switch (getDirection()) {
+            case NORTH:
+                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+            case NORTHEAST:
+                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+            case NORTHWEST:
+                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+            case EAST:
+                return (animationStatus == 0 ? Sprite.playerBud[2][0].flip() : (animationStatus == 1 ? Sprite.playerBud[5][0].flip() : Sprite.playerBud[6][0].flip()));
+            case SOUTH:
+                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+            case SOUTHEAST:
+                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+            case SOUTHWEST:
+                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+            case WEST:
+                return (animationStatus == 0 ? Sprite.playerBud[2][0] : (animationStatus == 1 ? Sprite.playerBud[5][0] : Sprite.playerBud[6][0]));
+            default:
+                return Sprite.sprites[9][1];
+        }
     }
 
     @Override
@@ -135,6 +153,21 @@ public class Player implements Entity {
         int yPlayer = getyOff();
 
         this.checkCentred(xMax, yMax, xPlayer, yPlayer);
+
+        if (isMoving()) {
+            animationCount++;
+
+            if (animationCount == 3) {
+                animationCount = 0;
+                animationStatus++;
+
+                if (animationStatus == 3)
+                    animationStatus = 0;
+            }
+        } else {
+            animationCount = 0;
+            animationStatus = 0;
+        }
     }
 
     @Override
@@ -145,8 +178,7 @@ public class Player implements Entity {
     @Override
     public void move(Direction direction) {
         this.playerDirection = direction;
-        // TODO: Fix this later
-        this.currentlyMoving = false;
+        this.currentlyMoving = true;
 
         float xDif = direction.getxChange() * .125F;
         float yDif = direction.getyChange() * .125F;

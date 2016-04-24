@@ -17,46 +17,55 @@ public class Level {
     private int screenX, screenY;
     public boolean playerMoved = true;
 
-    public int xOff = 0;
-    public int yOff = 0;
-
-    public Level(TileManager tileManager, int screenX, int screenY, int xOff, int yOff) {
+    public Level(TileManager tileManager, int screenX, int screenY) {
         this.tileManager = tileManager;
         this.screenX = screenX;
         this.screenY = screenY;
-        this.xOff = xOff;
-        this.yOff = yOff;
 
         this.groundTiles = new Bitmap[screenX][screenY];
 
         updateBitmap();
     }
 
+    public void updateWorld(int screenX, int screenY) {
+        this.groundTiles = new Bitmap[screenX][screenY];
+
+        updateBitmap();
+    }
+
     private void updateBitmap() {
+        // Update base layer
         for (int x = 0; x < screenX; x++)
             for (int y = 0; y < screenY; y++) {
                 groundTiles[x][y] = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]);
             }
 
+        // Update flora layer
         for (int x = 0; x < screenX; x++)
             for (int y = 0; y < screenY; y++) {
                 MapObject mapObject = tileManager.getMapObjectByLoc(x, y, 1);
                 Tree tree = null;
 
+                // Check if MapObject isn't null
+                if (mapObject == null)
+                    continue;
+
+                // Check if MapObject is an instance of Tree
                 if (tileManager.checkTree(mapObject)) {
                     tree = (Tree) mapObject;
-                    if (tree != null) {
-                        if (tileManager.getFloraLayer()[x][y] == 666999) {
-                            groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
-                        } else {
-                            Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
-                            Bitmap groundBitmap = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+
+                    // Check if the current location is a conflict location
+                    if (tileManager.getFloraLayer()[x][y] == 666999) {
+                        groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
+                    } else {
+                        Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
+                        Bitmap groundBitmap = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]).clone();
 
 
-                            groundBitmap.render(treeBitmap, 0, 0);
-                            groundTiles[x][y] = groundBitmap;
-                        }
+                        groundBitmap.render(treeBitmap, 0, 0);
+                        groundTiles[x][y] = groundBitmap;
                     }
+
                 }
             }
 
@@ -73,7 +82,7 @@ public class Level {
         for (int[] row : tileManager.getBaseLayer()) {
             int y = 0;
             for (int column : row) {
-                screen.render(groundTiles[x][y], x * 16 - xOff, y * 16 - yOff);
+                screen.render(groundTiles[x][y], x * 16 - tileManager.getCurrentWorld().getX(), y * 16 - tileManager.getCurrentWorld().getY());
 
                 y++;
             }
