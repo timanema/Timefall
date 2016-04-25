@@ -196,7 +196,8 @@ public class Player implements Mob {
         float xDif = direction.getxChange() * .125F;
         float yDif = direction.getyChange() * .125F;
 
-        getLocation().add(xDif, yDif);
+        getLocation().add((getxOff() + xDif < 0 || getxOff() + xDif > (BSGame.getTileManager().getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
+                (getyOff() + yDif < 0 || getyOff() + yDif > (BSGame.getTileManager().getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
 
         //TODO: Remove this debug code
         for (Block block : BSGame.getTileManager().getLevel().getSurroundingTiles(getLocation(), 2)) {

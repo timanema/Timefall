@@ -49,8 +49,10 @@ public class Game extends GameState {
                 if (withinYNorth && yCen) {
                     BSGame.getTileManager().getCurrentWorld().setOffset(BSGame.getTileManager().getCurrentWorld().getX(), BSGame.getTileManager().getCurrentWorld().getY() - 2);
                 } else {
-                    BSGame.getTileManager().getEntityManager().getPlayer().yCen = false;
-                    BSGame.getTileManager().getEntityManager().getPlayer().yOff -= 2;
+                    if (BSGame.getTileManager().getEntityManager().getPlayer().getyOff() - 2 >= 0) {
+                        BSGame.getTileManager().getEntityManager().getPlayer().yCen = false;
+                        BSGame.getTileManager().getEntityManager().getPlayer().yOff -= 2;
+                    }
                 }
             }
 
@@ -58,8 +60,10 @@ public class Game extends GameState {
                 if (withinXEast && xCen) {
                     BSGame.getTileManager().getCurrentWorld().setOffset(BSGame.getTileManager().getCurrentWorld().getX() + 2, BSGame.getTileManager().getCurrentWorld().getY());
                 } else {
-                    BSGame.getTileManager().getEntityManager().getPlayer().xCen = false;
-                    BSGame.getTileManager().getEntityManager().getPlayer().xOff += 2;
+                    if (BSGame.getTileManager().getEntityManager().getPlayer().getxOff() + 2 <= (BSGame.getTileManager().worldX - 1) * 16) {
+                        BSGame.getTileManager().getEntityManager().getPlayer().xCen = false;
+                        BSGame.getTileManager().getEntityManager().getPlayer().xOff += 2;
+                    }
                 }
             }
 
@@ -67,8 +71,10 @@ public class Game extends GameState {
                 if (withinYSouth && yCen) {
                     BSGame.getTileManager().getCurrentWorld().setOffset(BSGame.getTileManager().getCurrentWorld().getX(), BSGame.getTileManager().getCurrentWorld().getY() + 2);
                 } else {
-                    BSGame.getTileManager().getEntityManager().getPlayer().yCen = false;
-                    BSGame.getTileManager().getEntityManager().getPlayer().yOff += 2;
+                    if (BSGame.getTileManager().getEntityManager().getPlayer().getyOff() + 2 <= (BSGame.getTileManager().worldY - 1) * 16 - 12) {
+                        BSGame.getTileManager().getEntityManager().getPlayer().yCen = false;
+                        BSGame.getTileManager().getEntityManager().getPlayer().yOff += 2;
+                    }
                 }
             }
 
@@ -76,8 +82,10 @@ public class Game extends GameState {
                 if (withinXWest && xCen) {
                     BSGame.getTileManager().getCurrentWorld().setOffset(BSGame.getTileManager().getCurrentWorld().getX() - 2, BSGame.getTileManager().getCurrentWorld().getY());
                 } else {
-                    BSGame.getTileManager().getEntityManager().getPlayer().xCen = false;
-                    BSGame.getTileManager().getEntityManager().getPlayer().xOff -= 2;
+                    if (BSGame.getTileManager().getEntityManager().getPlayer().getxOff() - 2 >= 0) {
+                        BSGame.getTileManager().getEntityManager().getPlayer().xCen = false;
+                        BSGame.getTileManager().getEntityManager().getPlayer().xOff -= 2;
+                    }
                 }
             }
 
