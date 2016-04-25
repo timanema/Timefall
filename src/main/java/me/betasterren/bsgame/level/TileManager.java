@@ -70,6 +70,7 @@ public class TileManager {
         blocks.add(new GrassTile());
         blocks.add(new WaterTile());
         blocks.add(new VoidTile());
+        blocks.add(new StoneTile());
 
         trees.add(new SpruceTree());
     }
@@ -196,5 +197,22 @@ public class TileManager {
             if (world.getWorldName().equals(worldName))
                 return world;
         return null;
+    }
+
+    public void changeWorld(World world, int xOff, int yOff) {
+        // Change currentWorld
+        this.currentWorld = world;
+        this.worldX = world.getWidth();
+        this.worldY = world.getHeight();
+
+        // Set the correct offsets
+        currentWorld.setOffset(xOff, yOff);
+
+        // Update the level
+        level.updateWorld(currentWorld.getWidth(), currentWorld.getHeight());
+    }
+
+    public void changeWorld(String worldName, int xOff, int yOff) {
+        this.changeWorld(getWorld(worldName), xOff, yOff);
     }
 }

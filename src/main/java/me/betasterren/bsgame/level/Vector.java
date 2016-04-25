@@ -64,6 +64,12 @@ public class Vector {
         return new Vector(xPos, yPos);
     }
 
+    public void setLocation(String worldName, float xPos, float yPos) {
+        this.worldName = worldName;
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
     public static void setGlobalWorldName(String newWorldName) {
         globalWorldName = newWorldName;
     }

@@ -69,6 +69,7 @@
                     <include>**/*.txt</include>
                     <include>**/*.png</include>
                     <include>**/*.mp3</include>
+                    <include>**/*.gif</include>
                 </includes>
             </resource>
         </resources>

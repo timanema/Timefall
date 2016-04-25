@@ -21,7 +21,7 @@ public class World {
     private int xOff;
     private int yOff;
 
-    private int[][] baseLayer;
+    public int[][] baseLayer;
     private int[][] floraLayer;
 
     private Entity[] entities;

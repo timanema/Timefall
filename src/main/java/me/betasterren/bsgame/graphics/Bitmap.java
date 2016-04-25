@@ -16,6 +16,9 @@ public class Bitmap {
     }
 
     public void render(Bitmap bitmap, int x, int y, boolean mirrorY) {
+        if (bitmap == null)
+            return;
+
         int startX = x;
         int endX = x + bitmap.width;
 

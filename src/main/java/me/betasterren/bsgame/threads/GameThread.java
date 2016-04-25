@@ -1,7 +1,9 @@
 package me.betasterren.bsgame.threads;
 
 import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.display.Display;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class GameThread implements Runnable {
@@ -66,6 +68,22 @@ public class GameThread implements Runnable {
      */
     private void tick(double deltaTime) {
         BSGame.getSettings().getCurrentState().tick(deltaTime);
+
+        //TODO: Remove debug code
+        Display display = BSGame.getMainDisplay();
+
+        if (display != null) {
+            JFrame jFrame = display.jFrame;
+
+            if (jFrame != null) {
+                jFrame.setTitle("xOff: " + BSGame.getTileManager().getCurrentWorld().getX() + " yOff: " + BSGame.getTileManager().getCurrentWorld().getY()
+                + " pX: " + BSGame.getTileManager().getEntityManager().getPlayer().xOff
+                        + " pY: " + BSGame.getTileManager().getEntityManager().getPlayer().yOff
+                + " rPX: " + BSGame.getTileManager().getEntityManager().getPlayer().getxOff() +
+                " rPY: " + BSGame.getTileManager().getEntityManager().getPlayer().getyOff()
+                + " cW: " + BSGame.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName());
+            }
+        }
     }
 
     /**

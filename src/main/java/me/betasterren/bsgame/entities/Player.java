@@ -6,6 +6,7 @@ import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.Direction;
 import me.betasterren.bsgame.level.Vector;
+import me.betasterren.bsgame.level.tiles.base.Block;
 import me.betasterren.bsgame.level.world.World;
 
 public class Player implements Mob {
@@ -126,6 +127,7 @@ public class Player implements Mob {
 
                 xCen = true;
                 yCen = false;
+
             } else if (xPlayer < 320 || xPlayer > xMax - 320) {
                 // Player is Y centered, not X centered
                 xOff = (xPlayer < 320 ? xPlayer : 320 + (xPlayer - (xMax - 320)));
@@ -195,6 +197,14 @@ public class Player implements Mob {
         float yDif = direction.getyChange() * .125F;
 
         getLocation().add(xDif, yDif);
+
+        //TODO: Remove this debug code
+        for (Block block : BSGame.getTileManager().getLevel().getSurroundingTiles(getLocation(), 2)) {
+            if (block == null) continue;
+
+            if (block.getBlockID()[0] == 1)
+                teleport((BSGame.getTileManager().getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
+        }
     }
 
     @Override
@@ -212,8 +222,7 @@ public class Player implements Mob {
 
     @Override
     public void teleport(World world, float x, float y) {
-        // TODO: Change world in worldmanager on teleport
-        // get current location
+        // Get current location
         float currentX = playerLocation.getX();
         float currentY = playerLocation.getY();
 
@@ -221,46 +230,52 @@ public class Player implements Mob {
         x = x - (((int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
         y = y - (((int) Math.round((y * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
 
-        float xDif = -currentX + x;
-        float yDif = -currentY + y;
+        int remainderX = (int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int remainderY = (int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int xPos = (int) x;
+        int yPos = (int) y;
+
+        int xOff = xPos * 16 + (int) (remainderX / 62.5);
+        int yOff = yPos * 16 + (int) (remainderY / 62.5);
 
         // Update player location
-        getLocation().add(xDif, yDif);
+        this.xOff = xOff;
+        this.yOff = yOff;
+
+        getLocation().setLocation(world.getWorldName(), x, y);
 
         // Get current offsets
-        int playerxOff = getxOff();
-        int playeryOff = getyOff();
-        int xOffWorld = 0;
-        int yOffWorld = 0;
+        int xOffWorld;
+        int yOffWorld;
 
         // Calculate max offsets
-        int xMax = 16 * BSGame.getTileManager().worldX;
-        int yMax = 16 * BSGame.getTileManager().worldY - 8;
-
-        // Update checkCentered();
-        tick();
+        int xMax = 16 * world.getWidth();
+        int yMax = 16 * world.getHeight() - 8;
 
         // Calculate what the next offsets should be
+        boolean xCen = xOff >= 320 && xOff <= xMax - 320;
+        boolean yCen = yOff >= 180 && yOff <= yMax - 180;
+
         if (xCen && yCen) {
             // Both X and Y are centered
-            xOffWorld = playerxOff - 320;
-            yOffWorld = playeryOff - 180;
+            xOffWorld = xOff - 320;
+            yOffWorld = yOff - 180;
         } else if (xCen && !yCen) {
             // Only X is centered
-            xOffWorld = playerxOff - 320;
-            yOffWorld = (playeryOff < 180 ? 0 : yMax - 360);
+            xOffWorld = xOff - 320;
+            yOffWorld = (yOff < 180 ? 0 : yMax - 360);
         } else if (!xCen && yCen) {
             // Only Y is centered
-            xOffWorld = (playerxOff < 320 ? 0 : xMax - 640);
-            yOffWorld = playeryOff - 180;
+            xOffWorld = (xOff < 320 ? 0 : xMax - 640);
+            yOffWorld = yOff - 180;
         } else {
             // Both X and Y are not centered
-            xOffWorld = (playerxOff < 320 ? 0 : xMax - 640);
-            yOffWorld = (playeryOff < 180 ? 0 : yMax - 360);
+            xOffWorld = (xOff < 320 ? 0 : xMax - 640);
+            yOffWorld = (yOff < 180 ? 0 : yMax - 360);
         }
 
-        // Update world offsets
-        world.setOffset(xOffWorld, yOffWorld);
+        // Update world
+        BSGame.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
     }
 
     public int getxOff() {

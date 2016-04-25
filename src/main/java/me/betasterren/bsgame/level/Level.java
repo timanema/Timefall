@@ -7,8 +7,6 @@ import me.betasterren.bsgame.level.tiles.base.MapObject;
 import me.betasterren.bsgame.level.tiles.base.Tree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Level {
     private TileManager tileManager;
@@ -117,11 +115,24 @@ public class Level {
         ArrayList<Block> blockList = new ArrayList<>();
         Block[] tiles = new Block[range - 1];
 
-        for (Direction direction : Direction.values()) {
-            List tempBlockList = Arrays.asList(getFacingTiles(direction, vector, range));
+        int xPos = (int) vector.getX();
+        int yPos = (int) vector.getY();
 
-            blockList.addAll(tempBlockList);
+        for (int x = xPos - range; x <= xPos + range; x++) {
+            if (x < 0 || x > tileManager.getCurrentWorld().getWidth())
+                continue;
+
+            for (int y = yPos - range; y <= yPos + range; y++) {
+                if ((y == yPos && x == xPos) || y < 0 || y > tileManager.getCurrentWorld().getHeight())
+                    continue;
+
+                MapObject mapObject = tileManager.getMapObjectByLoc(x, y, 0);
+
+                if (mapObject != null && tileManager.checkBlock(mapObject))
+                    blockList.add((Block) mapObject);
+            }
         }
+
 
         tiles = blockList.toArray(tiles);
         return tiles;

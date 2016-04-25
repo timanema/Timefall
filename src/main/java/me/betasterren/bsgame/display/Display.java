@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 
 public class Display {
     private String gameName;
@@ -16,7 +17,7 @@ public class Display {
     private int height;
     private Dimension dimension;
 
-    private JFrame jFrame;
+    public JFrame jFrame;
     private GamePanel gameCanvas;
 
     public Display(String gameName, int width, int height) {
@@ -44,6 +45,17 @@ public class Display {
         jFrame.setResizable(false);
         jFrame.setLocationRelativeTo(null);
         jFrame.setTitle(gameName);
+
+        try {
+            URL url = getClass().getResource("/w3_icon.gif");
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Image image = toolkit.createImage(url);
+
+            jFrame.setIconImage(image);
+        } catch (NullPointerException npe) {
+            // Image wasn't found
+            System.out.println("Couldn't load icon, using default one");
+        }
 
         // Set close operation
         jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
