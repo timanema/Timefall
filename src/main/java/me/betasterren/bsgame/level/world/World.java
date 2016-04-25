@@ -102,6 +102,9 @@ public class World {
                                 }
                         } else if (hexCode == 0x002D2A) {
                             // Do nothing, no flora on this tile
+                        } else if (hexCode == 0xBF52B1) {
+                            // Conflict tile
+                            floraLayer[x][y] = 666999;
                         } else {
                             // MapObject has an unknown hex value
                             baseLayer[x][y] = 123456789;

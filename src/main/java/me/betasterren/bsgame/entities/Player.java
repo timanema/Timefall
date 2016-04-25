@@ -24,10 +24,13 @@ public class Player implements Mob {
     private int animationCount = 0;
     private int animationStatus = 0;
 
-    public Player(String name, Vector location, Direction direction, int worldX, int worldY) {
+    private int gender;
+
+    public Player(String name, Vector location, Direction direction, int worldX, int worldY, int gender) {
         this.playerName = name;
         this.playerLocation = location;
         this.playerDirection = direction;
+        this.gender = gender;
 
         this.currentlyMoving = false;
 
@@ -64,23 +67,23 @@ public class Player implements Mob {
         // Returns appropriate bitmap
         switch (getDirection()) {
             case NORTH:
-                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
             case NORTHEAST:
-                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
             case NORTHWEST:
-                return (animationStatus == 0 ? Sprite.playerBud[1][0] : (animationStatus == 1 ? Sprite.playerBud[4][0] : Sprite.playerBud[8][0]));
+                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
             case EAST:
-                return (animationStatus == 0 ? Sprite.playerBud[2][0].flip() : (animationStatus == 1 ? Sprite.playerBud[5][0].flip() : Sprite.playerBud[6][0].flip()));
+                return (animationStatus == 0 ? Sprite.characters[2][gender].flip() : (animationStatus == 1 ? Sprite.characters[5][gender].flip() : Sprite.characters[6][gender].flip()));
             case SOUTH:
-                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
             case SOUTHEAST:
-                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
             case SOUTHWEST:
-                return (animationStatus == 0 ? Sprite.playerBud[0][0] : (animationStatus == 1 ? Sprite.playerBud[3][0] : Sprite.playerBud[7][0]));
+                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
             case WEST:
-                return (animationStatus == 0 ? Sprite.playerBud[2][0] : (animationStatus == 1 ? Sprite.playerBud[5][0] : Sprite.playerBud[6][0]));
+                return (animationStatus == 0 ? Sprite.characters[2][gender] : (animationStatus == 1 ? Sprite.characters[5][gender] : Sprite.characters[6][gender]));
             default:
-                return Sprite.sprites[9][1];
+                return Sprite.terrain[0][0];
         }
     }
 

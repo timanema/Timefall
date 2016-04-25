@@ -4,10 +4,12 @@ import me.betasterren.bsgame.BSGame;
 import me.betasterren.bsgame.entities.EntityManager;
 import me.betasterren.bsgame.level.conflict.ConflictManager;
 import me.betasterren.bsgame.level.conflict.RenderConflictException;
-import me.betasterren.bsgame.level.tiles.*;
 import me.betasterren.bsgame.level.tiles.base.Block;
 import me.betasterren.bsgame.level.tiles.base.MapObject;
 import me.betasterren.bsgame.level.tiles.base.Tree;
+import me.betasterren.bsgame.level.tiles.tiles.*;
+import me.betasterren.bsgame.level.tiles.trees.OakTree;
+import me.betasterren.bsgame.level.tiles.trees.SpruceTree;
 import me.betasterren.bsgame.level.world.World;
 
 import java.util.ArrayList;
@@ -71,8 +73,11 @@ public class TileManager {
         blocks.add(new WaterTile());
         blocks.add(new VoidTile());
         blocks.add(new StoneTile());
+        blocks.add(new SnowTile());
+        blocks.add(new SandTile());
 
         trees.add(new SpruceTree());
+        trees.add(new OakTree());
     }
 
     private void initWorld() {

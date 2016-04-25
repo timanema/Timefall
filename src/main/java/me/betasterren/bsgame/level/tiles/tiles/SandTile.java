@@ -1,24 +1,33 @@
-package me.betasterren.bsgame.level.tiles;
+package me.betasterren.bsgame.level.tiles.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.tiles.base.Block;
 
-public class GrassTile implements Block {
-    Bitmap bitmap = Sprite.sprites[4][1];
+public class SandTile implements Block {
     @Override
     public Bitmap[] getAnimations() {
-        return null;
+        return new Bitmap[0];
     }
 
     @Override
-    public Bitmap getSprite(int ID) {
-        return bitmap;
+    public boolean isSolid() {
+        return false;
+    }
+
+    @Override
+    public boolean isAnimated() {
+        return false;
+    }
+
+    @Override
+    public Bitmap getSprite(int id) {
+        return Sprite.terrain[7][0];
     }
 
     @Override
     public int[] getBlockID() {
-        return new int[]{0};
+        return new int[] {26};
     }
 
     @Override
@@ -33,26 +42,16 @@ public class GrassTile implements Block {
 
     @Override
     public String getName() {
-        return "Grass";
+        return "Sand";
     }
 
     @Override
     public int[] getHex() {
-        return new int[]{0x3BE329};
-    }
-
-    @Override
-    public boolean isSolid() {
-        return true;
-    }
-
-    @Override
-    public boolean isAnimated() {
-        return false;
+        return new int[] {0xCCC791};
     }
 
     @Override
     public void tick() {
-        bitmap = Sprite.sprites[9][1];
+
     }
 }

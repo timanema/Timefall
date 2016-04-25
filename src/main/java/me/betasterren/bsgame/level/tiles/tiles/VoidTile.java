@@ -1,11 +1,9 @@
-package me.betasterren.bsgame.level.tiles;
+package me.betasterren.bsgame.level.tiles.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
-import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.tiles.base.Block;
 
-public class StoneTile implements Block {
-    // TODO: Fix this class
+public class VoidTile implements Block {
     @Override
     public Bitmap[] getAnimations() {
         return new Bitmap[0];
@@ -23,12 +21,12 @@ public class StoneTile implements Block {
 
     @Override
     public Bitmap getSprite(int id) {
-        return Sprite.sprites[9][1];
+        return null;
     }
 
     @Override
     public int[] getBlockID() {
-        return new int[] {30};
+        return new int[]{123456789};
     }
 
     @Override
@@ -43,12 +41,12 @@ public class StoneTile implements Block {
 
     @Override
     public String getName() {
-        return "Stone";
+        return "Void";
     }
 
     @Override
     public int[] getHex() {
-        return new int[] {0x000000};
+        return new int[]{0x000000};
     }
 
     @Override

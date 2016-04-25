@@ -18,7 +18,7 @@ public class EntityManager {
         entities = new ArrayList<>();
 
         System.out.println("   Creating player ...");
-        player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY);
+        player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY, 1);
     }
 
     public void tickEntities() {

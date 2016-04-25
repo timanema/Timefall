@@ -1,9 +1,10 @@
-package me.betasterren.bsgame.level.tiles;
+package me.betasterren.bsgame.level.tiles.tiles;
 
 import me.betasterren.bsgame.graphics.Bitmap;
+import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.tiles.base.Block;
 
-public class VoidTile implements Block {
+public class SnowTile implements Block {
     @Override
     public Bitmap[] getAnimations() {
         return new Bitmap[0];
@@ -21,12 +22,12 @@ public class VoidTile implements Block {
 
     @Override
     public Bitmap getSprite(int id) {
-        return null;
+        return Sprite.terrain[6][0];
     }
 
     @Override
     public int[] getBlockID() {
-        return new int[]{123456789};
+        return new int[] {25};
     }
 
     @Override
@@ -41,12 +42,12 @@ public class VoidTile implements Block {
 
     @Override
     public String getName() {
-        return "Void";
+        return "Snow";
     }
 
     @Override
     public int[] getHex() {
-        return new int[]{0x000000};
+        return new int[] {0xE0D7D3};
     }
 
     @Override
