@@ -47,7 +47,7 @@ public class Display {
         jFrame.setTitle(gameName);
 
         try {
-            URL url = getClass().getResource("/w3_icon.gif");
+            URL url = getClass().getResource("/icon.png");
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Image image = toolkit.createImage(url);
 
