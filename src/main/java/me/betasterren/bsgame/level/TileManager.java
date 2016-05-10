@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.level;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.entities.EntityManager;
 import me.betasterren.bsgame.level.conflict.ConflictManager;
 import me.betasterren.bsgame.level.conflict.RenderConflictException;
@@ -44,7 +44,7 @@ public class TileManager {
         System.out.println("  Loading worlds ...");
 
         // Creating worlds
-        for (String worldName : BSGame.getFileManager().worldFiles) {
+        for (String worldName : Timefall.getFileManager().worldFiles) {
             int xOff = 0;
             int yOff = 0;
 
@@ -61,7 +61,7 @@ public class TileManager {
         worldX = currentWorld.getWidth();
         worldY = currentWorld.getHeight();
 
-        conflictManager = new ConflictManager(this, loadedWorlds, BSGame.getFileManager().getFloraConflicts());
+        conflictManager = new ConflictManager(this, loadedWorlds, Timefall.getFileManager().getFloraConflicts());
 
         initWorld();
     }

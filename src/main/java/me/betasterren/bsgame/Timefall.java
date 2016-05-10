@@ -9,7 +9,7 @@ import me.betasterren.bsgame.threads.ThreadManager;
 
 import java.awt.*;
 
-public class BSGame {
+public class Timefall {
     private static volatile Display mainDisplay;
     private static Settings settings;
     private static FileManager fileManager;
@@ -18,7 +18,7 @@ public class BSGame {
     private static TileManager tileManager;
 
     public static void main(String args[]) {
-        System.out.println("Loading BS RPG components ...");
+        System.out.println("Loading Timefall components ...");
         keyHandler = new KeyHandler();
         settings = new Settings();
         fileManager = new FileManager(settings);
@@ -30,14 +30,14 @@ public class BSGame {
         tileManager = new TileManager();
 
         System.out.println(" Initializing display ...");
-        EventQueue.invokeLater(() -> mainDisplay = new Display("BS RPG", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
+        EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
 
         System.out.println(" Initializing game threads ...");
 
         // Start main thread
-        BSGame.initThreads();
+        Timefall.initThreads();
 
-        System.out.println("All BS RPG components loaded!");
+        System.out.println("All Timefall components loaded!");
         System.out.println("\nTick updates:");
     }
 

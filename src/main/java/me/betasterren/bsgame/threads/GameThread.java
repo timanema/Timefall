@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.threads;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.display.Display;
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class GameThread implements Runnable {
             }
 
             try {
-                Thread.sleep(1000 / BSGame.getSettings().getMaxFPS());
+                Thread.sleep(1000 / Timefall.getSettings().getMaxFPS());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -67,22 +67,22 @@ public class GameThread implements Runnable {
      * Method for logic calculations of the game
      */
     private void tick(double deltaTime) {
-        BSGame.getSettings().getCurrentState().tick(deltaTime);
+        Timefall.getSettings().getCurrentState().tick(deltaTime);
 
         //TODO: Remove debug code
-        Display display = BSGame.getMainDisplay();
+        Display display = Timefall.getMainDisplay();
 
         if (display != null) {
             JFrame jFrame = display.jFrame;
 
             if (jFrame != null) {
-                jFrame.setTitle("xOff: " + BSGame.getTileManager().getCurrentWorld().getX() + " yOff: " + BSGame.getTileManager().getCurrentWorld().getY()
-                + " pX: " + BSGame.getTileManager().getEntityManager().getPlayer().xOff
-                        + " pY: " + BSGame.getTileManager().getEntityManager().getPlayer().yOff
-                + " rPX: " + BSGame.getTileManager().getEntityManager().getPlayer().getxOff() +
-                " rPY: " + BSGame.getTileManager().getEntityManager().getPlayer().getyOff()
-                + " cW: " + BSGame.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
-                + " gender: " + BSGame.getTileManager().getEntityManager().getPlayer().getGender());
+                jFrame.setTitle("xOff: " + Timefall.getTileManager().getCurrentWorld().getX() + " yOff: " + Timefall.getTileManager().getCurrentWorld().getY()
+                + " pX: " + Timefall.getTileManager().getEntityManager().getPlayer().xOff
+                        + " pY: " + Timefall.getTileManager().getEntityManager().getPlayer().yOff
+                + " rPX: " + Timefall.getTileManager().getEntityManager().getPlayer().getxOff() +
+                " rPY: " + Timefall.getTileManager().getEntityManager().getPlayer().getyOff()
+                + " cW: " + Timefall.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
+                + " gender: " + Timefall.getTileManager().getEntityManager().getPlayer().getGender());
             }
         }
     }
@@ -91,6 +91,6 @@ public class GameThread implements Runnable {
      * Method to render all the logic calculations and show them to the user
      */
     private void render() {
-        EventQueue.invokeLater(() -> BSGame.getMainDisplay().getGameCanvas().render());
+        EventQueue.invokeLater(() -> Timefall.getMainDisplay().getGameCanvas().render());
     }
 }

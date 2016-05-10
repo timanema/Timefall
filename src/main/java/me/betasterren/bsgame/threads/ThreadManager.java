@@ -1,7 +1,5 @@
 package me.betasterren.bsgame.threads;
 
-import me.betasterren.bsgame.threads.GameThread;
-
 public class ThreadManager {
     private static Thread gameThread;
 

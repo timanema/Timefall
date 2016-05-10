@@ -6,7 +6,7 @@ import me.betasterren.bsgame.graphics.Screen;
 
 public class TitleScreen extends GameState {
     private enum SelectedOption {
-        PLAY("Play BSRPG!"), SETTINGS("Change settings"), QUIT("Quit to desktop"), SETTINGS_AUDO("Change audio settings"), SETTINGS_GRAPHICS("Change graphics settings");
+        PLAY("Play Timefall!"), SETTINGS("Change settings"), QUIT("Quit to desktop"), SETTINGS_AUDO("Change audio settings"), SETTINGS_GRAPHICS("Change graphics settings");
 
         private final String fullText;
 

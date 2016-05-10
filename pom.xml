@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.betasterren.bsrpg</groupId>
-    <artifactId>BSRPG</artifactId>
+    <artifactId>Timefall</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <url>https://hetbaarnschlyceum.me/Tim/bsrpg</url>
+    <url>https://suppatim.me/Tim/bsrpg</url>
     <description>
         Top down 2D RPG spel in Java voor betasterren en NLT
     </description>
@@ -51,7 +51,7 @@
 
     <!-- Packaging -->
     <packaging>jar</packaging>
-    <name>me.betasterren.bsgame.BSGame</name>
+    <name>me.betasterren.bsgame.Timefall</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -93,7 +93,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.betasterren.bsgame.BSGame</mainClass>
+                            <mainClass>me.betasterren.bsgame.Timefall</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.level.world;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.entities.Entity;
 import me.betasterren.bsgame.level.TileManager;
 import me.betasterren.bsgame.level.tiles.base.Block;
@@ -41,7 +41,7 @@ public class World {
         try {
             System.out.println("    Trying to load map file ...");
 
-            BufferedImage[] bufferedImages = new BufferedImage[]{ImageIO.read(BSGame.class.getResourceAsStream(mapPath)), ImageIO.read(BSGame.class.getResourceAsStream(mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")))};
+            BufferedImage[] bufferedImages = new BufferedImage[]{ImageIO.read(Timefall.class.getResourceAsStream(mapPath)), ImageIO.read(Timefall.class.getResourceAsStream(mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")))};
             BufferedImage mapImage = bufferedImages[0];
             BufferedImage floraImage = bufferedImages[1];
 
@@ -57,10 +57,10 @@ public class World {
             if (floraImage.getWidth() != width || floraImage.getHeight() != height) {
                 System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
 
-                BSGame.getFileManager().worldFiles.remove(worldName);
+                Timefall.getFileManager().worldFiles.remove(worldName);
 
                 // Check if there are any other worlds left
-                if (BSGame.getFileManager().worldFiles.isEmpty()) {
+                if (Timefall.getFileManager().worldFiles.isEmpty()) {
                     System.out.println("NO WORLDS LEFT, ABORTING!");
                     System.exit(-1);
                 }

@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.graphics;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,7 +15,7 @@ public class Sprite {
     public static Bitmap[][] getSubImage(String spriteName, int width , int height, int startX, int startY) {
         // Trying to read the image and get its width and height
         try {
-            BufferedImage sprite = ImageIO.read(BSGame.class.getResourceAsStream(spriteName));
+            BufferedImage sprite = ImageIO.read(Timefall.class.getResourceAsStream(spriteName));
             int xTiles = (sprite.getWidth() - startX) / width;
             int yTiles = (sprite.getHeight() - startY) / height;
 

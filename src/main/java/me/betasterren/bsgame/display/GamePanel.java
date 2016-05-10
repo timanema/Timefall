@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.display;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.graphics.Screen;
 
 import java.awt.*;
@@ -28,8 +28,8 @@ public class GamePanel extends Canvas {
         setMaximumSize(dimension);
         setPreferredSize(dimension);
 
-        addKeyListener(BSGame.getKeyHandler());
-        addFocusListener(BSGame.getKeyHandler());
+        addKeyListener(Timefall.getKeyHandler());
+        addFocusListener(Timefall.getKeyHandler());
     }
 
     public void render() {
@@ -44,7 +44,7 @@ public class GamePanel extends Canvas {
         Graphics graphics = bufferStrategy.getDrawGraphics();
 
         // Render sprites
-        BSGame.getSettings().getCurrentState().render(screen);
+        Timefall.getSettings().getCurrentState().render(screen);
 
         // Draw the image on the screen
         graphics.drawImage(screen.bufferedImage, 0, 0, width, height, null);

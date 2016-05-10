@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.files;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.Settings;
 import me.betasterren.bsgame.level.Vector;
 
@@ -34,7 +34,7 @@ public class FileManager {
 
         try {
             // Create files
-            mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
+            mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
 
             mainDirectory = new File(mainDir);
             settingFile = new File(mainDir + "/settings.txt/");
@@ -100,8 +100,8 @@ public class FileManager {
                 if (file.equals("music")) bufferedWriter.write("music: " + value + "\n");
                 if (file.equals("gender")) bufferedWriter.write("gender: 1" + "\n");
                 if (file.equals("screen_size")) bufferedWriter.write("screen_size: " + value + "\n");
-                if (file.equals("xOff")) bufferedWriter.write("xOff: " + (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getX()) + "\n");
-                if (file.equals("yOff")) bufferedWriter.write("yOff: " + (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getY()));*/
+                if (file.equals("xOff")) bufferedWriter.write("xOff: " + (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX()) + "\n");
+                if (file.equals("yOff")) bufferedWriter.write("yOff: " + (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getY()));*/
 
                 System.out.println(setting.equals("gender") ? settings.getGender() : "");
                 System.out.println("val " + value);
@@ -111,12 +111,12 @@ public class FileManager {
                 bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
                 bufferedWriter.write("gender: " + (setting.equals("gender") ? value : settings.getGender()) + "\n");
                 bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
-                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getX())) + "\n");
-                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getY())));
+                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX())) + "\n");
+                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getY())));
             } else if (file.equals("lvl")) {
-                bufferedWriter.write("world: " + (setting.equals("world") ? value : (BSGame.getTileManager() == null ? "world" : BSGame.getTileManager().getCurrentWorld().getWorldName())) + "\n");
-                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
-                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getEntityManager().getPlayer().getyOff())));
+                bufferedWriter.write("world: " + (setting.equals("world") ? value : (Timefall.getTileManager() == null ? "world" : Timefall.getTileManager().getCurrentWorld().getWorldName())) + "\n");
+                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
+                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getyOff())));
             }
 
             bufferedWriter.close();
@@ -147,7 +147,7 @@ public class FileManager {
             // Trying to get the path of the location of the JAR and creating the main directory and other files
             int readBytes;
             byte[] byteBuffer = new byte[4096];
-            mainDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/BS RPG";
+            mainDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
             outputStream = new FileOutputStream(mainDirectory + "/" + file + ".txt");
 
             // Write bytes to the files in the main directory from the files provided by the JAR

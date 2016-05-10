@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.entities;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.graphics.Sprite;
@@ -161,8 +161,8 @@ public class Player implements Mob {
     @Override
     public void tick() {
         // Calculate max and current values and use these for center calculations
-        int xMax = 16 * BSGame.getTileManager().worldX;
-        int yMax = 16 * BSGame.getTileManager().worldY - 8;
+        int xMax = 16 * Timefall.getTileManager().worldX;
+        int yMax = 16 * Timefall.getTileManager().worldY - 8;
         int xPlayer = getxOff();
         int yPlayer = getyOff();
 
@@ -192,7 +192,7 @@ public class Player implements Mob {
 
     @Override
     public void move(Direction direction) {
-        TileManager tileManager = BSGame.getTileManager();
+        TileManager tileManager = Timefall.getTileManager();
 
         // Move the player in a direction
         this.playerDirection = direction;
@@ -215,7 +215,7 @@ public class Player implements Mob {
                 teleport((tileManager.getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
 
                 // Change gender
-                BSGame.getSettings().setGender(this.gender == 0 ? 1 : 0);
+                Timefall.getSettings().setGender(this.gender == 0 ? 1 : 0);
                 this.gender = this.gender == 0 ? 1 : 0;
                 break;
             }
@@ -224,7 +224,7 @@ public class Player implements Mob {
 
     @Override
     public boolean canMove(Direction direction) {
-        TileManager tileManager = BSGame.getTileManager();
+        TileManager tileManager = Timefall.getTileManager();
 
         // Simulating move
         float xDif = direction.getxChange() * .125F;
@@ -310,7 +310,7 @@ public class Player implements Mob {
         }
 
         // Update world
-        BSGame.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
+        Timefall.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
     }
 
     public int getxOff() {

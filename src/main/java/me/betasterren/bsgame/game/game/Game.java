@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.game.game;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.GameState;
 import me.betasterren.bsgame.Settings;
 import me.betasterren.bsgame.events.Keys;
@@ -17,7 +17,7 @@ public class Game extends GameState {
 
     @Override
     public void tick(double deltaTime) {
-        TileManager tileManager = BSGame.getTileManager();
+        TileManager tileManager = Timefall.getTileManager();
 
         // Tick all entities
         tileManager.getEntityManager().tickEntities();
@@ -107,7 +107,7 @@ public class Game extends GameState {
 
     @Override
     public void render(Screen screen) {
-        TileManager tileManager = BSGame.getTileManager();
+        TileManager tileManager = Timefall.getTileManager();
 
         // Render the current world and render the entities in that world
         tileManager.getLevel().render(screen);

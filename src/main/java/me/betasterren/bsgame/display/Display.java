@@ -1,6 +1,6 @@
 package me.betasterren.bsgame.display;
 
-import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Timefall;
 import me.betasterren.bsgame.game.game.MoveListener;
 import me.betasterren.bsgame.graphics.Screen;
 
@@ -79,10 +79,10 @@ public class Display {
         jFrame.setVisible(true);
 
         // Add listeners
-        jFrame.addKeyListener(BSGame.getKeyHandler());
-        jFrame.addFocusListener(BSGame.getKeyHandler());
+        jFrame.addKeyListener(Timefall.getKeyHandler());
+        jFrame.addFocusListener(Timefall.getKeyHandler());
         jFrame.setFocusable(true);
-        BSGame.getKeyHandler().addListener(new MoveListener());
+        Timefall.getKeyHandler().addListener(new MoveListener());
     }
 
     /**
@@ -93,12 +93,12 @@ public class Display {
         System.out.println("\nSaving game data ...");
 
         // Save all necessary data
-        BSGame.getFileManager().changeSetting("settings", "xOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getX()));
-        BSGame.getFileManager().changeSetting("settings", "yOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getY()));
-        BSGame.getFileManager().changeSetting("settings", "gender", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getGender()));
-        BSGame.getFileManager().changeSetting("lvl", "world", BSGame.getTileManager().getCurrentWorld().getWorldName());
-        BSGame.getFileManager().changeSetting("lvl", "xOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getxOff()));
-        BSGame.getFileManager().changeSetting("lvl", "yOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getyOff()));
+        Timefall.getFileManager().changeSetting("settings", "xOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getX()));
+        Timefall.getFileManager().changeSetting("settings", "yOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getY()));
+        Timefall.getFileManager().changeSetting("settings", "gender", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getGender()));
+        Timefall.getFileManager().changeSetting("lvl", "world", Timefall.getTileManager().getCurrentWorld().getWorldName());
+        Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
+        Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));
 
         System.out.println("Saved game data!");
 
