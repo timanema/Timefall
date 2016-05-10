@@ -57,10 +57,7 @@ public class Vector {
         yPos -= vector.yPos;
     }
 
-    public Vector clone(Vector vector) {
-        xPos = vector.xPos;
-        yPos = vector.yPos;
-
+    public Vector clone() {
         return new Vector(xPos, yPos);
     }
 

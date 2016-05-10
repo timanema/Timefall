@@ -16,4 +16,6 @@ public interface MapObject {
     public abstract int[] getHex();
 
     public void tick();
+
+    public boolean isSolid();
 }

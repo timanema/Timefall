@@ -5,8 +5,10 @@ import me.betasterren.bsgame.graphics.Bitmap;
 import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.graphics.Sprite;
 import me.betasterren.bsgame.level.Direction;
+import me.betasterren.bsgame.level.TileManager;
 import me.betasterren.bsgame.level.Vector;
 import me.betasterren.bsgame.level.tiles.base.Block;
+import me.betasterren.bsgame.level.tiles.base.MapObject;
 import me.betasterren.bsgame.level.world.World;
 
 public class Player implements Mob {
@@ -23,7 +25,6 @@ public class Player implements Mob {
     public boolean currentlyMoving;
     private int animationCount = 0;
     private int animationStatus = 0;
-
     private int gender;
 
     public Player(String name, Vector location, Direction direction, int worldX, int worldY, int gender) {
@@ -191,6 +192,8 @@ public class Player implements Mob {
 
     @Override
     public void move(Direction direction) {
+        TileManager tileManager = BSGame.getTileManager();
+
         // Move the player in a direction
         this.playerDirection = direction;
         this.currentlyMoving = true;
@@ -199,16 +202,49 @@ public class Player implements Mob {
         float xDif = direction.getxChange() * .125F;
         float yDif = direction.getyChange() * .125F;
 
-        getLocation().add((getxOff() + xDif < 0 || getxOff() + xDif > (BSGame.getTileManager().getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
-                (getyOff() + yDif < 0 || getyOff() + yDif > (BSGame.getTileManager().getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
+        getLocation().add((getxOff() + xDif < 0 || getxOff() + xDif > (tileManager.getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
+                (getyOff() + yDif < 0 || getyOff() + yDif > (tileManager.getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
 
         //TODO: Remove this debug code
-        for (Block block : BSGame.getTileManager().getLevel().getSurroundingTiles(getLocation(), 2)) {
-            if (block == null) continue;
+        for (Block block : tileManager.getLevel().getSurroundingTiles(getLocation(), 2)) {
+            if (block == null)
+                continue;
 
-            if (block.getBlockID()[0] == 1)
-                teleport((BSGame.getTileManager().getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
+            if (block.getBlockID()[0] == 1) {
+                // TP player
+                teleport((tileManager.getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
+
+                // Change gender
+                BSGame.getSettings().setGender(this.gender == 0 ? 1 : 0);
+                this.gender = this.gender == 0 ? 1 : 0;
+                break;
+            }
         }
+    }
+
+    @Override
+    public boolean canMove(Direction direction) {
+        TileManager tileManager = BSGame.getTileManager();
+
+        // Simulating move
+        float xDif = direction.getxChange() * .125F;
+        float yDif = direction.getyChange() * .125F;
+        Vector locationCopy = getLocation().clone();
+
+        locationCopy.add((getxOff() + xDif < 0 || getxOff() + xDif > (tileManager.getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
+                (getyOff() + yDif < 0 || getyOff() + yDif > (tileManager.getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
+
+        int xOff = getxOff(locationCopy);
+        int yOff = getyOff(locationCopy);
+
+
+        for (int i = 0; i < 2; i++)
+            for (MapObject mapObject : tileManager.getMapObjectsByLoc(xOff / 16 + (direction.name().contains("EAST") ? 1 : 0) + i, yOff / 16 + (direction.name().contains("NORTH") ? 0 : 1) + i))
+                if (mapObject != null)
+                    if (mapObject.isSolid())
+                        return false;
+
+        return true;
     }
 
     @Override
@@ -234,13 +270,8 @@ public class Player implements Mob {
         x = x - (((int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
         y = y - (((int) Math.round((y * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
 
-        int remainderX = (int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int remainderY = (int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int xPos = (int) x;
-        int yPos = (int) y;
-
-        int xOff = xPos * 16 + (int) (remainderX / 62.5);
-        int yOff = yPos * 16 + (int) (remainderY / 62.5);
+        int xOff = getxOff(new Vector(x, 0));
+        int yOff = getyOff(new Vector(0, y));
 
         // Update player location
         this.xOff = xOff;
@@ -283,18 +314,28 @@ public class Player implements Mob {
     }
 
     public int getxOff() {
-        // Get the current offset based on the location of the player
-        int remainderX = (int) Math.round((playerLocation.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int xPos = (int) playerLocation.getX();
+        return getxOff(getLocation());
+    }
+
+    public int getyOff() {
+        return getyOff(getLocation());
+    }
+
+    private int getxOff(Vector vector) {
+        int remainderX = (int) Math.round((vector.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int xPos = (int) vector.getX();
 
         return xPos * 16 + (int) (remainderX / 62.5);
     }
 
-    public int getyOff() {
-        // Get the current offset based on the location of the player
-        int remainderY = (int) Math.round((playerLocation.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int yPos = (int) playerLocation.getY();
+    private int getyOff(Vector vector) {
+        int remainderY = (int) Math.round((vector.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int yPos = (int) vector.getY();
 
         return yPos * 16 + (int) (remainderY / 62.5);
+    }
+
+    public int getGender() {
+        return gender;
     }
 }

@@ -177,6 +177,16 @@ public class TileManager {
         return getMapObjectByID(blockID);
     }
 
+    public MapObject[] getMapObjectsByLoc(int x, int y) {
+        MapObject[] mapObjects = new MapObject[2];
+
+        // Get all objects
+        for (int i = 0; i < mapObjects.length; i++)
+            mapObjects[i] = getMapObjectByLoc(x, y, i);
+
+        return mapObjects;
+    }
+
     public MapObject getMapObjectByLoc(Vector vector, int layer) {
         return getMapObjectByLoc((int) vector.getX(), (int) vector.getY(), layer);
     }

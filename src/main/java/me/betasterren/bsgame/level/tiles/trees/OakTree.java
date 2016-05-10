@@ -46,4 +46,9 @@ public class OakTree implements Tree {
     public void tick() {
 
     }
+
+    @Override
+    public boolean isSolid() {
+        return true;
+    }
 }

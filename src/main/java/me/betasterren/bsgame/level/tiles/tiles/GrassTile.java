@@ -42,7 +42,7 @@ public class GrassTile implements Block {
 
     @Override
     public boolean isSolid() {
-        return true;
+        return false;
     }
 
     @Override

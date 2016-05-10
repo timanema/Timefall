@@ -21,8 +21,6 @@ public interface Entity {
 
     public void render(Screen screen);
 
-    public void move(Direction direction);
-
     public void spawn(int x, int y);
 
     public void despawn();

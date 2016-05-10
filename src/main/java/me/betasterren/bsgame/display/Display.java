@@ -95,6 +95,7 @@ public class Display {
         // Save all necessary data
         BSGame.getFileManager().changeSetting("settings", "xOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getX()));
         BSGame.getFileManager().changeSetting("settings", "yOff", String.valueOf(BSGame.getTileManager().getCurrentWorld().getY()));
+        BSGame.getFileManager().changeSetting("settings", "gender", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getGender()));
         BSGame.getFileManager().changeSetting("lvl", "world", BSGame.getTileManager().getCurrentWorld().getWorldName());
         BSGame.getFileManager().changeSetting("lvl", "xOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getxOff()));
         BSGame.getFileManager().changeSetting("lvl", "yOff", String.valueOf(BSGame.getTileManager().getEntityManager().getPlayer().getyOff()));

@@ -95,6 +95,17 @@ public class FileManager {
 
             // Check which file we're writing to
             if (file.equals("settings")) {
+                /*if (file.equals("max_fps")) bufferedWriter.write("max_fps: " + value + "\n");
+                if (file.equals("sound")) bufferedWriter.write("sound: " + value + "\n");
+                if (file.equals("music")) bufferedWriter.write("music: " + value + "\n");
+                if (file.equals("gender")) bufferedWriter.write("gender: 1" + "\n");
+                if (file.equals("screen_size")) bufferedWriter.write("screen_size: " + value + "\n");
+                if (file.equals("xOff")) bufferedWriter.write("xOff: " + (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getX()) + "\n");
+                if (file.equals("yOff")) bufferedWriter.write("yOff: " + (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getY()));*/
+
+                System.out.println(setting.equals("gender") ? settings.getGender() : "");
+                System.out.println("val " + value);
+
                 bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
                 bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
                 bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
@@ -143,6 +154,7 @@ public class FileManager {
             while ((readBytes = inputStream.read(byteBuffer)) > 0) {
                 outputStream.write(byteBuffer, 0, readBytes);
             }
+
         } catch (Exception exception) {
             exception.printStackTrace();
             throw exception;
@@ -208,6 +220,7 @@ public class FileManager {
                     settings.setMusicSetting(intValue);
                     break;
                 case "gender":
+                    System.out.println(intValue);
                     settings.setGender(intValue);
                     break;
                 case "screen_size":

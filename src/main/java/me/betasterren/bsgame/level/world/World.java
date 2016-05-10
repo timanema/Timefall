@@ -88,7 +88,8 @@ public class World {
                                     baseLayer[x][y] = blockID[i];
                                     break;
                                 }
-                            // Check if the MapObject is a tree
+
+                        // Check if the MapObject is a tree
                         } else if (tileManager.checkTree(mapObject)) {
                             Tree block = (Tree) mapObject;
                             int[] blockID = block.getBlockID();
@@ -108,6 +109,7 @@ public class World {
                         } else {
                             // MapObject has an unknown hex value
                             baseLayer[x][y] = 123456789;
+                            System.out.println("Unknown hex code: " + hexCode);
                         }
                     }
             }

@@ -81,7 +81,8 @@ public class GameThread implements Runnable {
                         + " pY: " + BSGame.getTileManager().getEntityManager().getPlayer().yOff
                 + " rPX: " + BSGame.getTileManager().getEntityManager().getPlayer().getxOff() +
                 " rPY: " + BSGame.getTileManager().getEntityManager().getPlayer().getyOff()
-                + " cW: " + BSGame.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName());
+                + " cW: " + BSGame.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
+                + " gender: " + BSGame.getTileManager().getEntityManager().getPlayer().getGender());
             }
         }
     }

@@ -12,7 +12,8 @@ public class StoneTile implements Block {
 
     @Override
     public boolean isSolid() {
-        return false;
+        //TODO: Remove debug code
+        return true;
     }
 
     @Override
