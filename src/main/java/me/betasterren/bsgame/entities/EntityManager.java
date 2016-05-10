@@ -1,6 +1,7 @@
 package me.betasterren.bsgame.entities;
 
 import me.betasterren.bsgame.BSGame;
+import me.betasterren.bsgame.Settings;
 import me.betasterren.bsgame.graphics.Screen;
 import me.betasterren.bsgame.level.Direction;
 import me.betasterren.bsgame.level.Vector;
@@ -12,13 +13,19 @@ public class EntityManager {
     private List<Entity> entities;
     private Player player;
 
+
+
     public EntityManager(int worldX, int worldY) {
         System.out.println("  Loading entities ...");
 
         entities = new ArrayList<>();
 
+        Settings settings = new Settings();
+        int gender = settings.getGender();
+        System.out.println("gender = " + gender);
+
         System.out.println("   Creating player ...");
-        player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY, 1);
+        player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY, gender);
     }
 
     public void tickEntities() {

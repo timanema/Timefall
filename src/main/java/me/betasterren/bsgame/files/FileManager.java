@@ -98,6 +98,7 @@ public class FileManager {
                 bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
                 bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
                 bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
+                bufferedWriter.write("gender: " + (setting.equals("gender") ? value : settings.getGender()) + "\n");
                 bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getX())) + "\n");
                 bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (BSGame.getTileManager() == null ? 0 : BSGame.getTileManager().getCurrentWorld().getY())));
@@ -205,6 +206,9 @@ public class FileManager {
                     break;
                 case "music":
                     settings.setMusicSetting(intValue);
+                    break;
+                case "gender":
+                    settings.setGender(intValue);
                     break;
                 case "screen_size":
                     settings.setScreenSize(settings.getScreenSize(intValue));

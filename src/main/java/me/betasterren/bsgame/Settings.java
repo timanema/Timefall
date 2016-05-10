@@ -6,6 +6,7 @@ public class Settings {
     private int maxFPS;
     private int soundSetting;
     private int musicSetting;
+    private int gender;
     private ScreenSize screenSize;
 
     private Stack<GameState> states;
@@ -70,6 +71,10 @@ public class Settings {
         this.musicSetting = musicSetting;
     }
 
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
     public void setScreenSize(ScreenSize screenSize) {
         this.screenSize = screenSize;
     }
@@ -98,6 +103,10 @@ public class Settings {
 
     public int getMusicSetting() {
         return musicSetting;
+    }
+
+    public int getGender() {
+        return gender;
     }
 
     public ScreenSize getScreenSize(int ID) {
