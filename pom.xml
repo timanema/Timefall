@@ -51,7 +51,7 @@
 
     <!-- Packaging -->
     <packaging>jar</packaging>
-    <name>me.betasterren.bsgame.Timefall</name>
+    <name>me.timefall.timefall.Timefall</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -93,7 +93,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.betasterren.bsgame.Timefall</mainClass>
+                            <mainClass>me.timefall.timefall.Timefall</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
