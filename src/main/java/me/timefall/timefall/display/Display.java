@@ -10,7 +10,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
 
-public class Display {
+public class Display
+{
     private String gameName;
 
     private int width;
@@ -19,8 +20,10 @@ public class Display {
 
     public JFrame jFrame;
     private GamePanel gameCanvas;
+    private Screen screen;
 
-    public Display(String gameName, int width, int height) {
+    public Display(String gameName, int width, int height)
+    {
         this.width = width;
         this.height = height;
         this.gameName = gameName;
@@ -33,7 +36,8 @@ public class Display {
     /**
      * Initializes all components of main display and combines them
      */
-    private void initDisplay() {
+    private void initDisplay()
+    {
         // Init frame
         jFrame = new JFrame();
 
@@ -46,30 +50,34 @@ public class Display {
         jFrame.setLocationRelativeTo(null);
         jFrame.setTitle(gameName);
 
-        try {
+        try
+        {
             URL url = getClass().getResource("/icon.png");
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Image image = toolkit.createImage(url);
 
             jFrame.setIconImage(image);
-        } catch (NullPointerException npe) {
+        } catch (NullPointerException npe)
+        {
             // Image wasn't found
             System.out.println("Couldn't load icon, using default one");
         }
 
         // Set close operation
         jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        jFrame.addWindowListener(new WindowAdapter() {
+        jFrame.addWindowListener(new WindowAdapter()
+        {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(WindowEvent e)
+            {
                 // This way we can save all the data before actually exiting
                 onClose();
             }
         });
 
-
         // Create components
-        gameCanvas = new GamePanel(width, height, dimension, new Screen(640, 360));
+        screen = new Screen(640, 360);
+        gameCanvas = new GamePanel(width, height, dimension, screen, screen.bufferedImage);
 
         // Add components
         jFrame.add(gameCanvas);
@@ -77,6 +85,8 @@ public class Display {
         // Show frame
         jFrame.pack();
         jFrame.setVisible(true);
+
+        gameCanvas.initBuffer();
 
         // Add listeners
         jFrame.addKeyListener(Timefall.getKeyHandler());
@@ -89,7 +99,8 @@ public class Display {
      * Gets called when the main display is being closed
      * This way everything can be saved before exiting
      */
-    private void onClose() {
+    private void onClose()
+    {
         System.out.println("\nSaving game data ...");
 
         // Save all necessary data
@@ -106,7 +117,13 @@ public class Display {
         System.exit(0);
     }
 
-    public GamePanel getGameCanvas() {
+    public GamePanel getGameCanvas()
+    {
         return gameCanvas;
+    }
+
+    public Screen getScreen()
+    {
+        return screen;
     }
 }

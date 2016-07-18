@@ -2,7 +2,8 @@ package me.timefall.timefall;
 
 import java.util.Stack;
 
-public class Settings {
+public class Settings
+{
     private int maxFPS;
     private int soundSetting;
     private int musicSetting;
@@ -11,7 +12,8 @@ public class Settings {
 
     private Stack<GameState> states;
 
-    public enum ScreenSize {
+    public enum ScreenSize
+    {
         SMALL(640, 360, false, 0),
         MEDIUM(960, 540, false, 1),
         NORMAL(1280, 720, false, 2),
@@ -25,31 +27,37 @@ public class Settings {
 
         private final int ID;
 
-        private ScreenSize(int width, int height, boolean fullscreen, int ID) {
+        private ScreenSize(int width, int height, boolean fullscreen, int ID)
+        {
             this.width = width;
             this.height = height;
             this.fullscreen = fullscreen;
             this.ID = ID;
         }
 
-        public int getWidth() {
+        public int getWidth()
+        {
             return width;
         }
 
-        public int getHeight() {
+        public int getHeight()
+        {
             return height;
         }
 
-        public int getID() {
+        public int getID()
+        {
             return ID;
         }
 
-        public boolean isFullscreen() {
+        public boolean isFullscreen()
+        {
             return fullscreen;
         }
     }
 
-    public Settings() {
+    public Settings()
+    {
         // Setting default values just in case
         maxFPS = 60;
         soundSetting = 100;
@@ -60,29 +68,36 @@ public class Settings {
         states = new Stack<>();
     }
 
-    public void setMaxFPS(int maxFPS) {
+    public void setMaxFPS(int maxFPS)
+    {
         this.maxFPS = maxFPS;
     }
 
-    public void setSoundSetting(int soundSetting) {
+    public void setSoundSetting(int soundSetting)
+    {
         this.soundSetting = soundSetting;
     }
 
-    public void setMusicSetting(int musicSetting) {
+    public void setMusicSetting(int musicSetting)
+    {
         this.musicSetting = musicSetting;
     }
 
-    public void setGender(int gender) {
+    public void setGender(int gender)
+    {
         this.gender = gender;
     }
 
-    public void setScreenSize(ScreenSize screenSize) {
+    public void setScreenSize(ScreenSize screenSize)
+    {
         this.screenSize = screenSize;
     }
 
-    public void setState(GameState gameState) {
+    public void setState(GameState gameState)
+    {
         if (!states.isEmpty())
-            if (states.peek() == gameState) {
+            if (states.peek() == gameState)
+            {
                 states.pop();
                 return;
             }
@@ -90,37 +105,45 @@ public class Settings {
         states.push(gameState);
     }
 
-    public void removeState(GameState gameState) {
+    public void removeState(GameState gameState)
+    {
         this.setState(gameState);
     }
 
-    public int getMaxFPS() {
+    public int getMaxFPS()
+    {
         return maxFPS;
     }
 
-    public int getSoundSetting() {
+    public int getSoundSetting()
+    {
         return soundSetting;
     }
 
-    public int getMusicSetting() {
+    public int getMusicSetting()
+    {
         return musicSetting;
     }
 
-    public int getGender() {
+    public int getGender()
+    {
         return gender;
     }
 
-    public ScreenSize getScreenSize(int ID) {
+    public ScreenSize getScreenSize(int ID)
+    {
         for (ScreenSize screenSize : ScreenSize.values())
             if (screenSize.getID() == ID) return screenSize;
         return null;
     }
 
-    public ScreenSize getScreenSize() {
+    public ScreenSize getScreenSize()
+    {
         return screenSize;
     }
 
-    public GameState getCurrentState() {
+    public GameState getCurrentState()
+    {
         return states.peek();
     }
 }

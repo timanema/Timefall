@@ -1,22 +1,27 @@
 package me.timefall.timefall.game.game;
 
-import me.timefall.timefall.Timefall;
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
+import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.Keys;
 import me.timefall.timefall.graphics.Screen;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 
-public class Game extends GameState {
-    public Game(Settings settings) {
+public class Game extends GameState
+{
+    public Game(Settings settings)
+    {
         super(settings);
 
         System.out.println("\nInitializing main game");
     }
 
     @Override
-    public void tick(double deltaTime) {
+    public void tick(double deltaTime)
+    {
+        //System.out.println("EDT (tick game): " + EventQueue.isDispatchThread());
+
         TileManager tileManager = Timefall.getTileManager();
 
         // Tick all entities
@@ -51,45 +56,62 @@ public class Game extends GameState {
 
         // Check all directions if it is a move command and if the player can move
         if (moveCommand /*&&
-                tileManager.getEntityManager().getPlayer().canMove(direction)*/) {
-            if (northDirection) {
-                if (withinYNorth && yCen) {
+                tileManager.getEntityManager().getPlayer().canMove(direction)*/)
+        {
+            if (northDirection)
+            {
+                if (withinYNorth && yCen)
+                {
                     tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() - 2);
-                } else {
-                    if (tileManager.getEntityManager().getPlayer().getyOff() - 2 >= 0) {
+                } else
+                {
+                    if (tileManager.getEntityManager().getPlayer().getyOff() - 2 >= 0)
+                    {
                         tileManager.getEntityManager().getPlayer().yCen = false;
                         tileManager.getEntityManager().getPlayer().yOff -= 2;
                     }
                 }
             }
 
-            if (eastDirection) {
-                if (withinXEast && xCen) {
+            if (eastDirection)
+            {
+                if (withinXEast && xCen)
+                {
                     tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() + 2, tileManager.getCurrentWorld().getY());
-                } else {
-                    if (tileManager.getEntityManager().getPlayer().getxOff() + 2 <= (tileManager.worldX - 1) * 16) {
+                } else
+                {
+                    if (tileManager.getEntityManager().getPlayer().getxOff() + 2 <= (tileManager.worldX - 1) * 16)
+                    {
                         tileManager.getEntityManager().getPlayer().xCen = false;
                         tileManager.getEntityManager().getPlayer().xOff += 2;
                     }
                 }
             }
 
-            if (southDirection) {
-                if (withinYSouth && yCen) {
+            if (southDirection)
+            {
+                if (withinYSouth && yCen)
+                {
                     tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() + 2);
-                } else {
-                    if (tileManager.getEntityManager().getPlayer().getyOff() + 2 <= (tileManager.worldY - 1) * 16 - 12) {
+                } else
+                {
+                    if (tileManager.getEntityManager().getPlayer().getyOff() + 2 <= (tileManager.worldY - 1) * 16 - 12)
+                    {
                         tileManager.getEntityManager().getPlayer().yCen = false;
                         tileManager.getEntityManager().getPlayer().yOff += 2;
                     }
                 }
             }
 
-            if (westDirection) {
-                if (withinXWest && xCen) {
+            if (westDirection)
+            {
+                if (withinXWest && xCen)
+                {
                     tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() - 2, tileManager.getCurrentWorld().getY());
-                } else {
-                    if (tileManager.getEntityManager().getPlayer().getxOff() - 2 >= 0) {
+                } else
+                {
+                    if (tileManager.getEntityManager().getPlayer().getxOff() - 2 >= 0)
+                    {
                         tileManager.getEntityManager().getPlayer().xCen = false;
                         tileManager.getEntityManager().getPlayer().xOff -= 2;
                     }
@@ -97,7 +119,8 @@ public class Game extends GameState {
             }
 
             tileManager.getEntityManager().getPlayer().move(direction);
-        } else {
+        } else
+        {
             // Player didn't issue move command this tick so the player entity stops moving
             tileManager.getEntityManager().getPlayer().currentlyMoving = false;
         }
@@ -106,11 +129,17 @@ public class Game extends GameState {
     }
 
     @Override
-    public void render(Screen screen) {
+    public void render(Screen screen)
+    {
         TileManager tileManager = Timefall.getTileManager();
 
         // Render the current world and render the entities in that world
+        tileManager.getLevel().updateBitmap();
         tileManager.getLevel().render(screen);
         tileManager.getEntityManager().renderEntities(screen);
+
+        // Render colours on screen
+        screen.render();
+        screen.update();
     }
 }

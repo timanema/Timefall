@@ -5,24 +5,32 @@ import me.timefall.timefall.graphics.Screen;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
-public class GamePanel extends Canvas {
+public class GamePanel extends Canvas
+{
+    private BufferStrategy bufferStrategy;
+    private Graphics graphics;
+    private BufferedImage bufferedImage;
+
     private final int width;
     private final int height;
     private Dimension dimension;
-
     private Screen screen;
 
-    public GamePanel(int width, int height, Dimension dimension, Screen screen) {
+    public GamePanel(int width, int height, Dimension dimension, Screen screen, BufferedImage bufferedImage)
+    {
         this.width = width;
         this.height = height;
         this.dimension = dimension;
         this.screen = screen;
+        this.bufferedImage = bufferedImage;
 
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents()
+    {
         // Initialize components and set some settings
         setMinimumSize(dimension);
         setMaximumSize(dimension);
@@ -32,25 +40,28 @@ public class GamePanel extends Canvas {
         addFocusListener(Timefall.getKeyHandler());
     }
 
-    public void render() {
-        // Change BufferStrategy so we use double buffering
-        BufferStrategy bufferStrategy = getBufferStrategy();
+    public void initBuffer()
+    {
+        createBufferStrategy(2);
 
-        if (bufferStrategy == null) {
-            createBufferStrategy(2);
-            return;
-        }
+        bufferStrategy = getBufferStrategy();
+        graphics = bufferStrategy.getDrawGraphics();
+    }
 
-        Graphics graphics = bufferStrategy.getDrawGraphics();
-
-        // Render sprites
+    public void render()
+    {
+        long n = System.nanoTime();
         Timefall.getSettings().getCurrentState().render(screen);
 
         // Draw the image on the screen
-        graphics.drawImage(screen.bufferedImage, 0, 0, width, height, null);
+        //graphics = bufferStrategy.getDrawGraphics();
+        graphics.drawImage(bufferedImage, 0, 0, width, height, null);
 
         // Dispose of the current graphics and issue the new buffer
-        graphics.dispose();
+        //graphics.dispose();
         bufferStrategy.show();
+        long a = System.nanoTime();
+
+        System.out.println("1 frame laden: " + (a - n) / 1000000.0);
     }
 }

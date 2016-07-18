@@ -2,10 +2,12 @@ package me.timefall.timefall;
 
 import me.timefall.timefall.graphics.Screen;
 
-public abstract class GameState {
+public abstract class GameState
+{
     Settings settings;
 
-    public GameState(Settings settings) {
+    public GameState(Settings settings)
+    {
         this.settings = settings;
     }
 

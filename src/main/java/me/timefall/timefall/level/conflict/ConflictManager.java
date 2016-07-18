@@ -7,21 +7,24 @@ import me.timefall.timefall.level.world.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ConflictManager {
+public class ConflictManager
+{
     private TileManager tileManager;
 
     private HashMap<String, Bitmap[][]> floraLayer;
     private HashMap<String, int[][]> impFloraLayer;
     private HashMap<String, HashMap<String, String>> floraConflicts;
 
-    public ConflictManager(TileManager tileManager, ArrayList<World> worlds, HashMap<String, HashMap<String, String>> floraConflicts) {
+    public ConflictManager(TileManager tileManager, ArrayList<World> worlds, HashMap<String, HashMap<String, String>> floraConflicts)
+    {
         this.tileManager = tileManager;
         floraLayer = new HashMap<>();
         impFloraLayer = new HashMap<>();
         this.floraConflicts = new HashMap<>();
 
         // Loop through all worlds and create a new matrix of bitmaps and integers
-        for (World world : worlds) {
+        for (World world : worlds)
+        {
             floraLayer.put(world.getWorldName(), new Bitmap[world.getWidth()][world.getHeight()]);
             impFloraLayer.put(world.getWorldName(), new int[world.getWidth()][world.getHeight()]);
         }
@@ -31,7 +34,8 @@ public class ConflictManager {
             this.floraConflicts.put(worldName, floraConflicts.get(worldName));
     }
 
-    public void solveConflicts(World world) throws RenderConflictException {
+    public void solveConflicts(World world) throws RenderConflictException
+    {
         System.out.println("  Looking for conflicts to solve ...");
 
         // Get the conflicts for this world
@@ -42,12 +46,14 @@ public class ConflictManager {
             return;
 
         // Loop through all the conflicts
-        for (String locationString : conflicts.keySet()) {
+        for (String locationString : conflicts.keySet())
+        {
             String[] parsedLocation = locationString.split(",");
             String[] parsedIDs = conflicts.get(locationString).split(">");
 
             // Check if the parsed strings can be conflict strings
-            if (parsedLocation.length != 2 || parsedIDs.length != 2) {
+            if (parsedLocation.length != 2 || parsedIDs.length != 2)
+            {
                 System.out.println("Error occurred while trying to process '" + locationString + ": " + conflicts.get(locationString) + "'! Format: x,y: ID1>ID2");
                 throw new RenderConflictException(-1, -1, "flora");
             }
@@ -56,14 +62,16 @@ public class ConflictManager {
             boolean coordsParsed = false;
 
             // Trying to parse the string
-            try {
+            try
+            {
                 x = Integer.parseInt(parsedLocation[0]);
                 y = Integer.parseInt(parsedLocation[1]);
                 coordsParsed = true;
 
                 firstLayer = Integer.parseInt(parsedIDs[0]);
                 secondLayer = Integer.parseInt(parsedIDs[1]);
-            } catch (NumberFormatException exception) {
+            } catch (NumberFormatException exception)
+            {
                 System.out.println("Error occurred while trying to process '" + (!coordsParsed ? locationString + "' to coordinates!" : conflicts.get(locationString) + "' to IDs!") + " Format: x,y: ID1>ID2");
                 throw new RenderConflictException(x, y, "flora");
             }
@@ -86,8 +94,8 @@ public class ConflictManager {
                 throw new RenderConflictException("Couldn't fetch bitmap for (" + x + "," + y + ") at base or flora layer!");
 
             // Render the conflict bitmaps onto a new one
-            groundBitmap.render(firstLayerBitmap, 0, 0);
-            groundBitmap.render(secondLayerBitmap, 0, 0);
+            groundBitmap.draw(firstLayerBitmap, 0, 0);
+            groundBitmap.draw(secondLayerBitmap, 0, 0);
 
             // Save the rendered conflict
             floraLayer.get(world.getWorldName())[x][y] = groundBitmap;
@@ -97,11 +105,13 @@ public class ConflictManager {
         }
     }
 
-    public Bitmap[][] getFloraLayer(World world) {
+    public Bitmap[][] getFloraLayer(World world)
+    {
         return floraLayer.get(world.getWorldName());
     }
 
-    public int getFloraID(World world, int x, int y) {
+    public int getFloraID(World world, int x, int y)
+    {
         return impFloraLayer.get(world.getWorldName())[x][y];
     }
 }

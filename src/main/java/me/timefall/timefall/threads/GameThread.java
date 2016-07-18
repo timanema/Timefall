@@ -2,17 +2,22 @@ package me.timefall.timefall.threads;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
+import me.timefall.timefall.graphics.Screen;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GameThread implements Runnable {
+public class GameThread implements Runnable
+{
+    private boolean capped = false;
     private boolean started = false;
     private static boolean isRunning;
 
     @Override
-    public void run() {
-        if (!started) {
+    public void run()
+    {
+        if (!started)
+        {
             isRunning = true;
             started = true;
         }
@@ -26,32 +31,40 @@ public class GameThread implements Runnable {
         long currentFrameTimer = System.currentTimeMillis();
         double deltaTime = 0;
 
-        while (isRunning) {
+        while (isRunning)
+        {
             long currentTime = System.nanoTime();
 
             deltaTime += (currentTime - beginTime) / tickTime;
 
             beginTime = currentTime;
 
-            while (deltaTime >= 1) {
+            while (deltaTime >= 1)
+            {
                 ticksPassed++;
 
                 tick(deltaTime);
                 deltaTime -= 1;
             }
 
-            try {
-                Thread.sleep(1000 / Timefall.getSettings().getMaxFPS());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (capped)
+            {
+                try
+                {
+                    Thread.sleep(1000 / 60);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
 
             framesDrawn++;
             render();
 
-            if (System.currentTimeMillis() - currentFrameTimer >= 1000) {
+            if (System.currentTimeMillis() - currentFrameTimer >= 1000)
+            {
                 currentFrameTimer += 1000;
-                System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn + " (" + Thread.currentThread().getName() + ")");
+                System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn + " (" + Thread.currentThread().getName() + " - " + EventQueue.isDispatchThread() + ")");
 
                 framesDrawn = 0;
                 ticksPassed = 0;
@@ -59,30 +72,34 @@ public class GameThread implements Runnable {
         }
     }
 
-    public static synchronized void stop() {
+    public static synchronized void stop()
+    {
         isRunning = false;
     }
 
     /**
      * Method for logic calculations of the game
      */
-    private void tick(double deltaTime) {
+    private void tick(double deltaTime)
+    {
         Timefall.getSettings().getCurrentState().tick(deltaTime);
 
         //TODO: Remove debug code
         Display display = Timefall.getMainDisplay();
 
-        if (display != null) {
+        if (display != null)
+        {
             JFrame jFrame = display.jFrame;
 
-            if (jFrame != null) {
-                jFrame.setTitle("xOff: " + Timefall.getTileManager().getCurrentWorld().getX() + " yOff: " + Timefall.getTileManager().getCurrentWorld().getY()
-                + " pX: " + Timefall.getTileManager().getEntityManager().getPlayer().xOff
+            if (jFrame != null)
+            {
+                /*jFrame.setTitle("xOff: " + Timefall.getTileManager().getCurrentWorld().getX() + " yOff: " + Timefall.getTileManager().getCurrentWorld().getY()
+                        + " pX: " + Timefall.getTileManager().getEntityManager().getPlayer().xOff
                         + " pY: " + Timefall.getTileManager().getEntityManager().getPlayer().yOff
-                + " rPX: " + Timefall.getTileManager().getEntityManager().getPlayer().getxOff() +
-                " rPY: " + Timefall.getTileManager().getEntityManager().getPlayer().getyOff()
-                + " cW: " + Timefall.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
-                + " gender: " + Timefall.getTileManager().getEntityManager().getPlayer().getGender());
+                        + " rPX: " + Timefall.getTileManager().getEntityManager().getPlayer().getxOff() +
+                        " rPY: " + Timefall.getTileManager().getEntityManager().getPlayer().getyOff()
+                        + " cW: " + Timefall.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
+                        + " gender: " + Timefall.getTileManager().getEntityManager().getPlayer().getGender());*/
             }
         }
     }
@@ -90,7 +107,20 @@ public class GameThread implements Runnable {
     /**
      * Method to render all the logic calculations and show them to the user
      */
-    private void render() {
-        EventQueue.invokeLater(() -> Timefall.getMainDisplay().getGameCanvas().render());
+    private void render()
+    {
+        Display display = Timefall.getMainDisplay();
+        Screen screen;
+
+        if (display == null)
+            return;
+
+        screen = display.getScreen();
+
+        if (screen == null)
+            return;
+
+        // Render sprites
+        Timefall.getMainDisplay().getGameCanvas().render();
     }
 }

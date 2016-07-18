@@ -1,6 +1,7 @@
 package me.timefall.timefall.events;
 
-public enum Keys {
+public enum Keys
+{
     VK_W(87),
     VK_S(83),
     VK_A(65),
@@ -13,20 +14,24 @@ public enum Keys {
     private int keyID;
     private boolean isPressed;
 
-    private Keys(int keyID) {
+    private Keys(int keyID)
+    {
         this.keyID = keyID;
         this.isPressed = false;
     }
 
-    public void togglePressed(boolean isPressed){
+    public void togglePressed(boolean isPressed)
+    {
         this.isPressed = isPressed;
     }
 
-    public int getKeyID() {
+    public int getKeyID()
+    {
         return keyID;
     }
 
-    public boolean isPressed() {
+    public boolean isPressed()
+    {
         return isPressed;
     }
 }

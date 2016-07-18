@@ -1,19 +1,23 @@
 package me.timefall.timefall.threads;
 
-public class ThreadManager {
+public class ThreadManager
+{
     private static Thread gameThread;
 
-    public ThreadManager() {
+    public ThreadManager()
+    {
         initThreads();
     }
 
-    private void initThreads() {
+    private void initThreads()
+    {
         gameThread = new Thread(new GameThread());
 
         gameThread.start();
     }
 
-    public static Thread getGameThread() {
+    public static Thread getGameThread()
+    {
         return gameThread;
     }
 }

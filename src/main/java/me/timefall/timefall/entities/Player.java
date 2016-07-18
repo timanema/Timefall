@@ -11,7 +11,8 @@ import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.world.World;
 
-public class Player implements Mob {
+public class Player implements Mob
+{
     public int xOff = 0;
     public int yOff = 0;
 
@@ -27,7 +28,8 @@ public class Player implements Mob {
     private int animationStatus = 0;
     private int gender;
 
-    public Player(String name, Vector location, Direction direction, int worldX, int worldY, int gender) {
+    public Player(String name, Vector location, Direction direction, int worldX, int worldY, int gender)
+    {
         this.playerName = name;
         this.playerLocation = location;
         this.playerDirection = direction;
@@ -49,24 +51,29 @@ public class Player implements Mob {
     }
 
     @Override
-    public Vector getLocation() {
+    public Vector getLocation()
+    {
         return playerLocation;
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return playerName;
     }
 
     @Override
-    public Direction getDirection() {
+    public Direction getDirection()
+    {
         return playerDirection;
     }
 
     @Override
-    public Bitmap getCurrentBitmap() {
+    public Bitmap getCurrentBitmap()
+    {
         // Returns appropriate bitmap
-        switch (getDirection()) {
+        switch (getDirection())
+        {
             case NORTH:
                 return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
             case NORTHEAST:
@@ -74,7 +81,7 @@ public class Player implements Mob {
             case NORTHWEST:
                 return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
             case EAST:
-                return (animationStatus == 0 ? Sprite.characters[2][gender].flip() : (animationStatus == 1 ? Sprite.characters[5][gender].flip() : Sprite.characters[6][gender].flip()));
+                return (animationStatus == 0 ? Sprite.characters[2][gender].flipVert() : (animationStatus == 1 ? Sprite.characters[5][gender].flipVert() : Sprite.characters[6][gender].flipVert()));
             case SOUTH:
                 return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
             case SOUTHEAST:
@@ -89,42 +96,50 @@ public class Player implements Mob {
     }
 
     @Override
-    public boolean isMoving() {
+    public boolean isMoving()
+    {
         return currentlyMoving;
     }
 
-    private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer) {
+    private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer)
+    {
         // Check if the player is in one of the four corners
-        if (xPlayer < 320 && yPlayer < 180) {
+        if (xPlayer < 320 && yPlayer < 180)
+        {
             // Player is in upper left corner
             xOff = xPlayer;
             yOff = yPlayer;
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - 320 && yPlayer > yMax - 180) {
+        } else if (xPlayer > xMax - 320 && yPlayer > yMax - 180)
+        {
             // Player is in lower right corner
             xOff = 320 + (xPlayer - (xMax - 320));
             yOff = 180 + (yPlayer - (yMax - 180));
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer < 320 && yPlayer > yMax - 180) {
+        } else if (xPlayer < 320 && yPlayer > yMax - 180)
+        {
             // Player is in lower left corner
             xOff = xPlayer;
             yOff = 180 + (yPlayer - (yMax - 180));
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - 320 && yPlayer < 180) {
+        } else if (xPlayer > xMax - 320 && yPlayer < 180)
+        {
             // Player is in upper right corner
             xOff = 320 + (xPlayer - (xMax - 320));
             yOff = yPlayer;
 
             xCen = false;
             yCen = false;
-        } else {
-            if (yPlayer < 180 || yPlayer > yMax - 180) {
+        } else
+        {
+            if (yPlayer < 180 || yPlayer > yMax - 180)
+            {
                 // Player is X centered, not Y centered
                 xOff = 320;
                 yOff = (yPlayer < 180 ? yPlayer : 180 + (yPlayer - (yMax - 180)));
@@ -132,14 +147,16 @@ public class Player implements Mob {
                 xCen = true;
                 yCen = false;
 
-            } else if (xPlayer < 320 || xPlayer > xMax - 320) {
+            } else if (xPlayer < 320 || xPlayer > xMax - 320)
+            {
                 // Player is Y centered, not X centered
                 xOff = (xPlayer < 320 ? xPlayer : 320 + (xPlayer - (xMax - 320)));
                 yOff = 180;
 
                 xCen = false;
                 yCen = true;
-            } else {
+            } else
+            {
                 // Both X and Y are centered
                 xOff = 320;
                 yOff = 180;
@@ -150,16 +167,19 @@ public class Player implements Mob {
         }
     }
 
-    public boolean isXCentred() {
+    public boolean isXCentred()
+    {
         return xCen;
     }
 
-    public boolean isYCentred() {
+    public boolean isYCentred()
+    {
         return yCen;
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         // Calculate max and current values and use these for center calculations
         int xMax = 16 * Timefall.getTileManager().worldX;
         int yMax = 16 * Timefall.getTileManager().worldY - 8;
@@ -169,29 +189,35 @@ public class Player implements Mob {
         this.checkCentred(xMax, yMax, xPlayer, yPlayer);
 
         // Update the current animationCount to set the correct animationStatus
-        if (isMoving()) {
+        if (isMoving())
+        {
+            System.out.println("Dir: " + this.getDirection());
             animationCount++;
 
-            if (animationCount == 3) {
+            if (animationCount == 3)
+            {
                 animationCount = 0;
                 animationStatus++;
 
                 if (animationStatus == 3)
                     animationStatus = 0;
             }
-        } else {
+        } else
+        {
             animationCount = 0;
             animationStatus = 0;
         }
     }
 
     @Override
-    public void render(Screen screen) {
-        screen.render(getCurrentBitmap(), xOff, yOff);
+    public void render(Screen screen)
+    {
+        screen.draw(getCurrentBitmap(), xOff, yOff);
     }
 
     @Override
-    public void move(Direction direction) {
+    public void move(Direction direction)
+    {
         TileManager tileManager = Timefall.getTileManager();
 
         // Move the player in a direction
@@ -206,11 +232,13 @@ public class Player implements Mob {
                 (getyOff() + yDif < 0 || getyOff() + yDif > (tileManager.getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
 
         //TODO: Remove this debug code
-        for (Block block : tileManager.getLevel().getSurroundingTiles(getLocation(), 2)) {
+        for (Block block : tileManager.getLevel().getSurroundingTiles(getLocation(), 2))
+        {
             if (block == null)
                 continue;
 
-            if (block.getBlockID()[0] == 1) {
+            if (block.getBlockID()[0] == 1)
+            {
                 // TP player
                 teleport((tileManager.getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
 
@@ -223,7 +251,8 @@ public class Player implements Mob {
     }
 
     @Override
-    public boolean canMove(Direction direction) {
+    public boolean canMove(Direction direction)
+    {
         TileManager tileManager = Timefall.getTileManager();
 
         // Simulating move
@@ -248,20 +277,24 @@ public class Player implements Mob {
     }
 
     @Override
-    public void spawn(int x, int y) {
+    public void spawn(int x, int y)
+    {
     }
 
     @Override
-    public void despawn() {
+    public void despawn()
+    {
     }
 
     @Override
-    public boolean isAlive() {
+    public boolean isAlive()
+    {
         return true;
     }
 
     @Override
-    public void teleport(World world, float x, float y) {
+    public void teleport(World world, float x, float y)
+    {
         // Get current location
         float currentX = playerLocation.getX();
         float currentY = playerLocation.getY();
@@ -291,19 +324,23 @@ public class Player implements Mob {
         boolean xCen = xOff >= 320 && xOff <= xMax - 320;
         boolean yCen = yOff >= 180 && yOff <= yMax - 180;
 
-        if (xCen && yCen) {
+        if (xCen && yCen)
+        {
             // Both X and Y are centered
             xOffWorld = xOff - 320;
             yOffWorld = yOff - 180;
-        } else if (xCen && !yCen) {
+        } else if (xCen && !yCen)
+        {
             // Only X is centered
             xOffWorld = xOff - 320;
             yOffWorld = (yOff < 180 ? 0 : yMax - 360);
-        } else if (!xCen && yCen) {
+        } else if (!xCen && yCen)
+        {
             // Only Y is centered
             xOffWorld = (xOff < 320 ? 0 : xMax - 640);
             yOffWorld = yOff - 180;
-        } else {
+        } else
+        {
             // Both X and Y are not centered
             xOffWorld = (xOff < 320 ? 0 : xMax - 640);
             yOffWorld = (yOff < 180 ? 0 : yMax - 360);
@@ -313,29 +350,34 @@ public class Player implements Mob {
         Timefall.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
     }
 
-    public int getxOff() {
+    public int getxOff()
+    {
         return getxOff(getLocation());
     }
 
-    public int getyOff() {
+    public int getyOff()
+    {
         return getyOff(getLocation());
     }
 
-    private int getxOff(Vector vector) {
+    private int getxOff(Vector vector)
+    {
         int remainderX = (int) Math.round((vector.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
         int xPos = (int) vector.getX();
 
         return xPos * 16 + (int) (remainderX / 62.5);
     }
 
-    private int getyOff(Vector vector) {
+    private int getyOff(Vector vector)
+    {
         int remainderY = (int) Math.round((vector.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
         int yPos = (int) vector.getY();
 
         return yPos * 16 + (int) (remainderY / 62.5);
     }
 
-    public int getGender() {
+    public int getGender()
+    {
         return gender;
     }
 }

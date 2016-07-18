@@ -4,18 +4,19 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.entities.EntityManager;
 import me.timefall.timefall.level.conflict.ConflictManager;
 import me.timefall.timefall.level.conflict.RenderConflictException;
+import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;
+import me.timefall.timefall.level.tiles.base.Tree;
 import me.timefall.timefall.level.tiles.tiles.*;
 import me.timefall.timefall.level.tiles.trees.OakTree;
 import me.timefall.timefall.level.tiles.trees.SpruceTree;
 import me.timefall.timefall.level.world.World;
-import me.timefall.timefall.level.tiles.base.Block;
-import me.timefall.timefall.level.tiles.base.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileManager {
+public class TileManager
+{
     private ConflictManager conflictManager;
     private EntityManager entityManager;
 
@@ -29,7 +30,8 @@ public class TileManager {
     public List<Block> blocks;
     public List<Tree> trees;
 
-    public TileManager() {
+    public TileManager()
+    {
         System.out.println(" Loading game tiles ... ");
 
         blocks = new ArrayList<>();
@@ -40,15 +42,18 @@ public class TileManager {
         initMap();
     }
 
-    private void initMap() {
+    private void initMap()
+    {
         System.out.println("  Loading worlds ...");
 
         // Creating worlds
-        for (String worldName : Timefall.getFileManager().worldFiles) {
+        for (String worldName : Timefall.getFileManager().worldFiles)
+        {
             int xOff = 0;
             int yOff = 0;
 
-            if (Vector.globalWorldName.equals(worldName)) {
+            if (Vector.globalWorldName.equals(worldName))
+            {
                 xOff = (int) Vector.worldxPos;
                 yOff = (int) Vector.worldyPos;
             }
@@ -61,12 +66,14 @@ public class TileManager {
         worldX = currentWorld.getWidth();
         worldY = currentWorld.getHeight();
 
+        System.out.printf("Width: %d, Height: %d%n", worldX, worldY);
         conflictManager = new ConflictManager(this, loadedWorlds, Timefall.getFileManager().getFloraConflicts());
 
         initWorld();
     }
 
-    private void initTiles() {
+    private void initTiles()
+    {
         System.out.println("  Loading tiles ...");
 
         blocks.add(new GrassTile());
@@ -80,11 +87,14 @@ public class TileManager {
         trees.add(new OakTree());
     }
 
-    private void initWorld() {
+    private void initWorld()
+    {
         for (World world : loadedWorlds)
-            try {
+            try
+            {
                 conflictManager.solveConflicts(world);
-            } catch (RenderConflictException exception) {
+            } catch (RenderConflictException exception)
+            {
                 exception.printStackTrace();
 
                 System.exit(-1);
@@ -96,27 +106,33 @@ public class TileManager {
         entityManager = new EntityManager(worldX, worldY);
     }
 
-    public Level getLevel() {
+    public Level getLevel()
+    {
         return level;
     }
 
-    public ConflictManager getConflictManager() {
+    public ConflictManager getConflictManager()
+    {
         return conflictManager;
     }
 
-    public EntityManager getEntityManager() {
+    public EntityManager getEntityManager()
+    {
         return entityManager;
     }
 
-    public int[][] getBaseLayer() {
+    public int[][] getBaseLayer()
+    {
         return currentWorld.getBaseLayer();
     }
 
-    public int[][] getFloraLayer() {
+    public int[][] getFloraLayer()
+    {
         return currentWorld.getFloraLayer();
     }
 
-    public MapObject getMapObjectByID(int ID) {
+    public MapObject getMapObjectByID(int ID)
+    {
         // Check block array for given ID
         if (!blocks.isEmpty())
             for (Block block : blocks)
@@ -133,7 +149,8 @@ public class TileManager {
         return null;
     }
 
-    public MapObject getMapObjectByHex(int hexCode) {
+    public MapObject getMapObjectByHex(int hexCode)
+    {
         // Check block array for given hexCode
         if (!blocks.isEmpty())
             for (Block block : blocks)
@@ -151,11 +168,14 @@ public class TileManager {
         return null;
     }
 
-    public MapObject getMapObjectByLoc(int x, int y, int layer) {
+    public MapObject getMapObjectByLoc(int x, int y, int layer)
+    {
         int blockID;
 
-        try {
-            switch (layer) {
+        try
+        {
+            switch (layer)
+            {
                 case 0:
                     // Base layer
                     blockID = getBaseLayer()[x][y];
@@ -170,14 +190,16 @@ public class TileManager {
                 default:
                     return null;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e)
+        {
             return null;
         }
 
         return getMapObjectByID(blockID);
     }
 
-    public MapObject[] getMapObjectsByLoc(int x, int y) {
+    public MapObject[] getMapObjectsByLoc(int x, int y)
+    {
         MapObject[] mapObjects = new MapObject[2];
 
         // Get all objects
@@ -187,34 +209,41 @@ public class TileManager {
         return mapObjects;
     }
 
-    public MapObject getMapObjectByLoc(Vector vector, int layer) {
+    public MapObject getMapObjectByLoc(Vector vector, int layer)
+    {
         return getMapObjectByLoc((int) vector.getX(), (int) vector.getY(), layer);
     }
 
-    public boolean checkBlock(MapObject mapObject) {
+    public boolean checkBlock(MapObject mapObject)
+    {
         return mapObject instanceof Block;
     }
 
-    public boolean checkTree(MapObject mapObject) {
+    public boolean checkTree(MapObject mapObject)
+    {
         return mapObject instanceof Tree;
     }
 
-    public boolean validID(int ID) {
+    public boolean validID(int ID)
+    {
         return getMapObjectByID(ID) != null;
     }
 
-    public World getCurrentWorld() {
+    public World getCurrentWorld()
+    {
         return currentWorld;
     }
 
-    public World getWorld(String worldName) {
+    public World getWorld(String worldName)
+    {
         for (World world : loadedWorlds)
             if (world.getWorldName().equals(worldName))
                 return world;
         return null;
     }
 
-    public void changeWorld(World world, int xOff, int yOff) {
+    public void changeWorld(World world, int xOff, int yOff)
+    {
         // Change currentWorld
         this.currentWorld = world;
         this.worldX = world.getWidth();
@@ -227,7 +256,8 @@ public class TileManager {
         level.updateWorld(currentWorld.getWidth(), currentWorld.getHeight());
     }
 
-    public void changeWorld(String worldName, int xOff, int yOff) {
+    public void changeWorld(String worldName, int xOff, int yOff)
+    {
         this.changeWorld(getWorld(worldName), xOff, yOff);
     }
 }

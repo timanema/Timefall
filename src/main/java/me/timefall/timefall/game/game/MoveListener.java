@@ -4,11 +4,14 @@ import me.timefall.timefall.events.KeyHandler;
 import me.timefall.timefall.events.Keys;
 import me.timefall.timefall.events.Listener;
 
-public class MoveListener implements Listener {
+public class MoveListener implements Listener
+{
     @Override
-    public void onKeyEvent(Keys key, int evenCode) {
+    public void onKeyEvent(Keys key, int evenCode)
+    {
         // Check if the key was pressed or released and take appropriate action
-        switch (evenCode) {
+        switch (evenCode)
+        {
             case KeyHandler.PRESSED:
                 key.togglePressed(true);
                 break;

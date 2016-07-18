@@ -1,7 +1,7 @@
 package me.timefall.timefall.files;
 
-import me.timefall.timefall.Timefall;
 import me.timefall.timefall.Settings;
+import me.timefall.timefall.Timefall;
 import me.timefall.timefall.level.Vector;
 
 import java.io.*;
@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class FileManager {
+public class FileManager
+{
     private String settingsPath = "";
     private String lvlPath = "";
     private String readLine = null;
@@ -26,13 +27,15 @@ public class FileManager {
 
     public ArrayList<String> worldFiles;
 
-    public FileManager(Settings settings) {
+    public FileManager(Settings settings)
+    {
         this.settings = settings;
         worldFiles = new ArrayList<>();
 
         System.out.println(" Loading files ...");
 
-        try {
+        try
+        {
             // Create files
             mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
 
@@ -41,7 +44,8 @@ public class FileManager {
             lvlFile = new File(mainDir + "/lvl.txt/");
 
             // Check if setting file exists, if not create it
-            if (!settingFile.exists()) {
+            if (!settingFile.exists())
+            {
                 System.out.println("  Creating file: " + mainDir + "/settings.txt ...");
 
                 settingFile.getParentFile().mkdirs();
@@ -55,7 +59,8 @@ public class FileManager {
             }
 
             // Check if level file exists, if not create it
-            if (!lvlFile.exists()) {
+            if (!lvlFile.exists())
+            {
                 System.out.println("  Creating file: " + mainDir + "/lvl.txt ...");
 
                 lvlFile.getParentFile().mkdirs();
@@ -74,7 +79,8 @@ public class FileManager {
 
             // Start reading world files
             readWorldFiles();
-        } catch (Exception exception) {
+        } catch (Exception exception)
+        {
             exception.printStackTrace();
             return;
         }
@@ -85,16 +91,19 @@ public class FileManager {
         readSettingsFile("lvl");
     }
 
-    public void changeSetting(String file, String setting, String value) {
+    public void changeSetting(String file, String setting, String value)
+    {
         BufferedWriter bufferedWriter = null;
 
         // Try to open a BufferedWriter using the file paths set in the constructor
-        try {
+        try
+        {
             FileWriter fileWriter = new FileWriter(new File((file.equals("settings") ? settingsPath : lvlPath)));
             bufferedWriter = new BufferedWriter(fileWriter);
 
             // Check which file we're writing to
-            if (file.equals("settings")) {
+            if (file.equals("settings"))
+            {
                 /*if (file.equals("max_fps")) bufferedWriter.write("max_fps: " + value + "\n");
                 if (file.equals("sound")) bufferedWriter.write("sound: " + value + "\n");
                 if (file.equals("music")) bufferedWriter.write("music: " + value + "\n");
@@ -113,32 +122,39 @@ public class FileManager {
                 bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX())) + "\n");
                 bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getY())));
-            } else if (file.equals("lvl")) {
+            } else if (file.equals("lvl"))
+            {
                 bufferedWriter.write("world: " + (setting.equals("world") ? value : (Timefall.getTileManager() == null ? "world" : Timefall.getTileManager().getCurrentWorld().getWorldName())) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
                 bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getyOff())));
             }
 
             bufferedWriter.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
+        } finally
+        {
+            try
+            {
                 if (bufferedWriter != null)
                     bufferedWriter.close();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    private String exportSettingsFile(String file) throws Exception {
+    private String exportSettingsFile(String file) throws Exception
+    {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         String mainDirectory;
 
         // Trying to open an InputStream using the paths set in the constructor and export them
-        try {
+        try
+        {
             inputStream = FileManager.class.getResourceAsStream((file.equals("settings") ? settingsPath : lvlPath));
 
             if (inputStream == null)
@@ -151,14 +167,17 @@ public class FileManager {
             outputStream = new FileOutputStream(mainDirectory + "/" + file + ".txt");
 
             // Write bytes to the files in the main directory from the files provided by the JAR
-            while ((readBytes = inputStream.read(byteBuffer)) > 0) {
+            while ((readBytes = inputStream.read(byteBuffer)) > 0)
+            {
                 outputStream.write(byteBuffer, 0, readBytes);
             }
 
-        } catch (Exception exception) {
+        } catch (Exception exception)
+        {
             exception.printStackTrace();
             throw exception;
-        } finally {
+        } finally
+        {
             if (inputStream != null)
                 inputStream.close();
 
@@ -169,26 +188,31 @@ public class FileManager {
         return mainDirectory + "/" + file + ".txt";
     }
 
-    private void readSettingsFile(String file) {
+    private void readSettingsFile(String file)
+    {
         System.out.println("  Reading from: " + mainDir + "/" + file + ".txt ...");
 
         // Trying to open a BufferedReader to read the files in the main directory outside the JAR
-        try {
+        try
+        {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(new File((file.equals("settings") ? settingsPath : lvlPath))));
 
             // Read each line an process it
             while ((readLine = bufferedReader.readLine()) != null)
                 processSettings(file, readLine);
 
-        } catch (FileNotFoundException exception) {
+        } catch (FileNotFoundException exception)
+        {
             System.out.println("Unable to open file '" + mainDir + (file.equals("settings") ? settingsPath : lvlPath) + "'");
-        } catch (IOException exception) {
+        } catch (IOException exception)
+        {
             System.out.println("Error reading file '" + mainDir + (file.equals("settings") ? settingsPath : lvlPath) + "'" + "\nError details");
             exception.printStackTrace();
         }
     }
 
-    private void processSettings(String file, String rawSetting) {
+    private void processSettings(String file, String rawSetting)
+    {
         String[] stringValues = rawSetting.split(":");
 
         // Check if the string can be a setting string
@@ -198,18 +222,23 @@ public class FileManager {
         int intValue = 0;
 
         // Parse the string to an int if the setting isn't the 'world' setting
-        if (!setting.equals("world")) {
-            try {
+        if (!setting.equals("world"))
+        {
+            try
+            {
                 intValue = Integer.parseInt(value);
-            } catch (NumberFormatException exception) {
+            } catch (NumberFormatException exception)
+            {
                 System.out.println("Failed to parse '" + value + "' into a integer!");
                 return;
             }
         }
 
         // Check which in file the settings is and take appropriate 'action'
-        if (file.equals("settings")) {
-            switch (setting) {
+        if (file.equals("settings"))
+        {
+            switch (setting)
+            {
                 case "max_fps":
                     settings.setMaxFPS(intValue);
                     break;
@@ -235,8 +264,10 @@ public class FileManager {
                 default:
                     break;
             }
-        } else if (file.equals("lvl")) {
-            switch (setting) {
+        } else if (file.equals("lvl"))
+        {
+            switch (setting)
+            {
                 case "world":
                     Vector.setGlobalWorldName(value);
                     break;
@@ -254,19 +285,23 @@ public class FileManager {
         System.out.println("   Set '" + setting + "' from '" + file + ".txt' to '" + value + "'");
     }
 
-    public HashMap<String, HashMap<String, String>> getFloraConflicts() {
+    public HashMap<String, HashMap<String, String>> getFloraConflicts()
+    {
         HashMap<String, HashMap<String, String>> floraConflicts = new HashMap<>();
         String rawLine;
 
         // Loop through all the found worlds
-        for (String worldName : worldFiles) {
+        for (String worldName : worldFiles)
+        {
             // Trying to open a BufferedReader to read the file
-            try {
+            try
+            {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/conflicts/" + worldName + "_flora.txt")));
                 HashMap<String, String> conflicts = new HashMap<>();
 
                 // Read the strings from the file and process it
-                while ((rawLine = bufferedReader.readLine()) != null) {
+                while ((rawLine = bufferedReader.readLine()) != null)
+                {
                     String[] values = rawLine.split(":");
 
                     if (values.length != 2) continue;
@@ -277,9 +312,11 @@ public class FileManager {
                     conflicts.put(coords, value);
                     floraConflicts.put(worldName, conflicts);
                 }
-            } catch (FileNotFoundException exception) {
+            } catch (FileNotFoundException exception)
+            {
                 System.out.println("Unable to open file '" + settingsPath + "'");
-            } catch (IOException exception) {
+            } catch (IOException exception)
+            {
                 System.out.println("Error reading file '" + settingsPath + "'" + "\nError details");
                 exception.printStackTrace();
             }
@@ -288,20 +325,23 @@ public class FileManager {
         return floraConflicts;
     }
 
-    private void readWorldFiles() throws IOException {
+    private void readWorldFiles() throws IOException
+    {
         System.out.println("  Looking for world files ...");
 
         // Get the CodeSource of the JAR
         CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
 
         // Check if the CodeSource isn't null
-        if (codeSource != null) {
+        if (codeSource != null)
+        {
             // Get the URL and open a ZipInputStream
             URL jar = codeSource.getLocation();
             ZipInputStream zip = new ZipInputStream(jar.openStream());
 
             // Loop through all the zip entries (files in jar)
-            while (true) {
+            while (true)
+            {
                 ZipEntry e = zip.getNextEntry();
 
                 if (e == null)
@@ -313,7 +353,8 @@ public class FileManager {
                 if (fileName.startsWith("worlds/")
                         && !fileName.equals("worlds/")
                         && fileName.contains(".png")
-                        && !fileName.contains("_flora.png")) {
+                        && !fileName.contains("_flora.png"))
+                {
                     String worldName = fileName.replaceAll("worlds/", "").replaceAll(".png", "");
 
                     System.out.println("   Found world: " + worldName);
@@ -329,13 +370,15 @@ public class FileManager {
                         System.out.println("   Failed to find entities/conflicts for world '" + worldName + "'!");
                 }
             }
-        } else {
+        } else
+        {
             System.out.println("Error while loading worlds!");
             System.exit(-1);
         }
 
         // Check if we have loaded worlds
-        if (worldFiles.isEmpty()) {
+        if (worldFiles.isEmpty())
+        {
             System.out.println("No worlds found!");
             System.exit(-1);
         }

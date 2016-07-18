@@ -9,7 +9,8 @@ import me.timefall.timefall.threads.ThreadManager;
 
 import java.awt.*;
 
-public class Timefall {
+public class Timefall
+{
     private static volatile Display mainDisplay;
     private static Settings settings;
     private static FileManager fileManager;
@@ -17,8 +18,10 @@ public class Timefall {
     private static ThreadManager threadManager;
     private static TileManager tileManager;
 
-    public static void main(String args[]) {
+    public static void main(String args[])
+    {
         System.out.println("Loading Timefall components ...");
+
         keyHandler = new KeyHandler();
         settings = new Settings();
         fileManager = new FileManager(settings);
@@ -41,31 +44,38 @@ public class Timefall {
         System.out.println("\nTick updates:");
     }
 
-    public static void initThreads() {
-       threadManager = new ThreadManager();
+    public static void initThreads()
+    {
+        threadManager = new ThreadManager();
     }
 
-    public static Display getMainDisplay() {
+    public static Display getMainDisplay()
+    {
         return mainDisplay;
     }
 
-    public static KeyHandler getKeyHandler() {
+    public static KeyHandler getKeyHandler()
+    {
         return keyHandler;
     }
 
-    public static Settings getSettings() {
+    public static Settings getSettings()
+    {
         return settings;
     }
 
-    public static FileManager getFileManager() {
+    public static FileManager getFileManager()
+    {
         return fileManager;
     }
 
-    public static ThreadManager getThreadManager() {
+    public static ThreadManager getThreadManager()
+    {
         return threadManager;
     }
 
-    public static TileManager getTileManager() {
+    public static TileManager getTileManager()
+    {
         return tileManager;
     }
 }

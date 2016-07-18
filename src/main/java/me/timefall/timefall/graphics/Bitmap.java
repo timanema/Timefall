@@ -1,23 +1,102 @@
 package me.timefall.timefall.graphics;
 
-public class Bitmap {
+public class Bitmap
+{
     public int width, height;
-    public int[] pixels;
+    public byte[] pixels;
+    public Colour[] colours;
 
-    public Bitmap(int width, int height) {
+    public Bitmap(int width, int height)
+    {
         this.width = width;
         this.height = height;
 
-        this.pixels = new int[width * height];
+        this.pixels = new byte[width * height * 4];
+        this.colours = new Colour[width * height];
     }
 
-    public void render(Bitmap bitmap, int x, int y) {
+    public void renderPixel(int x, int y, Colour colour)
+    {
+        if (colour == null)
+            return;
+
+        this.renderPixel(x, y, colour.alpha, colour.red, colour.green, colour.blue);
+    }
+
+    public void renderPixel(int x, int y, float alpha, float red, float green, float blue)
+    {
+        if ((x < 0 || y < 0 || x >= width || y >= width) || alpha == 0.0F)
+            return;
+
+        // Get index
+        int index = (x + y * width) * 4;
+
+        // Set colours
+        pixels[index] = (byte) ((alpha * 255F) + 0.5F);
+        pixels[index + 1] = (byte) ((blue * 255F) + 0.5F);
+        pixels[index + 2] = (byte) ((green * 255F) + 0.5F);
+        pixels[index + 3] = (byte) ((red * 255F) + 0.5F);
+    }
+
+    public void renderBytes(Bitmap bitmap, int xOff, int yOff)
+    {
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            {
+                int index = x + y * bitmap.width;
+
+                if (index < bitmap.colours.length)
+                    this.renderPixel(x + xOff, y + yOff, bitmap.colours[index]);
+            }
+    }
+
+    public void draw(Colour[] colours)
+    {
+        System.arraycopy(colours, 0, this.colours, 0, colours.length);
+    }
+
+    public void draw(Bitmap bitmap, int xLoc, int yLoc)
+    {
+        for (int x = 0; x < bitmap.width; x++)
+        {
+            for (int y = 0; y < bitmap.height; y++)
+            {
+                int xOff = x + xLoc;
+                int yOff = y + yLoc;
+                int index = xOff + yOff * width;
+
+                if (xOff < 0 || yOff < 0 || xOff >= width || yOff >= height || index < 0 || index >= colours.length)
+                    continue;
+
+                if (bitmap.colours[x + y * bitmap.width] != null && bitmap.colours[x + y * bitmap.width].alpha != 0.0)
+                    this.colours[index] = bitmap.colours[x + y * bitmap.width];
+            }
+        }
+    }
+
+    public void render()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                this.renderPixel(x, y, colours[x + y * width]);
+            }
+        }
+    }
+
+    /*public void render(Bitmap bitmap, int x, int y) {
         render(bitmap, x, y, false);
     }
 
     public void render(Bitmap bitmap, int x, int y, boolean mirrorY) {
         if (bitmap == null)
             return;
+
+        if (1 == 1) {
+            //renderBytes(bitmap, x, y);
+            return;
+        }
 
         int startX = x;
         int endX = x + bitmap.width;
@@ -43,13 +122,18 @@ public class Bitmap {
                 endPoint -= startPoint;
 
                 for (int xx = startPoint; xx < startPoint + absoluteWidth; xx++) {
-                    int colour = bitmap.pixels[xx];
+                    Colour colour = bitmap.colours[xx];
+
+                    if (colour == null)
+                        return;
 
                     // Set the colour code
-                    if (colour < 0) pixels[endPoint + xx] = colour;
+                    if (colour.alpha != 0)
+                        this.colours[endPoint + xx] = colour;
                 }
             }
         }
+
     }
 
     public void flipDraw(Bitmap bitmap, int xOffs, int yOffs) {
@@ -62,43 +146,51 @@ public class Bitmap {
                 int xPix = xOffs + bitmap.width - x - 1;
                 if (xPix < 0 || xPix >= width) continue;
 
-                int colour = bitmap.pixels[x + y * bitmap.width];
+                Colour colour = bitmap.colours[x + y * bitmap.width];
+
+                if (colour == null)
+                    return;
 
                 // Set the colour code
-                if (colour < 0) pixels[xPix + yPix * width] = colour;
+                if (colour.alpha > 1) this.colours[xPix + yPix * width] = colour;
             }
         }
     }
 
-    public Bitmap flip() {
+    */
+    public Bitmap flipVert()
+    {
         // Create a new bitmap
         Bitmap bitmap = new Bitmap(width, height);
 
-        // Loop through the bitmap in reverse
-        for (int y = 0; y < bitmap.height; y++) {
-            int yPix = y;
-            if (yPix < 0 || yPix >= bitmap.height) continue;
+        int xLoc = 0;
 
-            for (int x = 0; x < bitmap.width; x++) {
-                int xPix = bitmap.width - x - 1;
-                if (xPix < 0 || xPix >= bitmap.width) continue;
+        for (int y = 0; y < bitmap.height; y++)
+        {
+            for (int x = bitmap.width - 1; x >= 0; x--)
+            {
+                Colour colour = colours[x + y * bitmap.width];
 
-                int colour = pixels[x + y * bitmap.width];
+                if (colour != null)// && colour.alpha > 1)
+                {
+                    bitmap.colours[xLoc + y * bitmap.width] = colour;
+                }
 
-                // Set the colour code
-                if (colour < 0) bitmap.pixels[xPix + yPix * bitmap.width] = colour;
+                xLoc++;
             }
+            xLoc = 0;
         }
 
         return bitmap;
     }
 
-    public Bitmap clone() {
+    public Bitmap clone()
+    {
         // Create a new bitmap
         Bitmap clone = new Bitmap(width, height);
 
         // Render the current pixels onto the clone and return it
-        clone.render(this, 0, 0);
+        clone.draw(this, 0, 0);
         return clone;
     }
 }

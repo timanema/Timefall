@@ -4,55 +4,66 @@ import me.timefall.timefall.graphics.Bitmap;
 import me.timefall.timefall.graphics.Sprite;
 import me.timefall.timefall.level.tiles.base.Block;
 
-public class StoneTile implements Block {
+public class StoneTile implements Block
+{
     @Override
-    public Bitmap[] getAnimations() {
+    public Bitmap[] getAnimations()
+    {
         return new Bitmap[0];
     }
 
     @Override
-    public boolean isSolid() {
+    public boolean isSolid()
+    {
         //TODO: Remove debug code
         return true;
     }
 
     @Override
-    public boolean isAnimated() {
+    public boolean isAnimated()
+    {
         return false;
     }
 
     @Override
-    public Bitmap getSprite(int id) {
+    public Bitmap getSprite(int id)
+    {
         return Sprite.terrain[1][4];
     }
 
     @Override
-    public int[] getBlockID() {
-        return new int[] {16};
+    public int[] getBlockID()
+    {
+        return new int[]{16};
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight()
+    {
         return 1;
     }
 
     @Override
-    public int getWidth() {
+    public int getWidth()
+    {
         return 1;
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "Stone";
     }
 
     @Override
-    public int[] getHex() {
-        return new int[] {0x808080};
+    public int[] getHex()
+    {
+        return new int[]{0x808080};
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
 
     }
 }

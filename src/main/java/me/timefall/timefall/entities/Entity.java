@@ -6,7 +6,8 @@ import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.Vector;
 import me.timefall.timefall.level.world.World;
 
-public interface Entity {
+public interface Entity
+{
     public Vector getLocation();
 
     public String getName();
