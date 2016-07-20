@@ -20,6 +20,12 @@ public class StoneTile implements Block
     }
 
     @Override
+    public int getShadowType()
+    {
+        return 1;
+    }
+
+    @Override
     public boolean isAnimated()
     {
         return false;

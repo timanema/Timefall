@@ -146,4 +146,14 @@ public class Settings
     {
         return states.peek();
     }
+
+    public boolean isLightEnabled()
+    {
+        return true;
+    }
+
+    public boolean isDynamicLightEnabled()
+    {
+        return true;
+    }
 }

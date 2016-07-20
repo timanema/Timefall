@@ -18,6 +18,12 @@ public class VoidTile implements Block
     }
 
     @Override
+    public int getShadowType()
+    {
+        return 0;
+    }
+
+    @Override
     public boolean isAnimated()
     {
         return false;

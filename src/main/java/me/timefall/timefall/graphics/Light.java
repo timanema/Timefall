@@ -2,15 +2,14 @@ package me.timefall.timefall.graphics;
 
 public class Light
 {
-    private int[][] lightMap;
-    private int colour, radius, diameter;
+    private int[] lightMap;
+    private int radius, diameter;
 
     public Light(int colour, int radius)
     {
-        this.colour = colour;
         this.radius = radius;
         this.diameter = radius * 2;
-        this.lightMap = new int[diameter][diameter];
+        this.lightMap = new int[diameter * diameter];
 
         for (int x = 0; x < diameter; x++)
             for (int y = 0; y < diameter; y++)
@@ -23,14 +22,34 @@ public class Light
 
                 // Set light in lightmap
                 if (distanceFromCentre < radius)
-                    lightMap[x][y] = PixelUtils.getColourPower(colour, 1 - distanceFromCentre / radius);
+                    lightMap[x + y * diameter] = PixelUtils.getColourPower(colour, 1 - distanceFromCentre / radius);
                 else
-                    lightMap[x][y] = 0;
+                    lightMap[x + y * diameter] = 0;
             }
+    }
+
+    public int getColour(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= diameter || y >= diameter)
+        {
+            return 0xff000000;
+        }
+
+        return lightMap[x + y * diameter];
+    }
+
+    public int getRadius()
+    {
+        return this.radius;
     }
 
     public int getDiameter()
     {
-        return diameter;
+        return this.diameter;
+    }
+
+    public int[] getLightMap()
+    {
+        return this.lightMap;
     }
 }

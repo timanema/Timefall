@@ -50,7 +50,6 @@ public class GamePanel extends Canvas
 
     public void render()
     {
-        long n = System.nanoTime();
         Timefall.getSettings().getCurrentState().render(screen);
 
         // Draw the image on the screen
@@ -60,8 +59,5 @@ public class GamePanel extends Canvas
         // Dispose of the current graphics and issue the new buffer
         //graphics.dispose();
         bufferStrategy.show();
-        long a = System.nanoTime();
-
-        System.out.println("1 frame laden: " + (a - n) / 1000000.0);
     }
 }

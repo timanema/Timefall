@@ -76,7 +76,7 @@ public class Display
         });
 
         // Create components
-        screen = new Screen(640, 360);
+        screen = new Screen(Timefall.X_RES, Timefall.Y_RES);
         gameCanvas = new GamePanel(width, height, dimension, screen, screen.bufferedImage);
 
         // Add components

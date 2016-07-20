@@ -94,8 +94,8 @@ public class ConflictManager
                 throw new RenderConflictException("Couldn't fetch bitmap for (" + x + "," + y + ") at base or flora layer!");
 
             // Render the conflict bitmaps onto a new one
-            groundBitmap.draw(firstLayerBitmap, 0, 0);
-            groundBitmap.draw(secondLayerBitmap, 0, 0);
+            groundBitmap.draw(firstLayerBitmap, 0, 0, new int[]{-1});
+            groundBitmap.draw(secondLayerBitmap, 0, 0, new int[]{-1});
 
             // Save the rendered conflict
             floraLayer.get(world.getWorldName())[x][y] = groundBitmap;

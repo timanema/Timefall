@@ -134,12 +134,12 @@ public class Game extends GameState
         TileManager tileManager = Timefall.getTileManager();
 
         // Render the current world and render the entities in that world
-        tileManager.getLevel().updateBitmap();
         tileManager.getLevel().render(screen);
         tileManager.getEntityManager().renderEntities(screen);
 
         // Render colours on screen
         screen.render();
+        screen.blendLight();
         screen.update();
     }
 }

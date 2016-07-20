@@ -13,6 +13,9 @@ import me.timefall.timefall.level.world.World;
 
 public class Player implements Mob
 {
+    private final int xAxis = Timefall.X_RES / 2;
+    private final int yAxis = Timefall.Y_RES / 2;
+
     public int xOff = 0;
     public int yOff = 0;
 
@@ -38,8 +41,8 @@ public class Player implements Mob
         this.currentlyMoving = false;
 
         // Calculate max and current values and use these for center calculations
-        int xMax = 16 * worldX;
-        int yMax = 16 * worldY - 8;
+        int xMax = 16 * worldX - (xAxis % 16);
+        int yMax = 16 * worldY - (yAxis % 16);
         int xPlayer = (int) Vector.playerxPos;
         int yPlayer = (int) Vector.playeryPos;
 
@@ -104,7 +107,7 @@ public class Player implements Mob
     private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer)
     {
         // Check if the player is in one of the four corners
-        if (xPlayer < 320 && yPlayer < 180)
+        if (xPlayer < xAxis && yPlayer < yAxis)
         {
             // Player is in upper left corner
             xOff = xPlayer;
@@ -112,54 +115,54 @@ public class Player implements Mob
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - 320 && yPlayer > yMax - 180)
+        } else if (xPlayer > xMax - xAxis && yPlayer > yMax - yAxis)
         {
             // Player is in lower right corner
-            xOff = 320 + (xPlayer - (xMax - 320));
-            yOff = 180 + (yPlayer - (yMax - 180));
+            xOff = xAxis + (xPlayer - (xMax - xAxis));
+            yOff = yAxis + (yPlayer - (yMax - yAxis));
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer < 320 && yPlayer > yMax - 180)
+        } else if (xPlayer < xAxis && yPlayer > yMax - yAxis)
         {
             // Player is in lower left corner
             xOff = xPlayer;
-            yOff = 180 + (yPlayer - (yMax - 180));
+            yOff = yAxis + (yPlayer - (yMax - yAxis));
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - 320 && yPlayer < 180)
+        } else if (xPlayer > xMax - xAxis && yPlayer < yAxis)
         {
             // Player is in upper right corner
-            xOff = 320 + (xPlayer - (xMax - 320));
+            xOff = xAxis + (xPlayer - (xMax - xAxis));
             yOff = yPlayer;
 
             xCen = false;
             yCen = false;
         } else
         {
-            if (yPlayer < 180 || yPlayer > yMax - 180)
+            if (yPlayer < yAxis || yPlayer > yMax - yAxis)
             {
                 // Player is X centered, not Y centered
-                xOff = 320;
-                yOff = (yPlayer < 180 ? yPlayer : 180 + (yPlayer - (yMax - 180)));
+                xOff = xAxis;
+                yOff = (yPlayer < yAxis ? yPlayer : yAxis + (yPlayer - (yMax - yAxis)));
 
                 xCen = true;
                 yCen = false;
 
-            } else if (xPlayer < 320 || xPlayer > xMax - 320)
+            } else if (xPlayer < xAxis || xPlayer > xMax - xAxis)
             {
                 // Player is Y centered, not X centered
-                xOff = (xPlayer < 320 ? xPlayer : 320 + (xPlayer - (xMax - 320)));
-                yOff = 180;
+                xOff = (xPlayer < xAxis ? xPlayer : xAxis + (xPlayer - (xMax - xAxis)));
+                yOff = yAxis;
 
                 xCen = false;
                 yCen = true;
             } else
             {
                 // Both X and Y are centered
-                xOff = 320;
-                yOff = 180;
+                xOff = xAxis;
+                yOff = yAxis;
 
                 xCen = true;
                 yCen = true;
@@ -181,8 +184,8 @@ public class Player implements Mob
     public void tick()
     {
         // Calculate max and current values and use these for center calculations
-        int xMax = 16 * Timefall.getTileManager().worldX;
-        int yMax = 16 * Timefall.getTileManager().worldY - 8;
+        int xMax = 16 * Timefall.getTileManager().worldX - (xAxis % 16);
+        int yMax = 16 * Timefall.getTileManager().worldY - (yAxis % 16);
         int xPlayer = getxOff();
         int yPlayer = getyOff();
 
@@ -191,7 +194,6 @@ public class Player implements Mob
         // Update the current animationCount to set the correct animationStatus
         if (isMoving())
         {
-            System.out.println("Dir: " + this.getDirection());
             animationCount++;
 
             if (animationCount == 3)
@@ -321,29 +323,29 @@ public class Player implements Mob
         int yMax = 16 * world.getHeight() - 8;
 
         // Calculate what the next offsets should be
-        boolean xCen = xOff >= 320 && xOff <= xMax - 320;
-        boolean yCen = yOff >= 180 && yOff <= yMax - 180;
+        boolean xCen = xOff >= xAxis && xOff <= xMax - xAxis;
+        boolean yCen = yOff >= yAxis && yOff <= yMax - yAxis;
 
         if (xCen && yCen)
         {
             // Both X and Y are centered
-            xOffWorld = xOff - 320;
-            yOffWorld = yOff - 180;
+            xOffWorld = xOff - xAxis;
+            yOffWorld = yOff - yAxis;
         } else if (xCen && !yCen)
         {
             // Only X is centered
-            xOffWorld = xOff - 320;
-            yOffWorld = (yOff < 180 ? 0 : yMax - 360);
+            xOffWorld = xOff - xAxis;
+            yOffWorld = (yOff < yAxis ? 0 : yMax - yAxis * 2);
         } else if (!xCen && yCen)
         {
             // Only Y is centered
-            xOffWorld = (xOff < 320 ? 0 : xMax - 640);
-            yOffWorld = yOff - 180;
+            xOffWorld = (xOff < xAxis ? 0 : xMax - xAxis * 2);
+            yOffWorld = yOff - yAxis;
         } else
         {
             // Both X and Y are not centered
-            xOffWorld = (xOff < 320 ? 0 : xMax - 640);
-            yOffWorld = (yOff < 180 ? 0 : yMax - 360);
+            xOffWorld = (xOff < xAxis ? 0 : xMax - xAxis * 2);
+            yOffWorld = (yOff < yAxis ? 0 : yMax - yAxis * 2);
         }
 
         // Update world

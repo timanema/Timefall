@@ -7,4 +7,6 @@ public interface Block extends MapObject
     public abstract Bitmap[] getAnimations();
 
     public abstract boolean isAnimated();
+
+    public int getShadowType();
 }

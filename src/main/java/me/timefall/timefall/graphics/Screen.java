@@ -13,13 +13,6 @@ public class Screen extends Bitmap
 
         // Create a BufferedImage
         this.bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-        // Get the pixels of the BufferedImage
-        //long now = System.nanoTime();
-        //pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        //long after = System.nanoTime();
-
-        //System.out.println("Laden duurde: " + (after - now) / 1000000.0);
     }
 
     public void update()

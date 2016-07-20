@@ -1,9 +1,13 @@
 package me.timefall.timefall.graphics;
 
+import me.timefall.timefall.Timefall;
+
 public class Bitmap
 {
     public int width, height;
     public byte[] pixels;
+    private int[] lightMap;
+    private int[] shadowMap;
     public Colour[] colours;
 
     public Bitmap(int width, int height)
@@ -13,6 +17,16 @@ public class Bitmap
 
         this.pixels = new byte[width * height * 4];
         this.colours = new Colour[width * height];
+        this.lightMap = new int[width * height];
+        this.shadowMap = new int[width * height];
+    }
+
+    public void renderLightMap(int x, int y, int colour)
+    {
+        if ((x < 0 || y < 0 || x >= width || y >= height) || colour == 0xffff00ff)
+            return;
+
+        this.lightMap[x + y * width] = PixelUtils.getMax(colour, this.lightMap[x + y * width]);
     }
 
     public void renderPixel(int x, int y, Colour colour)
@@ -38,6 +52,16 @@ public class Bitmap
         pixels[index + 3] = (byte) ((red * 255F) + 0.5F);
     }
 
+    public int getShadow(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= width || y >= height)
+        {
+            return 1;
+        }
+
+        return shadowMap[x + y * width];
+    }
+
     public void renderBytes(Bitmap bitmap, int xOff, int yOff)
     {
         for (int x = 0; x < width; x++)
@@ -55,7 +79,7 @@ public class Bitmap
         System.arraycopy(colours, 0, this.colours, 0, colours.length);
     }
 
-    public void draw(Bitmap bitmap, int xLoc, int yLoc)
+    public void draw(Bitmap bitmap, int xLoc, int yLoc, int[] shadows)
     {
         for (int x = 0; x < bitmap.width; x++)
         {
@@ -69,7 +93,111 @@ public class Bitmap
                     continue;
 
                 if (bitmap.colours[x + y * bitmap.width] != null && bitmap.colours[x + y * bitmap.width].alpha != 0.0)
+                {
                     this.colours[index] = bitmap.colours[x + y * bitmap.width];
+
+                    if (shadows[0] != -1) this.shadowMap[index] = shadows[x + y * bitmap.width];
+                }
+            }
+        }
+    }
+
+    public void draw(Bitmap bitmap, int xLoc, int yLoc)
+    {
+        this.draw(bitmap, xLoc, yLoc, new int[]{-1});
+    }
+
+    public void clearLights()
+    {
+        this.lightMap = new int[width * height];
+        this.shadowMap = new int[width * height];
+    }
+
+    public void blendLight()
+    {
+        if (!Timefall.getSettings().isLightEnabled())
+        {
+            return;
+        }
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Colour colour = colours[x + y * width];
+
+                if (colour == null)
+                {
+                    continue;
+                }
+
+                this.renderPixel(x, y, PixelUtils.getColour(PixelUtils.blendColours(PixelUtils.getColour(colour.alpha, colour.red, colour.green, colour.blue), lightMap[x + y * width])));
+            }
+        }
+    }
+
+    public void drawLight(Light light, int xOff, int yOff)
+    {
+        if (!Timefall.getSettings().isLightEnabled())
+        {
+            return;
+        }
+
+        if (!Timefall.getSettings().isDynamicLightEnabled())
+        {
+            for (int x = 0; x < light.getDiameter(); x++)
+            {
+                for (int y = 0; y < light.getDiameter(); y++)
+                {
+                    this.renderLightMap(x + xOff - light.getRadius(), y + yOff - light.getRadius(), light.getLightMap()[x + y * light.getDiameter()]);
+                }
+            }
+        } else
+        {
+            for (int i = 0; i < light.getDiameter(); i++)
+            {
+                this.drawBresenhamLine(light.getRadius(), light.getRadius(), i, 0, light, xOff, yOff);
+                this.drawBresenhamLine(light.getRadius(), light.getRadius(), 0, i, light, xOff, yOff);
+                this.drawBresenhamLine(light.getRadius(), light.getRadius(), i, light.getDiameter(), light, xOff, yOff);
+                this.drawBresenhamLine(light.getRadius(), light.getRadius(), light.getDiameter(), i, light, xOff, yOff);
+            }
+        }
+    }
+
+    private void drawBresenhamLine(int startX, int startY, int endX, int endY, Light light, int xOff, int yOff)
+    {
+        int deltaX = Math.abs(startX - endX);
+        int deltaY = Math.abs(startY - endY);
+
+        int sX = startX < endX ? 1 : -1;
+        int sY = startY < endY ? 1 : -1;
+
+        int err = deltaX - deltaY;
+        int e2;
+
+        while (true)
+        {
+            this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, light.getColour(startX, startY));
+
+            if (startX == endX && startY == endY)
+            {
+                break;
+            }
+
+            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == 1) break;
+
+            e2 = 2 * err;
+
+            if (e2 > -1 * deltaY)
+            {
+                err -= deltaY;
+                startX += sX;
+            }
+
+            if (e2 < deltaX)
+            {
+                err += deltaX;
+                startY += sY;
             }
         }
     }

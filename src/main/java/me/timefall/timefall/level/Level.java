@@ -1,5 +1,6 @@
 package me.timefall.timefall.level;
 
+import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.Bitmap;
 import me.timefall.timefall.graphics.Light;
 import me.timefall.timefall.graphics.Screen;
@@ -14,9 +15,15 @@ public class Level
     private TileManager tileManager;
     private Bitmap[][] groundTiles;
 
-    private int screenX, screenY;
+    private int[] shadowMap;
+    private int[][][] shadowGrid;
 
-    Light testLight = new Light(0xff0000ff, 140);
+    private int screenX, screenY;
+    private MapObject[][] blockObject;
+    private MapObject[][] treeObjects;
+
+    Light testLight = new Light(0xffFFA500, 120);
+    Light testLight2 = new Light(0xff0000ff, 80);
 
     public Level(TileManager tileManager, int screenX, int screenY)
     {
@@ -24,38 +31,69 @@ public class Level
         this.screenX = screenX;
         this.screenY = screenY;
 
-        this.groundTiles = new Bitmap[screenX][screenY];
-
-        System.out.println("HNHNH!!!: " + (screenX * screenY));
-        updateBitmap();
+        this.updateWorld(screenX, screenY);
     }
 
     public void updateWorld(int screenX, int screenY)
     {
         this.groundTiles = new Bitmap[screenX][screenY];
+        this.shadowMap = new int[screenX * 16 * screenY * 16];
+        this.shadowGrid = new int[screenX][screenY][256];
+        this.blockObject = new MapObject[screenX][screenY];
+        this.treeObjects = new MapObject[screenX][screenY];
+
+        for (int x = 0; x < screenX; x++)
+        {
+            for (int y = 0; y < screenY; y++)
+            {
+                blockObject[x][y] = tileManager.getMapObjectByLoc(x, y, 0);
+                treeObjects[x][y] = tileManager.getMapObjectByLoc(x, y, 1);
+            }
+        }
+
 
         updateBitmap();
+        updateAnimations();
     }
 
-    public void updateBitmap()
+    private void updateAnimations()
     {
-        //System.out.println("EDT (update level): " + EventQueue.isDispatchThread());
 
+    }
+
+    private void updateBitmap()
+    {
         // Update base layer
         for (int x = 0; x < screenX; x++)
             for (int y = 0; y < screenY; y++)
             {
-                groundTiles[x][y] = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]);
+                groundTiles[x][y] = blockObject[x][y].getSprite(tileManager.getBaseLayer()[x][y]);
 
-                //System.out.println(x + "," + y + ": " + tileManager.getMapObjectByLoc(x, y, 0).getName());
+
+                if (Timefall.getSettings().isDynamicLightEnabled())
+                {
+                    Bitmap bitmap = groundTiles[x][y];
+
+                    for (int sX = 0; sX < bitmap.width; sX++)
+                    {
+                        for (int sY = 0; sY < bitmap.height; sY++)
+                        {
+                            if (bitmap.colours[sX + sY * bitmap.width].alpha != 0.0)
+                            {
+                                shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = ((Block) blockObject[x][y]).getShadowType();
+                            }
+                        }
+                    }
+                }
             }
 
         // Update flora layer
         for (int x = 0; x < screenX; x++)
+        {
             for (int y = 0; y < screenY; y++)
             {
-                MapObject mapObject = tileManager.getMapObjectByLoc(x, y, 1);
-                Tree tree = null;
+                MapObject mapObject = treeObjects[x][y];
+                Tree tree;
 
                 // Check if MapObject isn't null
                 if (mapObject == null)
@@ -65,32 +103,77 @@ public class Level
                 if (tileManager.checkTree(mapObject))
                 {
                     tree = (Tree) mapObject;
-
+                    Bitmap treeBitmap;
 
                     // Check if the current location is a conflict location
                     if (tileManager.getFloraLayer()[x][y] == 666999)
                     {
-                        groundTiles[x][y] = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
+                        treeBitmap = tileManager.getConflictManager().getFloraLayer(tileManager.getCurrentWorld())[x][y];
+                        groundTiles[x][y] = treeBitmap;
                     } else
                     {
-                        Bitmap treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
-                        Bitmap groundBitmap = tileManager.getMapObjectByLoc(x, y, 0).getSprite(tileManager.getBaseLayer()[x][y]).clone();
+                        treeBitmap = tree.getSprite(tileManager.getFloraLayer()[x][y]);
+                        Bitmap groundBitmap = blockObject[x][y].getSprite(tileManager.getBaseLayer()[x][y]).clone();
 
 
                         groundBitmap.draw(treeBitmap, 0, 0);
                         groundTiles[x][y] = groundBitmap;
                     }
 
+                    if (Timefall.getSettings().isDynamicLightEnabled())
+                    {
+                        Bitmap bitmap = treeBitmap;
+
+                        for (int sX = 0; sX < bitmap.width; sX++)
+                        {
+                            for (int sY = 0; sY < bitmap.height; sY++)
+                            {
+                                if (bitmap.colours[sX + sY * bitmap.width].alpha != 0.0)
+                                {
+                                    shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = 1;
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        }
+
+        if (Timefall.getSettings().isDynamicLightEnabled())
+        {
+            // Update shadowgrid
+            for (int x = 0; x < screenX; x++)
+            {
+                for (int y = 0; y < screenY; y++)
+                {
+                    Bitmap bitmap = groundTiles[x][y];
+                    int[] shadows = new int[bitmap.width * bitmap.height];
+
+                    int sX = 0, sY = 0;
+
+                    for (int i = x * 16; i < x * 16 + bitmap.width; i++)
+                    {
+                        for (int j = y * 16; j < y * 16 + bitmap.height; j++)
+                        {
+                            shadows[sX + sY * bitmap.width] = this.shadowMap[i + j * screenX * 16];
+                            sY++;
+                        }
+                        sX++;
+                        sY = 0;
+                    }
+
+                    this.shadowGrid[x][y] = shadows;
+                }
+            }
+        }
     }
 
     public void render(Screen screen)
     {
-        updateBitmap();
+        screen.clearLights();
+        updateAnimations();
 
         int x = 0;
-        //System.out.println("EDT (draw level): " + EventQueue.isDispatchThread());
 
         //Loop through the base layer and render it
         for (int[] row : tileManager.getBaseLayer())
@@ -98,32 +181,15 @@ public class Level
             int y = 0;
             for (int column : row)
             {
-                screen.draw(groundTiles[x][y], x * 16 - tileManager.getCurrentWorld().getX(), y * 16 - tileManager.getCurrentWorld().getY());
-                /*screen.draw(Sprite.test, 0, 16);
-                screen.draw(GrassTile.spr(), 0, 0);
-                screen.draw(GrassTile.spr(), 16, 0);
-
-
-                for (int xLoc = 19; xLoc < 19 + 16; xLoc++)
-                    for (int yLoc = 19; yLoc < 19 + 16; yLoc++) {
-                        screen.colours[xLoc + yLoc * screen.width] = Colour.COLOUR_BLACK;
-                    }*/
-
+                screen.draw(groundTiles[x][y], x * 16 - tileManager.getCurrentWorld().getX(), y * 16 - tileManager.getCurrentWorld().getY(), shadowGrid[x][y]);
                 y++;
             }
 
             x++;
         }
 
-        //screen.render();
-        //for (int i = 50; i < 66; i++)
-        //  for (int j = 50; j < 66; j++)
-        //       screen.renderPixel(i, j, 0, 0, 1, 1);
-
-        //for (int lX = 0; lX < testLight.getDiameter(); lX++)
-        //    for (int lY = 0; lY < testLight.getDiameter(); lY++) {
-        //       screen.
-        //   }
+        screen.drawLight(testLight2, 80 - tileManager.getCurrentWorld().getX(), 80 - tileManager.getCurrentWorld().getY());
+        screen.drawLight(testLight, Timefall.getTileManager().getEntityManager().getPlayer().xOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().width / 2), Timefall.getTileManager().getEntityManager().getPlayer().yOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().height / 2));
     }
 
     public Block getFacingTile(Direction direction, Vector vector)

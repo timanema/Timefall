@@ -11,6 +11,9 @@ import java.awt.*;
 
 public class Timefall
 {
+    public static final int X_RES = 640;
+    public static final int Y_RES = 360;
+
     private static volatile Display mainDisplay;
     private static Settings settings;
     private static FileManager fileManager;
