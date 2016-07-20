@@ -9,10 +9,9 @@ import java.io.IOException;
 public class Sprite
 {
     // Sprites
-    public static final Bitmap[][] characters = getSubImage("/spritesheets/characters.png", 15, 19, 0, 0);
+    public static final Bitmap[][] characters = getSubImage("/spritesheets/characters.png", 16, 23, 0, 0);
     public static final Bitmap[][] terrain = getSubImage("/spritesheets/terrain.png", 16, 16, 0, 0);
     public static final Bitmap[][] buildings = getSubImage("/spritesheets/buildings.png", 16, 16, 0, 0);
-    public static final Bitmap test = test();
 
     public static Bitmap[][] getSubImage(String spriteName, int width, int height, int startX, int startY)
     {
@@ -69,18 +68,5 @@ public class Sprite
                 sprite.flush();
         }
         return null;
-    }
-
-    private static Bitmap test()
-    {
-        Bitmap bitmap = new Bitmap(16, 16);
-
-        for (int x = 0; x < 16; x++)
-            for (int y = 0; y < 16; y++)
-            {
-                bitmap.colours[x + y * 16] = Colour.COLOUR_BLACK;
-            }
-
-        return bitmap;
     }
 }

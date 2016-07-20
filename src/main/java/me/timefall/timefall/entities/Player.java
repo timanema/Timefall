@@ -74,25 +74,27 @@ public class Player implements Mob
     @Override
     public Bitmap getCurrentBitmap()
     {
+        int gender = Math.abs(this.gender - 1);
+        // TODO: Add weapons, colouring and more
         // Returns appropriate bitmap
         switch (getDirection())
         {
             case NORTH:
-                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
             case NORTHEAST:
-                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
             case NORTHWEST:
-                return (animationStatus == 0 ? Sprite.characters[1][gender] : (animationStatus == 1 ? Sprite.characters[4][gender] : Sprite.characters[8][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
             case EAST:
-                return (animationStatus == 0 ? Sprite.characters[2][gender].flipVert() : (animationStatus == 1 ? Sprite.characters[5][gender].flipVert() : Sprite.characters[6][gender].flipVert()));
+                return (animationStatus == 0 ? Sprite.characters[gender][6].flipVert() : (animationStatus == 1 ? Sprite.characters[gender][7].flipVert() : Sprite.characters[gender][8].flipVert()));
             case SOUTH:
-                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
             case SOUTHEAST:
-                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
             case SOUTHWEST:
-                return (animationStatus == 0 ? Sprite.characters[0][gender] : (animationStatus == 1 ? Sprite.characters[3][gender] : Sprite.characters[7][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
             case WEST:
-                return (animationStatus == 0 ? Sprite.characters[2][gender] : (animationStatus == 1 ? Sprite.characters[5][gender] : Sprite.characters[6][gender]));
+                return (animationStatus == 0 ? Sprite.characters[gender][6] : (animationStatus == 1 ? Sprite.characters[gender][7] : Sprite.characters[gender][8]));
             default:
                 return Sprite.terrain[0][0];
         }
