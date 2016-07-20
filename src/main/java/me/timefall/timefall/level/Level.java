@@ -4,6 +4,7 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.Bitmap;
 import me.timefall.timefall.graphics.Light;
 import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.ShadowType;
 import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.tiles.base.Tree;
@@ -80,7 +81,7 @@ public class Level
                         {
                             if (bitmap.colours[sX + sY * bitmap.width].alpha != 0.0)
                             {
-                                shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = ((Block) blockObject[x][y]).getShadowType();
+                                shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = ((Block) blockObject[x][y]).getShadowType().type;
                             }
                         }
                     }
@@ -130,7 +131,7 @@ public class Level
                             {
                                 if (bitmap.colours[sX + sY * bitmap.width].alpha != 0.0)
                                 {
-                                    shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = 1;
+                                    shadowMap[(sX + x * 16) + (sY + y * 16) * screenX * 16] = ShadowType.TREE_FADE.type;
                                 }
                             }
                         }

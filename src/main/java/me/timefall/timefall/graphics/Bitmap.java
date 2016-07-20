@@ -174,18 +174,27 @@ public class Bitmap
 
         int err = deltaX - deltaY;
         int e2;
+        float lightPower = 1.0F;
 
         while (true)
         {
-            this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, light.getColour(startX, startY));
+            if (lightPower == 1.0F)
+            {
+                this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, light.getColour(startX, startY));
+            } else
+            {
+                this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, PixelUtils.getColourPower(light.getColour(startX, startY), lightPower));
+            }
 
             if (startX == endX && startY == endY)
             {
                 break;
             }
 
-            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == 1) break;
-
+            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FULL.type) break;
+            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FADE.type) lightPower -= 0.1F;
+            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.TREE_FADE.type) lightPower -= 0.03F;
+            if (lightPower <= 0) break;
             e2 = 2 * err;
 
             if (e2 > -1 * deltaY)

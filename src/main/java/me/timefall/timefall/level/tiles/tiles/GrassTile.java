@@ -1,6 +1,7 @@
 package me.timefall.timefall.level.tiles.tiles;
 
 import me.timefall.timefall.graphics.Bitmap;
+import me.timefall.timefall.graphics.ShadowType;
 import me.timefall.timefall.graphics.Sprite;
 import me.timefall.timefall.level.tiles.base.Block;
 
@@ -55,9 +56,9 @@ public class GrassTile implements Block
     }
 
     @Override
-    public int getShadowType()
+    public ShadowType getShadowType()
     {
-        return 0;
+        return ShadowType.NONE;
     }
 
     @Override
