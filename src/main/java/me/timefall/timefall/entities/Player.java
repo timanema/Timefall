@@ -1,9 +1,7 @@
 package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.graphics.Bitmap;
-import me.timefall.timefall.graphics.Screen;
-import me.timefall.timefall.graphics.Sprite;
+import me.timefall.timefall.graphics.*;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.Vector;
@@ -51,6 +49,8 @@ public class Player implements Mob
         Vector.setPlayerVariables(xOff * .0625F, yOff * .0625F);
 
         System.out.println("   Player created!");
+
+        this.updateBitmap();
     }
 
     @Override
@@ -71,30 +71,105 @@ public class Player implements Mob
         return playerDirection;
     }
 
+    public void updateBitmap()
+    {
+        Sprite.completeCharacters = new Bitmap[Sprite.characters.length][Sprite.characters[0].length];
+        int x = 0;
+        int gender = 0;
+
+        for (Bitmap[] genderBitmaps : Sprite.characters)
+        {
+            int y = 0;
+
+            for (Bitmap bitmap : genderBitmaps)
+            {
+                // TODO: Add weapons, colouring and more
+                // DEFAULTS:
+                //  Male: AC8105 (main hair), E2C13A (light hair), 4F4F15 (edge hair), 004562 (eye), 70591D (eyebrow), F9AD81 (skin-mid), F9BA98 (skin-light), D89671 (skin-dark)
+                //  Female: 007975 (eye), F9AD81 (skin-mid), 111111 (eyebrow), 16161A (main hair), 4A4A5F (light hair), 000000 (edge hair),
+                for (int i = 0; i < bitmap.colours.length; i++)
+                {
+                    int colour = PixelUtils.getColour(bitmap.colours[i]);
+
+                    // Main hair
+                    if (colour== 0xffff0000)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffac8105 : 0xff16161a);
+                    }
+
+                    // Light hair
+                    if (colour== 0xffff0c00)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffe2c13a : 0xff4a4a5f);
+                    }
+
+                    // Edge hair
+                    if (colour== 0xffff0c0c)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff4f4f15 : 0xff000000);
+                    }
+
+                    // Eyes
+                    if (colour== 0xff00ff00)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff004562 : 0xff007975);
+                    }
+
+                    // Eyebrow
+                    if (colour== 0xffff000c)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff70591d : 0xff111111);
+                    }
+
+                    // Skin medium
+                    if (colour== 0xffffff00)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(0xfff9ad81);
+                    }
+
+                    // Skin light
+                    if (colour== 0xffffff01)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xfff9ba98 : 0);
+                    }
+
+                    // Skin dark
+                    if (colour== 0xffffff02)
+                    {
+                        bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffd89671 : 0);
+                    }
+                }
+
+                Sprite.completeCharacters[x][y] = bitmap.clone();
+                y++;
+            }
+            gender++;
+            x++;
+        }
+    }
+
     @Override
     public Bitmap getCurrentBitmap()
     {
-        int gender = Math.abs(this.gender - 1);
-        // TODO: Add weapons, colouring and more
         // Returns appropriate bitmap
         switch (getDirection())
         {
             case NORTH:
-                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
             case NORTHEAST:
-                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
             case NORTHWEST:
-                return (animationStatus == 0 ? Sprite.characters[gender][3] : (animationStatus == 1 ? Sprite.characters[gender][4] : Sprite.characters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
             case EAST:
-                return (animationStatus == 0 ? Sprite.characters[gender][6].flipVert() : (animationStatus == 1 ? Sprite.characters[gender][7].flipVert() : Sprite.characters[gender][8].flipVert()));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6].flipVert() : (animationStatus == 1 ? Sprite.completeCharacters[gender][7].flipVert() : Sprite.completeCharacters[gender][8].flipVert()));
             case SOUTH:
-                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
             case SOUTHEAST:
-                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
             case SOUTHWEST:
-                return (animationStatus == 0 ? Sprite.characters[gender][0] : (animationStatus == 1 ? Sprite.characters[gender][1] : Sprite.characters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
             case WEST:
-                return (animationStatus == 0 ? Sprite.characters[gender][6] : (animationStatus == 1 ? Sprite.characters[gender][7] : Sprite.characters[gender][8]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6] : (animationStatus == 1 ? Sprite.completeCharacters[gender][7] : Sprite.completeCharacters[gender][8]));
             default:
                 return Sprite.terrain[0][0];
         }

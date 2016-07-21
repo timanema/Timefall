@@ -9,9 +9,10 @@ import java.io.IOException;
 public class Sprite
 {
     // Sprites
-    public static final Bitmap[][] characters = getSubImage("/spritesheets/characters.png", 16, 23, 0, 0);
+    public static final Bitmap[][] characters = getSubImage("/spritesheets/characters.png", 16, 25, 0, 0);
     public static final Bitmap[][] terrain = getSubImage("/spritesheets/terrain.png", 16, 16, 0, 0);
     public static final Bitmap[][] buildings = getSubImage("/spritesheets/buildings.png", 16, 16, 0, 0);
+    public static Bitmap[][] completeCharacters;
 
     public static Bitmap[][] getSubImage(String spriteName, int width, int height, int startX, int startY)
     {

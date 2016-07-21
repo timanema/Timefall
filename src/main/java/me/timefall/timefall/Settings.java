@@ -63,7 +63,7 @@ public class Settings
         soundSetting = 100;
         musicSetting = 100;
         screenSize = ScreenSize.NORMAL;
-        gender = 1;
+        gender = 0;
 
         states = new Stack<>();
     }
