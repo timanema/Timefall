@@ -7,6 +7,6 @@ public class AmbientLight
     //TODO: Make ambient light correspond to the time
     public static int getAmbientLight()
     {
-        return PixelUtils.getColour(1, 0.2F, 0.2F, 0.2F);
+        return PixelUtils.getColour(1, 0.6F, 0.6F, 0.6F);
     }
 }
