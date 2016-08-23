@@ -1,4 +1,6 @@
-package me.timefall.timefall.events;
+package me.timefall.timefall.events.keys;
+
+import me.timefall.timefall.events.Listener;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;

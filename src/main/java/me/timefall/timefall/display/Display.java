@@ -84,7 +84,7 @@ public class Display
         jFrame.add(gameCanvas);
 
         // Hide cursor
-        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
+        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
 
         // Show frame
         jFrame.pack();
@@ -92,9 +92,11 @@ public class Display
 
         gameCanvas.initBuffer();
 
-        // Add listeners
+         // Add listeners
         jFrame.addKeyListener(Timefall.getKeyHandler());
         jFrame.addFocusListener(Timefall.getKeyHandler());
+        jFrame.addMouseListener(Timefall.getMouseHandler());
+        jFrame.addMouseMotionListener(Timefall.getMouseHandler());
         jFrame.setFocusable(true);
         Timefall.getKeyHandler().addListener(new MoveListener());
 

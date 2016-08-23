@@ -1,7 +1,7 @@
 package me.timefall.timefall.game.game;
 
-import me.timefall.timefall.events.KeyHandler;
-import me.timefall.timefall.events.Keys;
+import me.timefall.timefall.events.keys.KeyHandler;
+import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.events.Listener;
 
 public class MoveListener implements Listener

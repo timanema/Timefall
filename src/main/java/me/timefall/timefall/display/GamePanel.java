@@ -1,7 +1,9 @@
 package me.timefall.timefall.display;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -38,6 +40,8 @@ public class GamePanel extends Canvas
 
         addKeyListener(Timefall.getKeyHandler());
         addFocusListener(Timefall.getKeyHandler());
+        addMouseListener(Timefall.getMouseHandler());
+        addMouseMotionListener(Timefall.getMouseHandler());
     }
 
     public void initBuffer()
@@ -51,6 +55,14 @@ public class GamePanel extends Canvas
     public void render()
     {
         Timefall.getSettings().getCurrentState().render(screen);
+
+        // TODO: Draw fancy mouse here
+        screen.draw(Sprite.mouse, (int) (MouseHandler.mouseX / Timefall.getSettings().getScreenSize().getScale()), (int) (MouseHandler.mouseY / Timefall.getSettings().getScreenSize().getScale()));
+
+        // Render colours on screen
+        screen.render();
+        screen.blendLight();
+        screen.update();
 
         // Draw the image on the screen
         //graphics = bufferStrategy.getDrawGraphics();

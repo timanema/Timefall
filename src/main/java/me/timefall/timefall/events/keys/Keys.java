@@ -1,4 +1,4 @@
-package me.timefall.timefall.events;
+package me.timefall.timefall.events.keys;
 
 public enum Keys
 {

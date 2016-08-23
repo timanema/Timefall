@@ -3,7 +3,7 @@ package me.timefall.timefall.graphics;
 public class Colour implements Cloneable
 {
     // Colours
-    public static Colour COLOUR_BLACK = new Colour(1, 0, 0, 0);
+    public static Colour BLACK = new Colour(1, 0, 0, 0);
 
     public float alpha, red, green, blue;
 

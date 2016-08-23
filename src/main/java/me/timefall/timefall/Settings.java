@@ -4,6 +4,8 @@ import java.util.Stack;
 
 public class Settings
 {
+    private boolean lightEnabled;
+    private boolean dynamicLightsEnabled;
     private int maxFPS;
     private int soundSetting;
     private int musicSetting;
@@ -14,23 +16,25 @@ public class Settings
 
     public enum ScreenSize
     {
-        SMALL(640, 360, false, 0),
-        MEDIUM(960, 540, false, 1),
-        NORMAL(1280, 720, false, 2),
-        LARGE(1920, 1080, false, 3),
-        FULLSCREEN(1920, 1080, true, 4);
+        SMALL(640, 360, false, 0, 1),
+        MEDIUM(960, 540, false, 1, 1.5f),
+        NORMAL(1280, 720, false, 2, 2),
+        LARGE(1920, 1080, false, 3, 3),
+        FULLSCREEN(1920, 1080, true, 4, 3);
 
         private final int width;
         private final int height;
+        private final float scale;
 
         private final boolean fullscreen;
 
         private final int ID;
 
-        private ScreenSize(int width, int height, boolean fullscreen, int ID)
+        private ScreenSize(int width, int height, boolean fullscreen, int ID, float scale)
         {
             this.width = width;
             this.height = height;
+            this.scale  = scale;
             this.fullscreen = fullscreen;
             this.ID = ID;
         }
@@ -43,6 +47,11 @@ public class Settings
         public int getHeight()
         {
             return height;
+        }
+
+        public float getScale()
+        {
+            return scale;
         }
 
         public int getID()
@@ -59,6 +68,8 @@ public class Settings
     public Settings()
     {
         // Setting default values just in case
+        lightEnabled = true;
+        dynamicLightsEnabled = true;
         maxFPS = 60;
         soundSetting = 100;
         musicSetting = 100;
@@ -110,6 +121,16 @@ public class Settings
         this.setState(gameState);
     }
 
+    public void setLightEnabled(boolean lightEnabled)
+    {
+        this.lightEnabled = lightEnabled;
+    }
+
+    public void setDynamicLightsEnabled(boolean dynamicLightsEnabled)
+    {
+        this.dynamicLightsEnabled = dynamicLightsEnabled;
+    }
+
     public int getMaxFPS()
     {
         return maxFPS;
@@ -149,11 +170,11 @@ public class Settings
 
     public boolean isLightEnabled()
     {
-        return true;
+        return lightEnabled;
     }
 
     public boolean isDynamicLightEnabled()
     {
-        return true;
+        return dynamicLightsEnabled;
     }
 }

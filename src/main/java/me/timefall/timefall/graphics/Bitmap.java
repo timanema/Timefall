@@ -87,6 +87,11 @@ public class Bitmap
             }
     }
 
+    public void draw(Colour colour, int xLoc, int yLoc)
+    {
+        this.colours[xLoc + yLoc * width] = colour;
+    }
+
     public void draw(Colour[] colours)
     {
         System.arraycopy(colours, 0, this.colours, 0, colours.length);

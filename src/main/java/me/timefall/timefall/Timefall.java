@@ -1,7 +1,8 @@
 package me.timefall.timefall;
 
 import me.timefall.timefall.display.Display;
-import me.timefall.timefall.events.KeyHandler;
+import me.timefall.timefall.events.keys.KeyHandler;
+import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
 import me.timefall.timefall.game.game.Game;
 import me.timefall.timefall.level.TileManager;
@@ -20,6 +21,7 @@ public class Timefall
     private static Settings settings;
     private static FileManager fileManager;
     private static KeyHandler keyHandler;
+    private static MouseHandler mouseHandler;
     private static ThreadManager threadManager;
     private static TileManager tileManager;
 
@@ -35,6 +37,7 @@ public class Timefall
         lockObject = new Object();
         settings = new Settings();
         keyHandler = new KeyHandler();
+        mouseHandler = new MouseHandler();
 
         System.out.println(" Initializing display ...");
 
@@ -55,6 +58,7 @@ public class Timefall
             e.printStackTrace();
         }
 
+        settings.setLightEnabled(false);
         this.internalStart();
     }
 
@@ -65,10 +69,7 @@ public class Timefall
 
         // Add temp gamestate
         // TODO: Remove this
-        Game game = new Game(settings);
-        settings.setState(game);
-
-        tileManager = game.tileManager;
+        startGame();
 
         System.out.println(" Initializing game threads ...");
 
@@ -77,6 +78,16 @@ public class Timefall
 
         System.out.println("All Timefall components loaded!");
         System.out.println("\nTick updates:");
+    }
+
+    public static void startGame()
+    {
+        //TODO: Verander settings later nog vanuit files
+        Game game = new Game(settings);
+        settings.setState(game);
+
+        tileManager = game.tileManager;
+        settings.setLightEnabled(true);
     }
 
     public static void initThreads()
@@ -92,6 +103,11 @@ public class Timefall
     public static KeyHandler getKeyHandler()
     {
         return keyHandler;
+    }
+
+    public static MouseHandler getMouseHandler()
+    {
+        return mouseHandler;
     }
 
     public static Settings getSettings()

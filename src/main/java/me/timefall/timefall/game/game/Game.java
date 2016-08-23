@@ -3,7 +3,7 @@ package me.timefall.timefall.game.game;
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.events.Keys;
+import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.graphics.Screen;
 import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
@@ -145,10 +145,5 @@ public class Game extends GameState
 
         //TODO: DEBUG
         Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", screen, 0, 0);
-
-        // Render colours on screen
-        screen.render();
-        screen.blendLight();
-        screen.update();
     }
 }
