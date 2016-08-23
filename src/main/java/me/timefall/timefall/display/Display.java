@@ -23,7 +23,7 @@ public class Display
     private GamePanel gameCanvas;
     private Screen screen;
 
-    public Display(String gameName, int width, int height)
+    public Display(String gameName, int width, int height, Object lockObject)
     {
         this.width = width;
         this.height = height;
@@ -31,13 +31,13 @@ public class Display
 
         dimension = new Dimension(width, height);
 
-        initDisplay();
+        initDisplay(lockObject);
     }
 
     /**
      * Initializes all components of main display and combines them
      */
-    private void initDisplay()
+    private void initDisplay(Object lockObject)
     {
         // Init frame
         jFrame = new JFrame();
@@ -97,6 +97,16 @@ public class Display
         jFrame.addFocusListener(Timefall.getKeyHandler());
         jFrame.setFocusable(true);
         Timefall.getKeyHandler().addListener(new MoveListener());
+
+        this.unlock(lockObject);
+    }
+
+    private void unlock(Object lockObject)
+    {
+        synchronized (lockObject)
+        {
+            lockObject.notify();
+        }
     }
 
     /**

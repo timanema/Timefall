@@ -13,11 +13,14 @@ import me.timefall.timefall.level.TileManager;
 
 public class Game extends GameState
 {
+    public TileManager tileManager;
+
     public Game(Settings settings)
     {
         super(settings);
 
         System.out.println("\nInitializing main game");
+        tileManager = new TileManager();
     }
 
     @Override

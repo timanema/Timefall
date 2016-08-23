@@ -11,6 +11,8 @@ import java.awt.*;
 
 public class Timefall
 {
+    private Object lockObject;
+
     public static final int X_RES = 640;
     public static final int Y_RES = 360;
 
@@ -23,20 +25,50 @@ public class Timefall
 
     public static void main(String args[])
     {
-        System.out.println("Loading Timefall components ...");
+        new Timefall();
+    }
 
-        keyHandler = new KeyHandler();
+    public Timefall()
+    {
+        System.out.println("Loading Timefall components ...\n Creating settings ...\n Enabling listeners ...");
+
+        lockObject = new Object();
         settings = new Settings();
+        keyHandler = new KeyHandler();
+
+        System.out.println(" Initializing display ...");
+
+        EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight(), lockObject));
+        lock();
+    }
+
+    private void lock()
+    {
+        try
+        {
+            synchronized (lockObject)
+            {
+                lockObject.wait();
+            }
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        this.internalStart();
+    }
+
+    private void internalStart()
+    {
+        System.out.println(" Reading files and readjusting settings ...");
         fileManager = new FileManager(settings);
 
         // Add temp gamestate
         // TODO: Remove this
-        settings.setState(new Game(settings));
+        Game game = new Game(settings);
+        settings.setState(game);
 
-        tileManager = new TileManager();
-
-        System.out.println(" Initializing display ...");
-        EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight()));
+        tileManager = game.tileManager;
 
         System.out.println(" Initializing game threads ...");
 
