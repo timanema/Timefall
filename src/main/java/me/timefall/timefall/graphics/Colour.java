@@ -19,4 +19,9 @@ public class Colour implements Cloneable
     {
         return new Colour(alpha, red, green, blue);
     }
+
+    public int getColourInt()
+    {
+        return ((int) (alpha * 255F + 0.5F) << PixelUtils.ALPHA_SHIFT | (int) (red * 255F + 0.5F) << PixelUtils.RED_SHIFT | (int) (green * 255F + 0.5F) << PixelUtils.GREEN_SHIFT | (int) (blue * 255F + 0.5F));
+    }
 }

@@ -13,7 +13,9 @@ public class Sprite
     public static final Bitmap[][] terrain = getSubImage("/spritesheets/terrain.png", 16, 16, 0, 0);
     public static final Bitmap[][] buildings = getSubImage("/spritesheets/buildings.png", 16, 16, 0, 0);
     public static Bitmap[][] completeCharacters;
-    public static Bitmap[][] font = getSubImage("/spritesheets/fonts/default_font.png", 48, 60, 0, 0);
+
+    public static Bitmap[][] defaultFontHuge = getSubImage("/spritesheets/fonts/default_font_huge.png", 48, 60, 0, 0);
+    public static Bitmap[][] defaultFontLarge = getSubImage("/spritesheets/fonts/default_font_large.png", 12, 18, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width, int height, int startX, int startY)
     {

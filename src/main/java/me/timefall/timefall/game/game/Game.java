@@ -4,8 +4,10 @@ import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.Keys;
-import me.timefall.timefall.graphics.Font;
 import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.font.Font;
+import me.timefall.timefall.graphics.font.FontSize;
+import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 
@@ -139,7 +141,7 @@ public class Game extends GameState
         tileManager.getEntityManager().renderEntities(screen);
 
         //TODO: DEBUG
-        Font.drawText(screen, "This is font", 0, 0);
+        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", screen, 0, 0);
 
         // Render colours on screen
         screen.render();

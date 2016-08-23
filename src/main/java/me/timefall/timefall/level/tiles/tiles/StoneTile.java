@@ -1,7 +1,7 @@
 package me.timefall.timefall.level.tiles.tiles;
 
 import me.timefall.timefall.graphics.Bitmap;
-import me.timefall.timefall.graphics.ShadowType;
+import me.timefall.timefall.graphics.lighting.ShadowType;
 import me.timefall.timefall.graphics.Sprite;
 import me.timefall.timefall.level.tiles.base.Block;
 

@@ -4,9 +4,9 @@ import me.timefall.timefall.game.game.AmbientLight;
 
 public class PixelUtils
 {
-    private static final int ALPHA_SHIFT = 24;
-    private static final int RED_SHIFT = 16;
-    private static final int GREEN_SHIFT = 8;
+    public static final int ALPHA_SHIFT = 24;
+    public static final int RED_SHIFT = 16;
+    public static final int GREEN_SHIFT = 8;
 
     public static int getColour(float alpha, float red, float green, float blue)
     {
@@ -60,6 +60,47 @@ public class PixelUtils
         float blueBlend = getBlue(blend) < getBlue(ambientLight) ? getBlue(ambientLight) : getBlue(blend);
         float greenBlend = getGreen(blend) < getGreen(ambientLight) ? getGreen(ambientLight) : getGreen(blend);
 
-        return getColour(1F, getRed(colour) * redBlend, getGreen(colour) * greenBlend, getBlue(colour) * blueBlend );
+        return getColour(1F, getRed(colour) * redBlend, getGreen(colour) * greenBlend, getBlue(colour) * blueBlend);
+    }
+
+    public static int[] nearestNeighbourScaling(int[] pixels, int originalWidth, int originalHeight, int newWidth, int newHeight)
+    {
+        int[] tempPixels = new int[newWidth * newHeight];
+        double xRatio = originalWidth / (double) newWidth;
+        double yRatio = originalHeight / (double) newHeight;
+        double px, py;
+
+        for (int i = 0; i < newHeight; i++)
+        {
+            for (int j = 0; j < newWidth; j++)
+            {
+                px = Math.floor(j * xRatio);
+                py = Math.floor(i * yRatio);
+                tempPixels[(i * newWidth) + j] = pixels[(int) ((py * originalWidth) + px)];
+            }
+        }
+        return tempPixels;
+    }
+
+    public static Colour[] nearestNeighbourScaling(Colour[] colours, int originalWidth, int originalHeight, int newWidth, int newHeight)
+    {
+        int[] pixels = new int[colours.length];
+        Colour[] colourSet = new Colour[newWidth * newHeight];
+        for (int i = 0; i < colours.length; i++)
+        {
+            if (colours[i] != null)
+            {
+                pixels[i] = colours[i].getColourInt();
+            }
+        }
+
+        pixels = nearestNeighbourScaling(pixels, originalWidth, originalHeight, newWidth, newHeight);
+
+        for (int i = 0; i < pixels.length; i++)
+        {
+            colourSet[i] = PixelUtils.getColour(pixels[i]);
+        }
+
+        return colourSet;
     }
 }

@@ -1,6 +1,8 @@
 package me.timefall.timefall.graphics;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.graphics.lighting.Light;
+import me.timefall.timefall.graphics.lighting.ShadowType;
 
 public class Bitmap
 {
@@ -11,6 +13,17 @@ public class Bitmap
     public Colour[] colours;
 
     public Bitmap(int width, int height)
+    {
+        this.width = width;
+        this.height = height;
+
+        this.pixels = new byte[width * height * 4];
+        this.colours = new Colour[width * height];
+        this.lightMap = new int[width * height];
+        this.shadowMap = new int[width * height];
+    }
+
+    public void setDimension(int width, int height)
     {
         this.width = width;
         this.height = height;

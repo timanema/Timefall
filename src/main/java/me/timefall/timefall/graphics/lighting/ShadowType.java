@@ -1,4 +1,4 @@
-package me.timefall.timefall.graphics;
+package me.timefall.timefall.graphics.lighting;
 
 public enum ShadowType
 {
