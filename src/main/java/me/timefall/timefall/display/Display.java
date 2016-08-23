@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 
 public class Display
@@ -81,6 +82,9 @@ public class Display
 
         // Add components
         jFrame.add(gameCanvas);
+
+        // Hide cursor
+        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
 
         // Show frame
         jFrame.pack();
