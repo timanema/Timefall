@@ -4,11 +4,13 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.game.game.MoveListener;
 import me.timefall.timefall.graphics.Screen;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 
 public class Display
@@ -83,8 +85,17 @@ public class Display
         // Add components
         jFrame.add(gameCanvas);
 
-        // Hide cursor
-        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
+        // Set custom cursor
+        BufferedImage mouseImage = null;
+        try
+        {
+            mouseImage = ImageIO.read(Timefall.class.getResourceAsStream("/spritesheets/mouse.png"));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(mouseImage, new Point(0, 0), "customMouse"));
 
         // Show frame
         jFrame.pack();
