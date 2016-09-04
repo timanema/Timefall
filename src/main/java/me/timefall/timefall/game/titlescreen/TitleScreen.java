@@ -6,7 +6,7 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
 import me.timefall.timefall.graphics.components.buttons.NormalButton;
-import me.timefall.timefall.graphics.handlers.ButtonUtils;
+import me.timefall.timefall.graphics.handlers.ButtonFactory;
 
 public class TitleScreen extends GameState
 {
@@ -39,7 +39,7 @@ public class TitleScreen extends GameState
 
     private void init()
     {
-        NormalButton normalButton = ButtonUtils.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
+        NormalButton normalButton = ButtonFactory.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
 
         normalButton.setLocation(23, 56);
         normalButton.setActive(true);
