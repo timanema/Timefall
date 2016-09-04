@@ -1,6 +1,7 @@
-package me.timefall.timefall.graphics;
+package me.timefall.timefall.graphics.utils;
 
 import me.timefall.timefall.game.game.AmbientLight;
+import me.timefall.timefall.graphics.components.Colour;
 
 public class PixelUtils
 {

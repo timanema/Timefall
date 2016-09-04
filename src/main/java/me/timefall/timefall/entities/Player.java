@@ -1,7 +1,10 @@
 package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.graphics.*;
+import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.utils.PixelUtils;
+import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.components.Sprite;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.Vector;
@@ -11,8 +14,8 @@ import me.timefall.timefall.level.world.World;
 
 public class Player implements Mob
 {
-    private final int xAxis = Timefall.X_RES / 2;
-    private final int yAxis = Timefall.Y_RES / 2;
+    private final int xAxis = Timefall.GAME_X_RES / 2;
+    private final int yAxis = Timefall.GAME_Y_RES / 2;
 
     public int xOff = 0;
     public int yOff = 0;
@@ -92,49 +95,49 @@ public class Player implements Mob
                     int colour = PixelUtils.getColour(bitmap.colours[i]);
 
                     // Main hair
-                    if (colour== 0xffff0000)
+                    if (colour == 0xffff0000)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffac8105 : 0xff16161a);
                     }
 
                     // Light hair
-                    if (colour== 0xffff0c00)
+                    if (colour == 0xffff0c00)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffe2c13a : 0xff4a4a5f);
                     }
 
                     // Edge hair
-                    if (colour== 0xffff0c0c)
+                    if (colour == 0xffff0c0c)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff4f4f15 : 0xff000000);
                     }
 
                     // Eyes
-                    if (colour== 0xff00ff00)
+                    if (colour == 0xff00ff00)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff004562 : 0xff007975);
                     }
 
                     // Eyebrow
-                    if (colour== 0xffff000c)
+                    if (colour == 0xffff000c)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xff70591d : 0xff111111);
                     }
 
                     // Skin medium
-                    if (colour== 0xffffff00)
+                    if (colour == 0xffffff00)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(0xfff9ad81);
                     }
 
                     // Skin light
-                    if (colour== 0xffffff01)
+                    if (colour == 0xffffff01)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xfff9ba98 : 0);
                     }
 
                     // Skin dark
-                    if (colour== 0xffffff02)
+                    if (colour == 0xffffff02)
                     {
                         bitmap.colours[i] = PixelUtils.getColour(gender == 0 ? 0xffd89671 : 0);
                     }
@@ -204,7 +207,8 @@ public class Player implements Mob
         {
             // Player is in lower left corner
             xOff = xPlayer;
-            yOff = yAxis + (yPlayer - (yMax - yAxis));
+            //yOff = yAxis + (yPlayer - (yMax - yAxis));
+            yOff = Timefall.GAME_Y_RES - (yMax - yPlayer);
 
             xCen = false;
             yCen = false;
@@ -260,13 +264,20 @@ public class Player implements Mob
     @Override
     public void tick()
     {
+        TileManager tileManager = Timefall.getTileManager();
         // Calculate max and current values and use these for center calculations
-        int xMax = 16 * Timefall.getTileManager().worldX - (xAxis % 16);
-        int yMax = 16 * Timefall.getTileManager().worldY - (yAxis % 16);
+        int xMax = 16 * tileManager.worldX - (xAxis % 16);
+        int yMax = 16 * tileManager.worldY - (yAxis % 16);
         int xPlayer = getxOff();
         int yPlayer = getyOff();
 
         this.checkCentred(xMax, yMax, xPlayer, yPlayer);
+
+        // Just in case the player somehow gets an offset outside the borders
+        if (xOff < 0) xOff = 0;
+        if (yOff < 0) yOff = 0;
+        if (xOff > tileManager.getCurrentWorld().getWidth() * 16) xOff = tileManager.getCurrentWorld().getWidth() * 16;
+        if (yOff > tileManager.getCurrentWorld().getHeight() * 16) yOff = tileManager.getCurrentWorld().getHeight() * 16;
 
         // Update the current animationCount to set the correct animationStatus
         if (isMoving())
@@ -297,18 +308,59 @@ public class Player implements Mob
     @Override
     public void move(Direction direction)
     {
+        //TODO: Add collision detection
         TileManager tileManager = Timefall.getTileManager();
 
         // Move the player in a direction
         this.playerDirection = direction;
         this.currentlyMoving = true;
 
-        // Calculating needed change in X-axis and Y-axis to move correctly
-        float xDif = direction.getxChange() * .125F;
-        float yDif = direction.getyChange() * .125F;
+        boolean negativeXMovement = direction.getxChange() < 0;
+        boolean negativeYMovement = direction.getyChange() < 0;
+        int xMod = (negativeXMovement ? -1 : 1);
+        int yMod = (negativeYMovement ? -1 : 1);
 
-        getLocation().add((getxOff() + xDif < 0 || getxOff() + xDif > (tileManager.getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
-                (getyOff() + yDif < 0 || getyOff() + yDif > (tileManager.getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
+        for (int x = 0; (negativeXMovement ? x > direction.getxChange() : x < direction.getxChange()); x += xMod)
+        {
+            int currentOff = tileManager.getCurrentWorld().getX();
+
+            if (currentOff + xMod > 0 && currentOff + xMod + 16 * Timefall.GAME_X_RES / 16 - Timefall.GAME_X_RES % 16 < tileManager.getCurrentWorld().getWidth() * 16 && xCen)
+            {
+                // Screen can move
+                tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() + xMod, tileManager.getCurrentWorld().getY());
+            } else
+            {
+                // Screen cannot move
+                if (xOff + xMod >= 0 && xOff + xMod < (tileManager.worldX - 1) * 16)
+                {
+                    xCen = false;
+                    xOff += xMod;
+                }
+            }
+
+            this.getLocation().add(xOff + xMod >= 0 && xOff + xMod < (tileManager.worldX - 1) * 16 ? xMod * .0625F : 0, 0);
+        }
+
+        for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
+        {
+            int currentOff = tileManager.getCurrentWorld().getY();
+
+            if (currentOff + yMod > 0 && currentOff + yMod + 16 * Timefall.GAME_Y_RES / 16 - Timefall.GAME_Y_RES % 16 < tileManager.getCurrentWorld().getHeight() * 16 && yCen)
+            {
+                // Screen can move
+                tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() + yMod);
+            } else
+            {
+                // Screen cannot move
+                if (yOff + yMod >= 0 && yOff + yMod < (tileManager.worldY - 1) * 16)
+                {
+                    yCen = false;
+                    yOff += yMod;
+                }
+            }
+
+            this.getLocation().add(0, yOff + yMod >= 0 && yOff + yMod < (tileManager.worldY - 1) * 16 ? yMod * .0625F : 0);
+        }
 
         //TODO: Remove this debug code
         for (Block block : tileManager.getLevel().getSurroundingTiles(getLocation(), 2))
@@ -353,6 +405,12 @@ public class Player implements Mob
                         return false;
 
         return true;
+    }
+
+    @Override
+    public void moveAnimationToggle()
+    {
+        this.currentlyMoving = !this.currentlyMoving;
     }
 
     @Override

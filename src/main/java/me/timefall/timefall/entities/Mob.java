@@ -9,4 +9,6 @@ public interface Mob extends Entity
 
     public boolean canMove(Direction direction);
 
+    public void moveAnimationToggle();
+
 }

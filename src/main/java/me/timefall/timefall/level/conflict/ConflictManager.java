@@ -1,6 +1,6 @@
 package me.timefall.timefall.level.conflict;
 
-import me.timefall.timefall.graphics.Bitmap;
+import me.timefall.timefall.graphics.components.Bitmap;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.world.World;
 

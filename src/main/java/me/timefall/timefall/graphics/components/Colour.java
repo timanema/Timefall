@@ -1,9 +1,12 @@
-package me.timefall.timefall.graphics;
+package me.timefall.timefall.graphics.components;
+
+import me.timefall.timefall.graphics.utils.PixelUtils;
 
 public class Colour implements Cloneable
 {
     // Colours
     public static Colour BLACK = new Colour(1, 0, 0, 0);
+    public static Colour GREY = new Colour(1, 0.5F, 0.5F, 0.5F);
 
     public float alpha, red, green, blue;
 

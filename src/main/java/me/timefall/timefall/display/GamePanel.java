@@ -1,7 +1,7 @@
 package me.timefall.timefall.display;
 
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Screen;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -18,13 +18,11 @@ public class GamePanel extends Canvas
     private Dimension dimension;
     private Screen screen;
 
-    public GamePanel(int width, int height, Dimension dimension, Screen screen, BufferedImage bufferedImage)
+    public GamePanel(int width, int height, Dimension dimension)
     {
         this.width = width;
         this.height = height;
         this.dimension = dimension;
-        this.screen = screen;
-        this.bufferedImage = bufferedImage;
 
         initComponents();
     }
@@ -44,15 +42,38 @@ public class GamePanel extends Canvas
 
     public void initBuffer()
     {
+        if (screen == null)
+        {
+            return;
+        }
+
         createBufferStrategy(2);
 
         bufferStrategy = getBufferStrategy();
         graphics = bufferStrategy.getDrawGraphics();
     }
 
+    public void updateScreen(Screen screen)
+    {
+        this.screen = screen;
+        this.bufferedImage = screen.bufferedImage;
+        this.initBuffer();
+    }
+
+    public Screen getScreen()
+    {
+        return this.screen;
+    }
+
     public void render()
     {
+        if (screen == null)
+        {
+            return;
+        }
+
         Timefall.getSettings().getCurrentState().render(screen);
+        Timefall.getButtonHandler().renderButtons(screen);
 
         // Render colours on screen
         screen.render();
@@ -65,6 +86,7 @@ public class GamePanel extends Canvas
 
         // Dispose of the current graphics and issue the new buffer
         //graphics.dispose();
+
         bufferStrategy.show();
     }
 }

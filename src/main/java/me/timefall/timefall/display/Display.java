@@ -2,7 +2,7 @@ package me.timefall.timefall.display;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.game.game.MoveListener;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Screen;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,7 +23,6 @@ public class Display
 
     public JFrame jFrame;
     private GamePanel gameCanvas;
-    private Screen screen;
 
     public Display(String gameName, int width, int height, Object lockObject)
     {
@@ -79,8 +78,7 @@ public class Display
         });
 
         // Create components
-        screen = new Screen(Timefall.X_RES, Timefall.Y_RES);
-        gameCanvas = new GamePanel(width, height, dimension, screen, screen.bufferedImage);
+        gameCanvas = new GamePanel(width, height, dimension);
 
         // Add components
         jFrame.add(gameCanvas);
@@ -100,8 +98,6 @@ public class Display
         // Show frame
         jFrame.pack();
         jFrame.setVisible(true);
-
-        gameCanvas.initBuffer();
 
          // Add listeners
         jFrame.addKeyListener(Timefall.getKeyHandler());
@@ -146,11 +142,11 @@ public class Display
 
     public GamePanel getGameCanvas()
     {
-        return gameCanvas;
+        return this.gameCanvas;
     }
 
     public Screen getScreen()
     {
-        return screen;
+        return this.gameCanvas.getScreen();
     }
 }

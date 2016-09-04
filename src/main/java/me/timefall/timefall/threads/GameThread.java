@@ -2,9 +2,8 @@ package me.timefall.timefall.threads;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Screen;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class GameThread implements Runnable
@@ -87,21 +86,21 @@ public class GameThread implements Runnable
         //TODO: Remove debug code
         Display display = Timefall.getMainDisplay();
 
-        if (display != null)
+        /*if (display != null)
         {
             JFrame jFrame = display.jFrame;
 
             if (jFrame != null)
             {
-                /*jFrame.setTitle("xOff: " + Timefall.getTileManager().getCurrentWorld().getX() + " yOff: " + Timefall.getTileManager().getCurrentWorld().getY()
+                jFrame.setTitle("xOff: " + Timefall.getTileManager().getCurrentWorld().getX() + " yOff: " + Timefall.getTileManager().getCurrentWorld().getY()
                         + " pX: " + Timefall.getTileManager().getEntityManager().getPlayer().xOff
                         + " pY: " + Timefall.getTileManager().getEntityManager().getPlayer().yOff
                         + " rPX: " + Timefall.getTileManager().getEntityManager().getPlayer().getxOff() +
                         " rPY: " + Timefall.getTileManager().getEntityManager().getPlayer().getyOff()
                         + " cW: " + Timefall.getTileManager().getEntityManager().getPlayer().getLocation().getWorldName()
-                        + " gender: " + Timefall.getTileManager().getEntityManager().getPlayer().getGender());*/
+                        + " gender: " + Timefall.getTileManager().getEntityManager().getPlayer().getGender());
             }
-        }
+        }*/
     }
 
     /**

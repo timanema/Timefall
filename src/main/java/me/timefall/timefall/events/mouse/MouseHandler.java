@@ -13,7 +13,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
+        mouseX = (int) (e.getX() / Timefall.getSettings().getScale());
+        mouseY = (int) (e.getY() / Timefall.getSettings().getScale());
 
+        Timefall.getButtonHandler().clickAction(mouseX, mouseY);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mouseMoved(MouseEvent e)
     {
-        mouseX = (int) (e.getX() / Timefall.getSettings().getScreenSize().getScale());
-        mouseY = (int) (e.getY() / Timefall.getSettings().getScreenSize().getScale());
+        //mouseX = (int) (e.getX() / Timefall.getSettings().getScreenSize().getScale());
+        //mouseY = (int) (e.getY() / Timefall.getSettings().getScreenSize().getScale());
     }
 }

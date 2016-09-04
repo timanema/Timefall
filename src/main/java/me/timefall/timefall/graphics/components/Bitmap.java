@@ -1,8 +1,9 @@
-package me.timefall.timefall.graphics;
+package me.timefall.timefall.graphics.components;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.lighting.Light;
 import me.timefall.timefall.graphics.lighting.ShadowType;
+import me.timefall.timefall.graphics.utils.PixelUtils;
 
 public class Bitmap
 {

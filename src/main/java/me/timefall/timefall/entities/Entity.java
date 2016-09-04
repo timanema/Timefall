@@ -1,7 +1,7 @@
 package me.timefall.timefall.entities;
 
-import me.timefall.timefall.graphics.Bitmap;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.Vector;
 import me.timefall.timefall.level.world.World;

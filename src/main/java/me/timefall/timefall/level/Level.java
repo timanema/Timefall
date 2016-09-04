@@ -1,9 +1,9 @@
 package me.timefall.timefall.level;
 
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.graphics.Bitmap;
+import me.timefall.timefall.graphics.components.Bitmap;
 import me.timefall.timefall.graphics.lighting.Light;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.lighting.ShadowType;
 import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;

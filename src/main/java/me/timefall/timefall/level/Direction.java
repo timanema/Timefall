@@ -2,7 +2,7 @@ package me.timefall.timefall.level;
 
 public enum Direction
 {
-    NORTH(0, -1), NORTHEAST(1, -1), NORTHWEST(-1, -1), EAST(1, 0), SOUTH(0, 1), SOUTHEAST(1, 1), SOUTHWEST(-1, 1), WEST(-1, 0);
+    NORTH(0, -3), NORTHEAST(2, -2), NORTHWEST(-2, -2), EAST(3, 0), SOUTH(0, 3), SOUTHEAST(2, 2), SOUTHWEST(-2, 2), WEST(-3, 0);
 
     int xChange;
     int yChange;

@@ -1,7 +1,7 @@
 package me.timefall.timefall.graphics.font;
 
-import me.timefall.timefall.graphics.Bitmap;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Screen;
 
 public class Font
 {

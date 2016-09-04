@@ -1,5 +1,6 @@
 package me.timefall.timefall;
 
+import java.awt.*;
 import java.util.Stack;
 
 public class Settings
@@ -16,25 +17,23 @@ public class Settings
 
     public enum ScreenSize
     {
-        SMALL(640, 360, false, 0, 1),
-        MEDIUM(960, 540, false, 1, 1.5f),
-        NORMAL(1280, 720, false, 2, 2),
-        LARGE(1920, 1080, false, 3, 3),
-        FULLSCREEN(1920, 1080, true, 4, 3);
+        SMALL(640, 360, false, 0),
+        MEDIUM(960, 540, false, 1),
+        NORMAL(1280, 720, false, 2),
+        LARGE(1920, 1080, false, 3),
+        FULLSCREEN(1920, 1080, true, 4);
 
         private final int width;
         private final int height;
-        private final float scale;
 
         private final boolean fullscreen;
 
         private final int ID;
 
-        private ScreenSize(int width, int height, boolean fullscreen, int ID, float scale)
+        private ScreenSize(int width, int height, boolean fullscreen, int ID)
         {
             this.width = width;
             this.height = height;
-            this.scale  = scale;
             this.fullscreen = fullscreen;
             this.ID = ID;
         }
@@ -47,11 +46,6 @@ public class Settings
         public int getHeight()
         {
             return height;
-        }
-
-        public float getScale()
-        {
-            return scale;
         }
 
         public int getID()
@@ -114,6 +108,8 @@ public class Settings
             }
 
         states.push(gameState);
+
+        EventQueue.invokeLater(() -> Timefall.getMainDisplay().getGameCanvas().updateScreen(gameState.getScreen()));
     }
 
     public void removeState(GameState gameState)
@@ -166,6 +162,16 @@ public class Settings
     public GameState getCurrentState()
     {
         return states.peek();
+    }
+
+    public float getScale()
+    {
+        int screenWidth = Timefall.getMainDisplay().getScreen().width, screenHeight = Timefall.getMainDisplay().getScreen().height;
+        int windowWidth = this.getScreenSize().width, windowHeight = this.getScreenSize().height;
+
+        float xScale = windowWidth / screenWidth, yScale = windowHeight / screenHeight;
+
+        return xScale == yScale ? xScale : 1;
     }
 
     public boolean isLightEnabled()

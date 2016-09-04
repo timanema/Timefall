@@ -1,6 +1,9 @@
-package me.timefall.timefall.graphics;
+package me.timefall.timefall.graphics.components;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Colour;
+import me.timefall.timefall.graphics.utils.PixelUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

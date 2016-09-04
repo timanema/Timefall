@@ -5,6 +5,9 @@ import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
 import me.timefall.timefall.game.game.Game;
+import me.timefall.timefall.game.titlescreen.TitleScreen;
+import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.handlers.ButtonHandler;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.threads.ThreadManager;
 
@@ -14,8 +17,10 @@ public class Timefall
 {
     private Object lockObject;
 
-    public static final int X_RES = 640;
-    public static final int Y_RES = 360;
+    public static int GAME_X_RES = 320; // 640
+    public static int GAME_Y_RES = 180; // 360
+    public static final int MENU_X_RES = 640;
+    public static final int MENU_Y_RES = 360;
 
     private static volatile Display mainDisplay;
     private static Settings settings;
@@ -24,6 +29,7 @@ public class Timefall
     private static MouseHandler mouseHandler;
     private static ThreadManager threadManager;
     private static TileManager tileManager;
+    private static ButtonHandler buttonHandler;
 
     public static void main(String args[])
     {
@@ -38,6 +44,9 @@ public class Timefall
         settings = new Settings();
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
+
+        System.out.println(" Reading files and readjusting settings ...");
+        fileManager = new FileManager(settings);
 
         System.out.println(" Initializing display ...");
 
@@ -64,16 +73,16 @@ public class Timefall
 
     private void internalStart()
     {
-        System.out.println(" Reading files and readjusting settings ...");
-        fileManager = new FileManager(settings);
+        System.out.println(" Initializing game threads ...");
+        buttonHandler = new ButtonHandler();
 
+        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
         // TODO: Remove this
-        startGame();
-
-        System.out.println(" Initializing game threads ...");
+        //startGame();
 
         // Start main thread
+        System.out.println(" Initializing game threads ...");
         Timefall.initThreads();
 
         System.out.println("All Timefall components loaded!");
@@ -83,7 +92,7 @@ public class Timefall
     public static void startGame()
     {
         //TODO: Verander settings later nog vanuit files
-        Game game = new Game(settings);
+        Game game = new Game(settings, new Screen(GAME_X_RES, GAME_Y_RES));
         settings.setState(game);
 
         tileManager = game.tileManager;
@@ -128,5 +137,10 @@ public class Timefall
     public static TileManager getTileManager()
     {
         return tileManager;
+    }
+
+    public static ButtonHandler getButtonHandler()
+    {
+        return buttonHandler;
     }
 }

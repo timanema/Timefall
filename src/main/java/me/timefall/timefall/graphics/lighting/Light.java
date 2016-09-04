@@ -1,6 +1,6 @@
 package me.timefall.timefall.graphics.lighting;
 
-import me.timefall.timefall.graphics.PixelUtils;
+import me.timefall.timefall.graphics.utils.PixelUtils;
 
 public class Light
 {

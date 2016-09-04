@@ -2,7 +2,11 @@ package me.timefall.timefall.game.titlescreen;
 
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.Timefall;
+import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
+import me.timefall.timefall.graphics.components.buttons.NormalButton;
+import me.timefall.timefall.graphics.handlers.ButtonUtils;
 
 public class TitleScreen extends GameState
 {
@@ -25,11 +29,21 @@ public class TitleScreen extends GameState
 
     private SelectedOption selectedOption;
 
-    public TitleScreen(Settings settings)
+    public TitleScreen(Settings settings, Screen screen)
     {
-        super(settings);
+        super(settings, screen);
 
         selectedOption = SelectedOption.PLAY;
+        this.init();
+    }
+
+    private void init()
+    {
+        NormalButton normalButton = ButtonUtils.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
+
+        normalButton.setLocation(23, 56);
+        normalButton.setActive(true);
+        normalButton.setVisible(true);
     }
 
     @Override

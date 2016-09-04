@@ -4,7 +4,7 @@ import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.keys.Keys;
-import me.timefall.timefall.graphics.Screen;
+import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
 import me.timefall.timefall.graphics.font.FontType;
@@ -15,9 +15,9 @@ public class Game extends GameState
 {
     public TileManager tileManager;
 
-    public Game(Settings settings)
+    public Game(Settings settings, Screen screen)
     {
-        super(settings);
+        super(settings, screen);
 
         System.out.println("\nInitializing main game");
         tileManager = new TileManager();
@@ -26,28 +26,21 @@ public class Game extends GameState
     @Override
     public void tick(double deltaTime)
     {
-        //System.out.println("EDT (tick game): " + EventQueue.isDispatchThread());
-
+        //TODO: Remove old movement code
         TileManager tileManager = Timefall.getTileManager();
 
         // Tick all entities
         tileManager.getEntityManager().tickEntities();
 
-        // Get which keys are pressed
-        boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed();
-        boolean leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed();
-        boolean upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed();
-        boolean downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();
-
-        // 'Make' directions of the above data
-        boolean northDirection = upKey && !downKey;
-        boolean southDirection = downKey && !upKey;
-        boolean westDirection = leftKey && !rightKey;
-        boolean eastDirection = rightKey && !leftKey;
-
+        // Get which keys are pressed and pair them with direction
+        boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed(), leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed(), upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed(), downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();
+        boolean northDirection = upKey && !downKey, southDirection = downKey && !upKey, westDirection = leftKey && !rightKey, eastDirection = rightKey && !leftKey;
         boolean moveCommand = rightKey || leftKey || upKey || downKey;
 
-        // Check if the screen can move any further
+        // Get direction
+        Direction direction = (northDirection && eastDirection ? Direction.NORTHEAST : (northDirection && westDirection ? Direction.NORTHWEST : (southDirection && eastDirection ? Direction.SOUTHEAST : (southDirection && westDirection ? Direction.SOUTHWEST : (northDirection ? Direction.NORTH : (southDirection ? Direction.SOUTH : (eastDirection ? Direction.EAST : Direction.WEST)))))));
+
+        /*// Check if the screen can move any further
         boolean withinXEast = tileManager.getCurrentWorld().getX() + 2 + 16 * 40 <= tileManager.worldX * 16;
         boolean withinXWest = tileManager.getCurrentWorld().getX() - 2 >= 0;
         boolean withinYNorth = tileManager.getCurrentWorld().getY() - 2 >= 0;
@@ -55,16 +48,13 @@ public class Game extends GameState
 
         // Check if the player is X or Y centered
         boolean xCen = tileManager.getEntityManager().getPlayer().isXCentred();
-        boolean yCen = tileManager.getEntityManager().getPlayer().isYCentred();
+        boolean yCen = tileManager.getEntityManager().getPlayer().isYCentred();*/
 
-        // Get direction
-        Direction direction = (northDirection && eastDirection ? Direction.NORTHEAST : (northDirection && westDirection ? Direction.NORTHWEST : (southDirection && eastDirection ? Direction.SOUTHEAST : (southDirection && westDirection ? Direction.SOUTHWEST : (northDirection ? Direction.NORTH : (southDirection ? Direction.SOUTH : (eastDirection ? Direction.EAST : Direction.WEST)))))));
 
         // Check all directions if it is a move command and if the player can move
-        if (moveCommand /*&&
-                tileManager.getEntityManager().getPlayer().canMove(direction)*/)
+        if (moveCommand)
         {
-            if (northDirection)
+            /*if (northDirection)
             {
                 if (withinYNorth && yCen)
                 {
@@ -122,12 +112,11 @@ public class Game extends GameState
                         tileManager.getEntityManager().getPlayer().xOff -= 2;
                     }
                 }
-            }
-
+            }*/
             tileManager.getEntityManager().getPlayer().move(direction);
         } else
         {
-            // Player didn't issue move command this tick so the player entity stops moving
+            // TODO: Use keyReleased in keyhandler
             tileManager.getEntityManager().getPlayer().currentlyMoving = false;
         }
 
