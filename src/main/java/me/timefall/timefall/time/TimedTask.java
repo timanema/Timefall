@@ -52,4 +52,9 @@ public class TimedTask
     {
         this.task.run();
     }
+
+    public boolean done()
+    {
+        return this.repeats == -1;
+    }
 }

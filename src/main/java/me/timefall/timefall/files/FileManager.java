@@ -117,7 +117,7 @@ public class FileManager
 
                 bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
                 bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
-                bufferedWriter.write("music: " + (setting.equals("music") ? value : settings.getMusicSetting()) + "\n");
+                bufferedWriter.write("music: " + (setting.equals("sounds/music") ? value : settings.getMusicSetting()) + "\n");
                 bufferedWriter.write("gender: " + (setting.equals("gender") ? value : settings.getGender()) + "\n");
                 bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
                 bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX())) + "\n");
@@ -245,7 +245,7 @@ public class FileManager
                 case "sound":
                     settings.setSoundSetting(intValue);
                     break;
-                case "music":
+                case "sounds/music":
                     settings.setMusicSetting(intValue);
                     break;
                 case "gender":

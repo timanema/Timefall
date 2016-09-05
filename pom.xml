@@ -69,6 +69,19 @@
                     <include>**/*.txt</include>
                     <include>**/*.png</include>
                     <include>**/*.mp3</include>
+                    <include>**/*.wav</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources-bin</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.png</include>
+                    <include>**/*.mp3</include>
+                    <include>**/*.wav</include>
                     <include>**/*.gif</include>
                 </includes>
             </resource>

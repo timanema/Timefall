@@ -46,9 +46,9 @@ public class TitleScreen extends GameState
         normalButton.setActive(true);
         normalButton.setVisible(true);
 
-        Timefall.getTime().scheduleTask(5 * 30, () -> System.out.println("Sync task: " + Thread.currentThread().getName()));
-        Timefall.getTime().scheduleASyncTask(5 * 30 + 5, () -> System.out.println("ASync task: " + Thread.currentThread().getName()));
-        Timefall.getTime().scheduleTask(5, 30, () -> System.out.println(Timefall.getTime().getTimeString()));
+        //Timefall.getTime().scheduleTask(5 * 30, () -> System.out.println("Sync task: " + Thread.currentThread().getName()));
+        //Timefall.getTime().scheduleASyncTask(5 * 30 + 5, () -> System.out.println("ASync task: " + Thread.currentThread().getName()));
+        Timefall.getTime().scheduleTask(0, 30, () -> System.out.println(Timefall.getTime().getTimeString()));
     }
 
     @Override

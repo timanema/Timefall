@@ -1,6 +1,7 @@
 package me.timefall.timefall.time;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Time
 {
@@ -23,9 +24,9 @@ public class Time
     {
         ticks++;
 
-        if (ticks == 30)
+        if (ticks == 1)
         {
-            seconds++;
+            seconds += 2;
             ticks = 0;
 
             if (seconds == 60)
@@ -47,7 +48,20 @@ public class Time
             }
         }
 
-        this.timedTasks.forEach(me.timefall.timefall.time.TimedTask::tick);
+        Iterator<TimedTask> taskIterator = this.timedTasks.iterator();
+
+        while (taskIterator.hasNext())
+        {
+            TimedTask timedTask = taskIterator.next();
+
+            if (timedTask.done())
+            {
+                this.timedTasks.remove(timedTask);
+                continue;
+            }
+
+            timedTask.tick();
+        }
     }
 
     public long getDaysPassed()

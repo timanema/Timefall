@@ -40,6 +40,8 @@ public class Timefall
 
     public Timefall()
     {
+        //new Sound("/sounds/music/far_horizons.wav").playSound();
+
         System.out.println("Loading Timefall components ...\n Creating settings ...\n Enabling listeners ...");
 
         lockObject = new Object();
@@ -78,7 +80,7 @@ public class Timefall
         //TODO: Add real time from file
         System.out.println(" Initializing game threads ...");
         buttonHandler = new ButtonHandler();
-        time = new Time(6, 23, 59, 34, 0);
+        time = new Time(6, 23, 58, 58, 0);
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
