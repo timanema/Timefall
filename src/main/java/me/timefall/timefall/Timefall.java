@@ -10,6 +10,7 @@ import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.handlers.ButtonHandler;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.threads.ThreadManager;
+import me.timefall.timefall.time.Time;
 
 import java.awt.*;
 
@@ -30,6 +31,7 @@ public class Timefall
     private static ThreadManager threadManager;
     private static TileManager tileManager;
     private static ButtonHandler buttonHandler;
+    private static Time time;
 
     public static void main(String args[])
     {
@@ -73,8 +75,10 @@ public class Timefall
 
     private void internalStart()
     {
+        //TODO: Add real time from file
         System.out.println(" Initializing game threads ...");
         buttonHandler = new ButtonHandler();
+        time = new Time(6, 23, 59, 34, 0);
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
@@ -142,5 +146,10 @@ public class Timefall
     public static ButtonHandler getButtonHandler()
     {
         return buttonHandler;
+    }
+
+    public static Time getTime()
+    {
+        return time;
     }
 }

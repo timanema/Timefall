@@ -6,7 +6,7 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
 import me.timefall.timefall.graphics.components.buttons.NormalButton;
-import me.timefall.timefall.graphics.handlers.ButtonFactory;
+import me.timefall.timefall.graphics.utils.ButtonFactory;
 
 public class TitleScreen extends GameState
 {
@@ -39,11 +39,16 @@ public class TitleScreen extends GameState
 
     private void init()
     {
+        //TODO: Remove example code
         NormalButton normalButton = ButtonFactory.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
 
         normalButton.setLocation(23, 56);
         normalButton.setActive(true);
         normalButton.setVisible(true);
+
+        Timefall.getTime().scheduleTask(5 * 30, () -> System.out.println("Sync task: " + Thread.currentThread().getName()));
+        Timefall.getTime().scheduleASyncTask(5 * 30 + 5, () -> System.out.println("ASync task: " + Thread.currentThread().getName()));
+        Timefall.getTime().scheduleTask(5, 30, () -> System.out.println(Timefall.getTime().getTimeString()));
     }
 
     @Override
@@ -56,5 +61,11 @@ public class TitleScreen extends GameState
     public void render(Screen screen)
     {
         // En hier renderen, duh
+    }
+
+    @Override
+    public void saveState()
+    {
+
     }
 }

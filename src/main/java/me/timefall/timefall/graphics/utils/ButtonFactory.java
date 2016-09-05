@@ -1,4 +1,4 @@
-package me.timefall.timefall.graphics.handlers;
+package me.timefall.timefall.graphics.utils;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;

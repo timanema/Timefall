@@ -124,17 +124,7 @@ public class Display
      */
     private void onClose()
     {
-        System.out.println("\nSaving game data ...");
-
-        // Save all necessary data
-        Timefall.getFileManager().changeSetting("settings", "xOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getX()));
-        Timefall.getFileManager().changeSetting("settings", "yOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getY()));
-        Timefall.getFileManager().changeSetting("settings", "gender", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getGender()));
-        Timefall.getFileManager().changeSetting("lvl", "world", Timefall.getTileManager().getCurrentWorld().getWorldName());
-        Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
-        Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));
-
-        System.out.println("Saved game data!");
+        Timefall.getSettings().getCurrentState().saveState();
 
         // Exit the program
         System.exit(0);

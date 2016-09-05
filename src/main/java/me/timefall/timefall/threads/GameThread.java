@@ -4,8 +4,6 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
 import me.timefall.timefall.graphics.components.Screen;
 
-import java.awt.*;
-
 public class GameThread implements Runnable
 {
     private boolean capped = false;
@@ -63,7 +61,7 @@ public class GameThread implements Runnable
             if (System.currentTimeMillis() - currentFrameTimer >= 1000)
             {
                 currentFrameTimer += 1000;
-                System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn + " (" + Thread.currentThread().getName() + " - " + EventQueue.isDispatchThread() + ")");
+                //System.out.println("Ticks: " + ticksPassed + ", Frames: " + framesDrawn + " (" + Thread.currentThread().getName() + " - " + EventQueue.isDispatchThread() + ")");
 
                 framesDrawn = 0;
                 ticksPassed = 0;
@@ -82,6 +80,7 @@ public class GameThread implements Runnable
     private void tick(double deltaTime)
     {
         Timefall.getSettings().getCurrentState().tick(deltaTime);
+        Timefall.getTime().tickTime();
 
         //TODO: Remove debug code
         Display display = Timefall.getMainDisplay();

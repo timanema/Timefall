@@ -21,4 +21,6 @@ public abstract class GameState
     {
         return this.screen;
     }
+
+    public abstract void saveState();
 }
