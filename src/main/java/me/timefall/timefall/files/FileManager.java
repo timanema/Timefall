@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * @deprecated Needs a recode asap
+ */
 public class FileManager
 {
     private String settingsPath = "";

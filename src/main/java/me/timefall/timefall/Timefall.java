@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class Timefall
 {
-    private static HashMap<String, Boolean> arguments;
+    private static HashMap<String, Object> arguments;
 
     private Object lockObject;
 
@@ -45,7 +45,12 @@ public class Timefall
 
         for (String argument : args)
         {
-            arguments.keySet().stream().filter(arg -> arg.equals(argument)).forEach(arg -> arguments.put(arg, true));
+            if (argument.contains("="))
+            {
+                arguments.put(argument.split("=")[0], Integer.parseInt(argument.split("=")[1]));
+            } else {
+                arguments.keySet().stream().filter(arg -> arg.equals(argument)).forEach(arg -> arguments.put(arg, true));
+            }
         }
 
         new Timefall();
@@ -63,6 +68,11 @@ public class Timefall
         System.out.println(" Reading files and readjusting settings ...");
         fileManager = new FileManager(settings);
 
+        if (arguments.containsKey("screenSize"))
+        {
+            // todo: fix this
+            //settings.setScreenSize(settings.getScreenSize((Integer) arguments.get("screenSize")));
+        }
         System.out.println(" Initializing display ...");
 
         EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight(), lockObject));
@@ -94,7 +104,7 @@ public class Timefall
         time = new Time(6, 23, 58, 58, 0);
 
         //TODO: Load sounds from files
-        soundHandler = new SoundHandler(arguments.get("disableSounds"));
+        soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
