@@ -9,13 +9,17 @@ import me.timefall.timefall.game.titlescreen.TitleScreen;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.handlers.ButtonHandler;
 import me.timefall.timefall.level.TileManager;
+import me.timefall.timefall.sounds.SoundHandler;
 import me.timefall.timefall.threads.ThreadManager;
 import me.timefall.timefall.time.Time;
 
 import java.awt.*;
+import java.util.HashMap;
 
 public class Timefall
 {
+    private static HashMap<String, Boolean> arguments;
+
     private Object lockObject;
 
     public static int GAME_X_RES = 320; // 640
@@ -32,16 +36,23 @@ public class Timefall
     private static TileManager tileManager;
     private static ButtonHandler buttonHandler;
     private static Time time;
+    private static SoundHandler soundHandler;
 
     public static void main(String args[])
     {
+        arguments =  new HashMap<>();
+        arguments.put("disableSounds", false);
+
+        for (String argument : args)
+        {
+            arguments.keySet().stream().filter(arg -> arg.equals(argument)).forEach(arg -> arguments.put(arg, true));
+        }
+
         new Timefall();
     }
 
     public Timefall()
     {
-        //new Sound("/sounds/music/far_horizons.wav").playSound();
-
         System.out.println("Loading Timefall components ...\n Creating settings ...\n Enabling listeners ...");
 
         lockObject = new Object();
@@ -81,6 +92,9 @@ public class Timefall
         System.out.println(" Initializing game threads ...");
         buttonHandler = new ButtonHandler();
         time = new Time(6, 23, 58, 58, 0);
+
+        //TODO: Load sounds from files
+        soundHandler = new SoundHandler(arguments.get("disableSounds"));
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
@@ -153,5 +167,10 @@ public class Timefall
     public static Time getTime()
     {
         return time;
+    }
+
+    public static SoundHandler getSoundHandler()
+    {
+        return soundHandler;
     }
 }

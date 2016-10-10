@@ -9,7 +9,8 @@ public enum Keys
     VK_UP(38),
     VK_DOWN(40),
     VK_LEFT(37),
-    VK_RIGHT(39);
+    VK_RIGHT(39),
+    VK_I(73);
 
     private int keyID;
     private boolean isPressed;

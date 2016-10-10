@@ -1,16 +1,22 @@
-package me.timefall.timefall.sounds;
+package me.timefall.timefall.sounds.components;
 
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Sound
+/**
+ * @deprecated Use {@link me.timefall.timefall.sounds.components.Sound ()}
+ */
+@Deprecated
+public class SoundOld
 {
-    private Clip clip;
-    private FloatControl floatControl;
+    protected Clip clip;
+    protected FloatControl floatControl;
 
-    public Sound(String path)
+    protected SoundCharacteristic[] soundCharacteristics;
+
+    public SoundOld(String path, SoundCharacteristic[] soundCharacteristics)
     {
         try
         {
@@ -23,15 +29,14 @@ public class Sound
             this.clip = AudioSystem.getClip();
 
             this.clip.open(decodedAudioInputStream);
-            this.clip.addLineListener(event -> {
-                System.out.println(event.getType().toString());
-            });
 
             this.floatControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
         {
             e.printStackTrace();
         }
+
+        this.soundCharacteristics = soundCharacteristics;
     }
 
     public void playSound()
@@ -63,5 +68,27 @@ public class Sound
         this.stopSound();
         this.clip.drain();
         this.clip.close();
+    }
+
+    /**
+     * Loops the clip so its state will change.
+     * The listeners, therefore, will not work properly in this method.
+     *
+     * @deprecated Use multiple {@link #playSound()}'s for the time being instead.
+     */
+    @Deprecated
+    public void loopSound(int loops)
+    {
+        this.clip.loop(loops);
+
+        while (!this.clip.isRunning())
+        {
+            this.clip.start();
+        }
+    }
+
+    public SoundCharacteristic[] getSoundCharacteristics()
+    {
+        return this.soundCharacteristics;
     }
 }

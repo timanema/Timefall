@@ -39,7 +39,13 @@ public class TitleScreen extends GameState
 
     private void init()
     {
-        //TODO: Remove example code
+        NormalButton testButton = ButtonFactory.createNormalButton("asfsf", 50, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
+
+        testButton.setLocation(Timefall.MENU_X_RES / 2 - 25, Timefall.MENU_Y_RES / 2 - 13);
+        testButton.setActive(true);
+        testButton.setVisible(true);
+
+       /* //TODO: Remove example code
         NormalButton normalButton = ButtonFactory.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
 
         normalButton.setLocation(23, 56);
@@ -48,7 +54,7 @@ public class TitleScreen extends GameState
 
         //Timefall.getTime().scheduleTask(5 * 30, () -> System.out.println("Sync task: " + Thread.currentThread().getName()));
         //Timefall.getTime().scheduleASyncTask(5 * 30 + 5, () -> System.out.println("ASync task: " + Thread.currentThread().getName()));
-        Timefall.getTime().scheduleTask(0, 30, () -> System.out.println(Timefall.getTime().getTimeString()));
+        Timefall.getTime().scheduleTask(0, 30, () -> System.out.println(Timefall.getTime().getTimeString()));*/
     }
 
     @Override
