@@ -331,14 +331,13 @@ public class Player implements Mob
             } else
             {
                 // Screen cannot move
-                if (xOff + xMod >= 0 && xOff + xMod < (tileManager.worldX - 1) * 16)
+                if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width)
                 {
                     xCen = false;
                     xOff += xMod;
                 }
             }
-
-            this.getLocation().add(xOff + xMod >= 0 && xOff + xMod < (tileManager.worldX - 1) * 16 ? xMod * .0625F : 0, 0);
+            this.getLocation().add(xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width ? xMod * .0625F : 0, 0);
         }
 
         for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
@@ -352,14 +351,14 @@ public class Player implements Mob
             } else
             {
                 // Screen cannot move
-                if (yOff + yMod >= 0 && yOff + yMod < (tileManager.worldY - 1) * 16)
+                if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height)
                 {
                     yCen = false;
                     yOff += yMod;
                 }
             }
 
-            this.getLocation().add(0, yOff + yMod >= 0 && yOff + yMod < (tileManager.worldY - 1) * 16 ? yMod * .0625F : 0);
+            this.getLocation().add(0, yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height ? yMod * .0625F : 0);
         }
 
         //TODO: Remove this debug code

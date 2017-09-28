@@ -19,7 +19,7 @@ public class SoundHandler
 
     private void initSounds()
     {
-        new Music("/sounds/music/far_horizons.wav", null).start();
+        new Music("/music/tarir.wav", null).start();
     }
 
     public void triggerLineListener(LineEvent lineEvent)

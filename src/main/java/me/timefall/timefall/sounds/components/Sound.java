@@ -1,5 +1,7 @@
 package me.timefall.timefall.sounds.components;
 
+import me.timefall.timefall.Timefall;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
@@ -17,7 +19,7 @@ public class Sound extends BigClip
         try
         {
             this.soundCharacteristics = soundCharacteristics;
-            InputStream inputStream = getClass().getResourceAsStream(path);
+            InputStream inputStream = Timefall.class.getResourceAsStream(path);
             InputStream bufferedInput = new BufferedInputStream(inputStream);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedInput);
 

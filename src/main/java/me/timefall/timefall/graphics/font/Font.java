@@ -25,7 +25,6 @@ public class Font
 
             screen.draw(font, xPos, yPos);
             xPos += font.width;
-            font = null;
         }
     }
 

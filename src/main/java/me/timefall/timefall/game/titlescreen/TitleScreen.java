@@ -6,6 +6,9 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
 import me.timefall.timefall.graphics.components.buttons.NormalButton;
+import me.timefall.timefall.graphics.font.Font;
+import me.timefall.timefall.graphics.font.FontSize;
+import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.graphics.utils.ButtonFactory;
 
 public class TitleScreen extends GameState
@@ -67,6 +70,7 @@ public class TitleScreen extends GameState
     public void render(Screen screen)
     {
         // En hier renderen, duh
+        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", screen, 0, 0);
     }
 
     @Override
