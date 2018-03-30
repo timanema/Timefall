@@ -1,7 +1,5 @@
 package me.timefall.timefall.graphics.components;
 
-import me.timefall.timefall.graphics.components.Bitmap;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 

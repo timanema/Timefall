@@ -154,6 +154,9 @@ public class Player implements Mob
     @Override
     public Bitmap getCurrentBitmap()
     {
+        if (Sprite.completeCharacters == null)
+            return null;
+
         // Returns appropriate bitmap
         switch (getDirection())
         {
@@ -222,10 +225,15 @@ public class Player implements Mob
             yCen = false;
         } else
         {
+            //TODO: Fix 'teleporting'
+            Bitmap currentBitmap = getCurrentBitmap();
+            int width = currentBitmap == null ? 0 : currentBitmap.width / 2;
+            int height = currentBitmap == null ? 0 : currentBitmap.width / 2;
+
             if (yPlayer < yAxis || yPlayer > yMax - yAxis)
             {
                 // Player is X centered, not Y centered
-                xOff = xAxis;
+                xOff = xAxis - width;
                 yOff = (yPlayer < yAxis ? yPlayer : yAxis + (yPlayer - (yMax - yAxis)));
 
                 xCen = true;
@@ -235,15 +243,15 @@ public class Player implements Mob
             {
                 // Player is Y centered, not X centered
                 xOff = (xPlayer < xAxis ? xPlayer : xAxis + (xPlayer - (xMax - xAxis)));
-                yOff = yAxis;
+                yOff = yAxis - height;
 
                 xCen = false;
                 yCen = true;
             } else
             {
                 // Both X and Y are centered
-                xOff = xAxis;
-                yOff = yAxis;
+                xOff = xAxis - width;
+                yOff = yAxis - height;
 
                 xCen = true;
                 yCen = true;

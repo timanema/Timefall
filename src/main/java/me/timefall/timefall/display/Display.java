@@ -23,6 +23,7 @@ public class Display
 
     public JFrame jFrame;
     private GamePanel gameCanvas;
+    private GamePanel menuCanvas;
 
     public Display(String gameName, int width, int height, Object lockObject)
     {
@@ -78,10 +79,18 @@ public class Display
         });
 
         // Create components
-        gameCanvas = new GamePanel(width, height, dimension);
+        JLayeredPane jLayeredPane = new JLayeredPane();
+        gameCanvas = new GamePanel(width, height, dimension, false);
+        menuCanvas = new GamePanel(width, height, dimension, true);
 
         // Add components
-        jFrame.add(gameCanvas);
+        jLayeredPane.setPreferredSize(new Dimension(width, height));
+        gameCanvas.setBounds(0 ,0, width, height);
+        menuCanvas.setBounds(0, 0, width, height);
+        jLayeredPane.add(gameCanvas, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane.add(menuCanvas, JLayeredPane.PALETTE_LAYER);
+
+        jFrame.getContentPane().add(jLayeredPane);
 
         // Set custom cursor
         BufferedImage mouseImage = null;
@@ -133,6 +142,10 @@ public class Display
     public GamePanel getGameCanvas()
     {
         return this.gameCanvas;
+    }
+
+    public GamePanel getMenuCanvas() {
+        return this.menuCanvas;
     }
 
     public Screen getScreen()

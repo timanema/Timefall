@@ -133,7 +133,7 @@ public class Game extends GameState
         tileManager.getEntityManager().renderEntities(screen);
 
         //TODO: DEBUG
-        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", screen, 0, 0);
+        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Dit is een test", 0, 25);
     }
 
     @Override

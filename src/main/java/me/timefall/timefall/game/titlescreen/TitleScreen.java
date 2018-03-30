@@ -69,8 +69,7 @@ public class TitleScreen extends GameState
     @Override
     public void render(Screen screen)
     {
-        // En hier renderen, duh
-        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", screen, 0, 0);
+        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Hello me friend", 0, 0);
     }
 
     @Override

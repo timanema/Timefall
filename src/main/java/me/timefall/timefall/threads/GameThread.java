@@ -4,6 +4,8 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
 import me.timefall.timefall.graphics.components.Screen;
 
+import java.awt.image.BufferedImage;
+
 public class GameThread implements Runnable
 {
     private boolean capped = false;
@@ -119,6 +121,7 @@ public class GameThread implements Runnable
             return;
 
         // Render sprites
-        Timefall.getMainDisplay().getGameCanvas().render();
+        Timefall.getMainDisplay().getMenuCanvas().repaint();
+        Timefall.getMainDisplay().getGameCanvas().repaint();
     }
 }

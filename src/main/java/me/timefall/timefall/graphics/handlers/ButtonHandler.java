@@ -56,8 +56,7 @@ public class ButtonHandler
 
     public void renderButtons(Screen screen)
     {
-        this.buttons.stream().filter(button -> button.isVisible()).forEach(button -> {
-            screen.draw(button.getBitmap(), button.xOff, button.yOff);
-        });
+        this.buttons.stream().filter(Button::isVisible).forEach(button ->
+                screen.draw(button.getBitmap(), button.xOff, button.yOff));
     }
 }

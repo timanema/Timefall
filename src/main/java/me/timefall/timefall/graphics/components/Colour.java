@@ -7,6 +7,7 @@ public class Colour implements Cloneable
     // Colours
     public static Colour BLACK = new Colour(1, 0, 0, 0);
     public static Colour GREY = new Colour(1, 0.5F, 0.5F, 0.5F);
+    public static Colour TRANSPARANT = new Colour(0, 0, 0, 0);
 
     public float alpha, red, green, blue;
 
@@ -25,6 +26,9 @@ public class Colour implements Cloneable
 
     public int getColourInt()
     {
-        return ((int) (alpha * 255F + 0.5F) << PixelUtils.ALPHA_SHIFT | (int) (red * 255F + 0.5F) << PixelUtils.RED_SHIFT | (int) (green * 255F + 0.5F) << PixelUtils.GREEN_SHIFT | (int) (blue * 255F + 0.5F));
+        return ((int) (alpha * 255F + 0.5F) << PixelUtils.ALPHA_SHIFT
+                | (int) (red * 255F + 0.5F) << PixelUtils.RED_SHIFT
+                | (int) (green * 255F + 0.5F) << PixelUtils.GREEN_SHIFT
+                | (int) (blue * 255F + 0.5F));
     }
 }

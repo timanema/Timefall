@@ -5,6 +5,7 @@ import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
 import me.timefall.timefall.game.game.Game;
+import me.timefall.timefall.game.menu.TextOverlay;
 import me.timefall.timefall.game.titlescreen.TitleScreen;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.handlers.ButtonHandler;
@@ -22,8 +23,8 @@ public class Timefall
 
     private Object lockObject;
 
-    public static int GAME_X_RES = 640;//320; // 640
-    public static int GAME_Y_RES = 360;//180; // 360
+    public static int GAME_X_RES = 320; // 640
+    public static int GAME_Y_RES = 180; // 360
     public static final int MENU_X_RES = 640;
     public static final int MENU_Y_RES = 360;
 
@@ -37,6 +38,9 @@ public class Timefall
     private static ButtonHandler buttonHandler;
     private static Time time;
     private static SoundHandler soundHandler;
+
+    // TODO: Tijdelijke oplossing verwijderen
+    public static GameState textOverlay;
 
     public static void main(String args[])
     {
@@ -105,6 +109,10 @@ public class Timefall
 
         //TODO: Load sounds from files
         soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
+
+        // Setting up text overlay
+        textOverlay = new TextOverlay(settings, new Screen(MENU_X_RES, MENU_Y_RES));
+        EventQueue.invokeLater(() -> Timefall.getMainDisplay().getMenuCanvas().updateScreen(textOverlay.getScreen()));
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
         // Add temp gamestate
