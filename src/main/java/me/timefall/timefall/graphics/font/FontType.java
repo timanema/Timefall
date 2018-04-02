@@ -7,9 +7,12 @@ import java.util.HashMap;
 
 public enum FontType
 {
-    DEFAULT("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789                " + "*$-+%#!?=@;'.,)(~}{`_^][  ",
-            new FontSize[]{FontSize.LARGE, FontSize.HUGE},
-            new Bitmap[][][]{Sprite.defaultFontLarge, Sprite.defaultFontHuge});
+    DEFAULT("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "abcdefghijklmnopqrstuvwxyz" +
+            "0123456789                " +
+            "*$-+%#!?=@;'.,)(~}{`_^][: ",
+            new FontSize[]{FontSize.NORMAL},
+            new Bitmap[][][]{Sprite.defaultFontNormal});
 
     private String charString;
     public HashMap<FontSize, Bitmap[][]> fontSizes;

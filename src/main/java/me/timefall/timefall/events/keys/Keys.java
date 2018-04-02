@@ -1,38 +1,72 @@
 package me.timefall.timefall.events.keys;
 
+import me.timefall.timefall.threads.GameThread;
+
 public enum Keys
 {
-    VK_W(87),
-    VK_S(83),
-    VK_A(65),
-    VK_D(68),
-    VK_UP(38),
-    VK_DOWN(40),
-    VK_LEFT(37),
-    VK_RIGHT(39),
-    VK_I(73);
+    VK_W(87, 0),
+    VK_S(83, 0),
+    VK_A(65, 0),
+    VK_D(68, 0),
+    VK_UP(38, 0),
+    VK_DOWN(40, 0),
+    VK_LEFT(37, 0),
+    VK_RIGHT(39, 0),
+    VK_I(73, 0),
+    VK_F3(114, 0.2 * GameThread.TICKS);
 
     private int keyID;
     private boolean isPressed;
+    private boolean clicked;
+    private int timeout;
+    private int cooldown;
 
-    private Keys(int keyID)
+    private Keys(int keyID, double timeout)
     {
         this.keyID = keyID;
         this.isPressed = false;
+        this.clicked = false;
+        this.timeout = (int) timeout;
     }
 
     public void togglePressed(boolean isPressed)
     {
         this.isPressed = isPressed;
+
+        if (this.cooldown <= 0)
+        {
+            this.clicked = true;
+        }
     }
 
     public int getKeyID()
     {
-        return keyID;
+        return this.keyID;
     }
 
     public boolean isPressed()
     {
-        return isPressed;
+        return this.isPressed;
+    }
+
+    public boolean isClicked()
+    {
+        if (this.clicked)
+        {
+            this.clicked = false;
+            this.cooldown = this.timeout;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void tickCooldown()
+    {
+        if (this.cooldown > 0)
+        {
+            this.cooldown -= 1;
+        }
     }
 }

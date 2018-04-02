@@ -2,12 +2,15 @@ package me.timefall.timefall.threads;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
+import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.graphics.components.Screen;
 
 import java.awt.image.BufferedImage;
 
 public class GameThread implements Runnable
 {
+    public static final int TICKS = 30;
+
     private boolean capped = false;
     private boolean started = false;
     private static boolean isRunning;
@@ -83,6 +86,12 @@ public class GameThread implements Runnable
     {
         Timefall.getSettings().getCurrentState().tick(deltaTime);
         Timefall.getTime().tickTime();
+
+        // Tick button cooldown
+        for (Keys key : Keys.values())
+        {
+            key.tickCooldown();
+        }
 
         //TODO: Remove debug code
         Display display = Timefall.getMainDisplay();

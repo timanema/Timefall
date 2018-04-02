@@ -1,6 +1,7 @@
 package me.timefall.timefall;
 
 import me.timefall.timefall.display.Display;
+import me.timefall.timefall.display.GamePanel;
 import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
@@ -39,7 +40,6 @@ public class Timefall
     private static Time time;
     private static SoundHandler soundHandler;
 
-    // TODO: Tijdelijke oplossing verwijderen
     public static GameState textOverlay;
 
     public static void main(String args[])
@@ -111,7 +111,7 @@ public class Timefall
         soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
 
         // Setting up text overlay
-        textOverlay = new TextOverlay(settings, new Screen(MENU_X_RES, MENU_Y_RES));
+        textOverlay = new TextOverlay(settings, new Screen(1280, 720));
         EventQueue.invokeLater(() -> Timefall.getMainDisplay().getMenuCanvas().updateScreen(textOverlay.getScreen()));
 
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
@@ -190,5 +190,10 @@ public class Timefall
     public static SoundHandler getSoundHandler()
     {
         return soundHandler;
+    }
+
+    public static TextOverlay getTextOverlay()
+    {
+        return (TextOverlay) textOverlay;
     }
 }

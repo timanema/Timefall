@@ -189,8 +189,12 @@ public class Player implements Mob
 
     private void checkCentred(int xMax, int yMax, int xPlayer, int yPlayer)
     {
+        Bitmap currentBitmap = getCurrentBitmap();
+        int width = currentBitmap == null ? 0 : currentBitmap.width / 2;
+        int height = currentBitmap == null ? 0 : currentBitmap.width / 2;
+
         // Check if the player is in one of the four corners
-        if (xPlayer < xAxis && yPlayer < yAxis)
+        if (xPlayer + width < xAxis && yPlayer + height < yAxis)
         {
             // Player is in upper left corner
             xOff = xPlayer;
@@ -198,7 +202,7 @@ public class Player implements Mob
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - xAxis && yPlayer > yMax - yAxis)
+        } else if (xPlayer + width > xMax - xAxis && yPlayer + height > yMax - yAxis)
         {
             // Player is in lower right corner
             xOff = xAxis + (xPlayer - (xMax - xAxis));
@@ -206,7 +210,7 @@ public class Player implements Mob
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer < xAxis && yPlayer > yMax - yAxis)
+        } else if (xPlayer + width < xAxis && yPlayer + height > yMax - yAxis)
         {
             // Player is in lower left corner
             xOff = xPlayer;
@@ -215,7 +219,7 @@ public class Player implements Mob
 
             xCen = false;
             yCen = false;
-        } else if (xPlayer > xMax - xAxis && yPlayer < yAxis)
+        } else if (xPlayer + width> xMax - xAxis && yPlayer + height < yAxis)
         {
             // Player is in upper right corner
             xOff = xAxis + (xPlayer - (xMax - xAxis));
@@ -226,11 +230,8 @@ public class Player implements Mob
         } else
         {
             //TODO: Fix 'teleporting'
-            Bitmap currentBitmap = getCurrentBitmap();
-            int width = currentBitmap == null ? 0 : currentBitmap.width / 2;
-            int height = currentBitmap == null ? 0 : currentBitmap.width / 2;
 
-            if (yPlayer < yAxis || yPlayer > yMax - yAxis)
+            if (yPlayer + height < yAxis || yPlayer + height > yMax - yAxis)
             {
                 // Player is X centered, not Y centered
                 xOff = xAxis - width;
@@ -239,7 +240,7 @@ public class Player implements Mob
                 xCen = true;
                 yCen = false;
 
-            } else if (xPlayer < xAxis || xPlayer > xMax - xAxis)
+            } else if (xPlayer + width < xAxis || xPlayer + width > xMax - xAxis)
             {
                 // Player is Y centered, not X centered
                 xOff = (xPlayer < xAxis ? xPlayer : xAxis + (xPlayer - (xMax - xAxis)));

@@ -108,10 +108,18 @@ public class Bitmap
                 int yOff = y + yLoc;
                 int index = xOff + yOff * width;
 
-                if (xOff < 0 || yOff < 0 || xOff >= width || yOff >= height || index < 0 || index >= colours.length)
+                if (xOff < 0 ||
+                        yOff < 0 ||
+                        xOff >= width ||
+                        yOff >= height ||
+                        index < 0 ||
+                        index >= colours.length
+                        )
                     continue;
 
-                if (bitmap.colours[x + y * bitmap.width] != null && bitmap.colours[x + y * bitmap.width].alpha != 0.0)
+                if (bitmap.colours[x + y * bitmap.width] != null &&
+                        bitmap.colours[x + y * bitmap.width].alpha != 0.0
+                        )
                 {
                     this.colours[index] = bitmap.colours[x + y * bitmap.width];
 
@@ -124,6 +132,19 @@ public class Bitmap
     public void draw(Bitmap bitmap, int xLoc, int yLoc)
     {
         this.draw(bitmap, xLoc, yLoc, new int[]{-1});
+    }
+
+    public void clear()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for  (int x = 0; x < width; x++)
+            {
+                int index = x + y * width;
+
+                this.colours[index] = Colour.TRANSPARENT;
+            }
+        }
     }
 
     public void clearLights()

@@ -20,6 +20,6 @@ public class ASyncTimedTask extends TimedTask
     @Override
     protected void run()
     {
-        new Thread(task::run).start();
+        new Thread(task).start();
     }
 }

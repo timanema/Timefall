@@ -1,7 +1,7 @@
 package me.timefall.timefall.display;
 
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.game.game.MoveListener;
+import me.timefall.timefall.game.game.KeyListener;
 import me.timefall.timefall.graphics.components.Screen;
 
 import javax.imageio.ImageIO;
@@ -114,7 +114,7 @@ public class Display
         jFrame.addMouseListener(Timefall.getMouseHandler());
         jFrame.addMouseMotionListener(Timefall.getMouseHandler());
         jFrame.setFocusable(true);
-        Timefall.getKeyHandler().addListener(new MoveListener());
+        Timefall.getKeyHandler().addListener(new KeyListener());
 
         this.unlock(lockObject);
     }

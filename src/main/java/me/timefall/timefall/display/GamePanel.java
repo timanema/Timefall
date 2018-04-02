@@ -83,7 +83,7 @@ public class GamePanel extends JComponent {
 
         // Render colours on screen
         screen.render();
-        screen.blendLight();
+        if (!menuPanel) screen.blendLight();
         screen.update();
 
         // Draw the image on the screen

@@ -14,6 +14,7 @@ import me.timefall.timefall.level.TileManager;
 public class Game extends GameState
 {
     public TileManager tileManager;
+    private boolean debugInfo = false;
 
     public Game(Settings settings, Screen screen)
     {
@@ -31,6 +32,14 @@ public class Game extends GameState
 
         // Tick all entities
         tileManager.getEntityManager().tickEntities();
+
+        // Check for key commands
+        boolean debugToggle = Keys.VK_F3.isClicked();
+
+        if (debugToggle)
+        {
+            this.debugInfo = !this.debugInfo;
+        }
 
         // Get which keys are pressed and pair them with direction
         boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed(), leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed(), upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed(), downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();
@@ -132,8 +141,33 @@ public class Game extends GameState
         tileManager.getLevel().render(screen);
         tileManager.getEntityManager().renderEntities(screen);
 
-        //TODO: DEBUG
-        Font.drawText(FontType.DEFAULT, FontSize.LARGE, "Dit is een test", 0, 25);
+        // Render debug information
+
+        if (this.debugInfo) {
+            int screenXOFF = tileManager.getCurrentWorld().getX();
+            int screenYOFF = tileManager.getCurrentWorld().getY();
+            float xLoc = tileManager.getEntityManager().getPlayer().getLocation().getX();
+            float yLoc = tileManager.getEntityManager().getPlayer().getLocation().getY();
+            int playerXWOFF = tileManager.getEntityManager().getPlayer().getxOff();
+            int playerYWOFF = tileManager.getEntityManager().getPlayer().getyOff();
+            int playerXOFF = tileManager.getEntityManager().getPlayer().xOff;
+            int playerYOFF = tileManager.getEntityManager().getPlayer().yOff;
+            boolean xCen = tileManager.getEntityManager().getPlayer().xCen;
+            boolean yCen = tileManager.getEntityManager().getPlayer().yCen;
+            String worldName = tileManager.getCurrentWorld().getWorldName();
+
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Screen xOff: " + screenXOFF, 0, 0);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Screen yOff: " + screenYOFF, 0, 20);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "xLoc: " + xLoc, 0, 40);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "yLoc: " + yLoc, 0, 60);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xWOff: " + playerXWOFF, 0, 80);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xWOff: " + playerYWOFF, 0, 100);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xOff: " + playerXOFF, 0, 120);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xOff: " + playerYOFF, 0, 140);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xCen: " + xCen, 0, 160);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player yCen: " + yCen, 0, 180);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "World: " + worldName, 0, 200);
+        }
     }
 
     @Override

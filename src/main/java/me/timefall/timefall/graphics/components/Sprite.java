@@ -15,8 +15,7 @@ public class Sprite
     public static final Bitmap[][] buildings = getSubImage("/spritesheets/buildings.png", 16, 16, 0, 0);
     public static Bitmap[][] completeCharacters;
 
-    public static Bitmap[][] defaultFontHuge = getSubImage("/spritesheets/fonts/default_font_huge.png", 48, 60, 0, 0);
-    public static Bitmap[][] defaultFontLarge = getSubImage("/spritesheets/fonts/default_font_large.png", 12, 18, 0, 0);
+    public static Bitmap[][] defaultFontNormal = getSubImage("/spritesheets/fonts/default_font_normal.png", 12, 18, 0, 0);
 
     public static Bitmap mouse = creatMouse();
 

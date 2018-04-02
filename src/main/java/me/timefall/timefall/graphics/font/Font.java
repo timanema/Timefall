@@ -6,9 +6,28 @@ import me.timefall.timefall.graphics.components.Screen;
 
 public class Font
 {
-    public static void drawText(FontType fontType, FontSize fontSize, String message, int xPos, int yPos)
+    public static void requestText(FontType fontType,
+                                   FontSize fontSize,
+                                   String message,
+                                   int xPos,
+                                   int yPos)
     {
-        System.out.println("Rendering: " + message);
+        Timefall.getTextOverlay().requestText(fontType, fontSize, message, xPos, yPos);
+    }
+
+    //TODO: Add more text options
+
+    /**
+     * Draws text directly onto given bitmap
+     * Should not be used before the overlay has been cleared
+     */
+    public static void drawText(Bitmap bitmap,
+                                FontType fontType,
+                                FontSize fontSize,
+                                String message,
+                                int xPos,
+                                int yPos)
+    {
         if (!fontType.fontSizes.keySet().contains(fontSize))
         {
             try
@@ -23,27 +42,17 @@ public class Font
         for (int i = 0; i < message.length(); i++)
         {
             int index = fontType.getCharString().indexOf(message.charAt(i));
+
+            if (index < 0)
+            {
+                System.out.println("[TimeFall] Could not find character: " + message.charAt(i));
+                continue;
+            }
+
             Bitmap font = fontType.getChars(fontSize)[index % 26][index / 26];
 
-            Timefall.textOverlay.getScreen().draw(font, xPos, yPos);
+            bitmap.draw(font, xPos, yPos);
             xPos += font.width;
         }
-    }
-
-    public static void drawText(FontType fontType, String message, int xPos, int yPos)
-    {
-        //TODO: Change default size to normal
-        drawText(fontType, FontSize.LARGE, message, xPos, yPos);
-    }
-
-    public static void drawText(FontSize fontSize, String message, int xPos, int yPos)
-    {
-        drawText(FontType.DEFAULT, fontSize, message, xPos, yPos);
-    }
-
-    public static void drawText(String message, int xPos, int yPos)
-    {
-        //TODO: Change default size to normal
-        drawText(FontType.DEFAULT, FontSize.LARGE, message, xPos, yPos);
     }
 }
