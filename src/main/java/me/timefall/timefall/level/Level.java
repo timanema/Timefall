@@ -2,6 +2,7 @@ package me.timefall.timefall.level;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.lighting.Light;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.lighting.ShadowType;
@@ -9,6 +10,7 @@ import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.tiles.base.Tree;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Level
@@ -69,7 +71,6 @@ public class Level
             for (int y = 0; y < screenY; y++)
             {
                 groundTiles[x][y] = blockObject[x][y].getSprite(tileManager.getBaseLayer()[x][y]);
-
 
                 if (Timefall.getSettings().isDynamicLightEnabled())
                 {
@@ -167,6 +168,8 @@ public class Level
                 }
             }
         }
+
+        System.out.println("World bitmap updated");
     }
 
     public void render(Screen screen)
@@ -188,6 +191,18 @@ public class Level
 
             x++;
         }
+
+        // TODO: Remove debug code
+        /*for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
+        {
+            for (int j = (int) rectangle.getX(); j < rectangle.getWidth() + rectangle.getX(); j++)
+            {
+                for (int z = (int) rectangle.getY(); z < rectangle.getHeight() + rectangle.getY(); z++)
+                {
+                    screen.draw(Colour.BLACK, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
+                }
+            }
+        }*/
 
         screen.drawLight(testLight2, 80 - tileManager.getCurrentWorld().getX(), 80 - tileManager.getCurrentWorld().getY());
         screen.drawLight(testLight, Timefall.getTileManager().getEntityManager().getPlayer().xOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().width / 2), Timefall.getTileManager().getEntityManager().getPlayer().yOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().height / 2));

@@ -96,13 +96,14 @@ public class Display
         BufferedImage mouseImage = null;
         try
         {
-            mouseImage = ImageIO.read(Timefall.class.getResourceAsStream("/spritesheets/mouse.png"));
+            mouseImage = ImageIO.read(Timefall.class.getResourceAsStream("/spritesheets/ImprovedCursorV2.png"));
         } catch (IOException e)
         {
             e.printStackTrace();
         }
 
-        jFrame.setCursor(jFrame.getToolkit().createCustomCursor(mouseImage, new Point(0, 0), "customMouse"));
+        //TODO: Fatsoenlijke muis maken
+        //jFrame.setCursor(jFrame.getToolkit().createCustomCursor(mouseImage, new Point(0, 0), "customMouse"));
 
         // Show frame
         jFrame.pack();

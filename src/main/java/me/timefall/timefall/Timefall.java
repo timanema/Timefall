@@ -26,8 +26,8 @@ public class Timefall
 
     public static int GAME_X_RES = 320; // 640
     public static int GAME_Y_RES = 180; // 360
-    public static final int MENU_X_RES = 640;
-    public static final int MENU_Y_RES = 360;
+    public static final int MENU_X_RES = 1280;
+    public static final int MENU_Y_RES = 720;
 
     private static volatile Display mainDisplay;
     private static Settings settings;

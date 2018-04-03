@@ -68,9 +68,14 @@ public class Bitmap
 
     public int getShadow(int x, int y)
     {
-        if (x < 0 || y < 0 || x >= width || y >= height)
+        //if (x < 0 || y < 0 || x >= width || y >= height)
+        //{
+        //    return ShadowType.OUTSIDE_VIEW.type;
+        //}
+
+        if (x + y * width < 0 || x + y * width >= shadowMap.length)
         {
-            return 1;
+            return ShadowType.FULL.type;
         }
 
         return shadowMap[x + y * width];
@@ -90,7 +95,10 @@ public class Bitmap
 
     public void draw(Colour colour, int xLoc, int yLoc)
     {
-        this.colours[xLoc + yLoc * width] = colour;
+        if (xLoc + yLoc * width > 0 && xLoc + yLoc * width < this.colours.length)
+        {
+            this.colours[xLoc + yLoc * width] = colour;
+        }
     }
 
     public void draw(Colour[] colours)
@@ -232,6 +240,7 @@ public class Bitmap
             }
 
             if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FULL.type) break;
+            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.OUTSIDE_VIEW.type) continue;
             if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FADE.type) lightPower -= 0.1F;
             if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.TREE_FADE.type) lightPower -= 0.03F;
             if (lightPower <= 0) break;

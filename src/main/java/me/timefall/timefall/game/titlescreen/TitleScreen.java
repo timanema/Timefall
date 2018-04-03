@@ -3,7 +3,10 @@ package me.timefall.timefall.game.titlescreen;
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.components.Sprite;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
 import me.timefall.timefall.graphics.components.buttons.NormalButton;
 import me.timefall.timefall.graphics.font.Font;
@@ -42,6 +45,8 @@ public class TitleScreen extends GameState
 
     private void init()
     {
+        getScreen().draw(Sprite.backgroundImage[0][0], 0, 0);
+
         NormalButton testButton = ButtonFactory.createNormalButton("asfsf", 50, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);
 
         testButton.setLocation(Timefall.MENU_X_RES / 2 - 25, Timefall.MENU_Y_RES / 2 - 13);

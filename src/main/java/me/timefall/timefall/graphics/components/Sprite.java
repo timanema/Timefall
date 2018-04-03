@@ -17,7 +17,7 @@ public class Sprite
 
     public static Bitmap[][] defaultFontNormal = getSubImage("/spritesheets/fonts/default_font_normal.png", 12, 18, 0, 0);
 
-    public static Bitmap mouse = creatMouse();
+    public static Bitmap[][] backgroundImage = getSubImage("/spritesheets/maxresdefault.png", 1280, 720, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width, int height, int startX, int startY)
     {
@@ -74,21 +74,5 @@ public class Sprite
                 sprite.flush();
         }
         return null;
-    }
-
-    public static Bitmap creatMouse()
-    {
-        //TODO: Sprite van maken (net zoals de anderen, dit is even omdat ik lui ben)
-        Bitmap mouse = new Bitmap(12, 12);
-
-        for (int x = 0; x < mouse.width; x++)
-        {
-            for (int y = 0; y < mouse.height; y++)
-            {
-                mouse.draw(Colour.BLACK, x, y);
-            }
-        }
-
-        return mouse;
     }
 }

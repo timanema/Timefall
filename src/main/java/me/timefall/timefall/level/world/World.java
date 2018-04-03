@@ -8,8 +8,10 @@ import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.tiles.base.Tree;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class World
 {
@@ -26,6 +28,7 @@ public class World
     private int[][] floraLayer;
 
     private Entity[] entities;
+    private ArrayList<Rectangle> collisions;
 
     public World(TileManager tileManager, String worldName, int xOff, int yOff, String mapPath, String entityPath)
     {
@@ -33,6 +36,7 @@ public class World
         this.worldName = worldName;
         this.xOff = xOff;
         this.yOff = yOff;
+        this.collisions = new ArrayList<>();
 
         System.out.println("   Loading world: " + worldName);
         this.initWorld(mapPath, entityPath);
@@ -45,7 +49,13 @@ public class World
         {
             System.out.println("    Trying to load map file ...");
 
-            BufferedImage[] bufferedImages = new BufferedImage[]{ImageIO.read(Timefall.class.getResourceAsStream(mapPath)), ImageIO.read(Timefall.class.getResourceAsStream(mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")))};
+            BufferedImage[] bufferedImages = new BufferedImage[]{
+                    ImageIO.read(Timefall.class.getResourceAsStream(mapPath)),
+                    ImageIO.read(Timefall.class.getResourceAsStream(
+                            mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")
+                            )
+                    )
+            };
             BufferedImage mapImage = bufferedImages[0];
             BufferedImage floraImage = bufferedImages[1];
 
@@ -60,7 +70,8 @@ public class World
             // Checking if the images are the same size
             if (floraImage.getWidth() != width || floraImage.getHeight() != height)
             {
-                System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
+                System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! " +
+                        "FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
 
                 Timefall.getFileManager().worldFiles.remove(worldName);
 
@@ -90,6 +101,12 @@ public class World
                             Block block = (Block) mapObject;
                             int[] blockID = block.getBlockID();
                             int[] blockHex = block.getHex();
+
+                            // Check for collision detection
+                            if (block.isSolid())
+                            {
+                                this.collisions.add(new Rectangle(x * 16, y * 16, 16, 16));
+                            }
 
                             // Get the correct ID and set it in the base layer
                             for (int i = 0; i < blockID.length; i++)
@@ -178,5 +195,9 @@ public class World
     public int[][] getFloraLayer()
     {
         return floraLayer;
+    }
+
+    public ArrayList<Rectangle> getCollisions() {
+        return this.collisions;
     }
 }

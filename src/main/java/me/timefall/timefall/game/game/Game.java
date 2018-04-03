@@ -59,7 +59,6 @@ public class Game extends GameState
         boolean xCen = tileManager.getEntityManager().getPlayer().isXCentred();
         boolean yCen = tileManager.getEntityManager().getPlayer().isYCentred();*/
 
-
         // Check all directions if it is a move command and if the player can move
         if (moveCommand)
         {

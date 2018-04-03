@@ -12,6 +12,8 @@ import me.timefall.timefall.level.tiles.base.Block;
 import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.world.World;
 
+import java.awt.*;
+
 public class Player implements Mob
 {
     private final int xAxis = Timefall.GAME_X_RES / 2;
@@ -387,6 +389,11 @@ public class Player implements Mob
                 break;
             }
         }
+
+        if (!canMove(direction))
+        {
+            move(direction.getOpposite());
+        }
     }
 
     @Override
@@ -395,22 +402,33 @@ public class Player implements Mob
         TileManager tileManager = Timefall.getTileManager();
 
         // Simulating move
-        float xDif = direction.getxChange() * .125F;
-        float yDif = direction.getyChange() * .125F;
-        Vector locationCopy = getLocation().clone();
+        boolean negativeXMovement = direction.getxChange() < 0;
+        boolean negativeYMovement = direction.getyChange() < 0;
+        int xMod = (negativeXMovement ? -1 : 1);
+        int yMod = (negativeYMovement ? -1 : 1);
+        Vector simulatedMovement = this.getLocation().clone();
 
-        locationCopy.add((getxOff() + xDif < 0 || getxOff() + xDif > (tileManager.getCurrentWorld().getWidth() - 1) * 16 ? 0 : xDif),
-                (getyOff() + yDif < 0 || getyOff() + yDif > (tileManager.getCurrentWorld().getHeight() - 1) * 16 - 12 ? 0 : yDif));
+        simulatedMovement.add(xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width ? xMod * .0625F : 0, 0);
+        simulatedMovement.add(0, yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height ? yMod * .0625F : 0);
 
-        int xOff = getxOff(locationCopy);
-        int yOff = getyOff(locationCopy);
+        Rectangle playerRectangle = new Rectangle(getxOff(simulatedMovement), getyOff(simulatedMovement), 16, 24);
 
+        for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
+        {
+            int deltaX = (int) Math.abs(playerRectangle.getX() - rectangle.getX());
+            int deltaY = (int) Math.abs(playerRectangle.getY() - rectangle.getY());
 
-        for (int i = 0; i < 2; i++)
-            for (MapObject mapObject : tileManager.getMapObjectsByLoc(xOff / 16 + (direction.name().contains("EAST") ? 1 : 0) + i, yOff / 16 + (direction.name().contains("NORTH") ? 0 : 1) + i))
-                if (mapObject != null)
-                    if (mapObject.isSolid())
-                        return false;
+            // Skip rectangles than cannot intersect
+            if (deltaX > 32 || deltaY > 32)
+            {
+                continue;
+            }
+
+            if (playerRectangle.intersects(rectangle))
+            {
+                return false;
+            }
+        }
 
         return true;
     }
