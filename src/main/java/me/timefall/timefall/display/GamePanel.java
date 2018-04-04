@@ -77,8 +77,8 @@ public class GamePanel extends JComponent {
         if (!menuPanel) {
             Timefall.getSettings().getCurrentState().render(screen);
         } else {
-            Timefall.textOverlay.render(screen);
             Timefall.getButtonHandler().renderButtons(screen);
+            Timefall.textOverlay.render(screen);
         }
 
         // Render colours on screen
