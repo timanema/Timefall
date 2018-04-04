@@ -13,18 +13,18 @@ public class SoundHandler
 {
     private HashMap<Music, Float> currentSounds;
     private ArrayList<Music> fadeOut;
+    private boolean soundsDisabled;
 
     public SoundHandler(boolean soundsDisabled)
     {
-        if (soundsDisabled)
-        {
-            System.out.println("[TimeFall] Sounds are now disabled.");
-            return;
-        }
-
+        this.soundsDisabled = soundsDisabled;
         this.currentSounds = new HashMap<>();
         this.fadeOut = new ArrayList<>();
         this.initSounds();
+        if (soundsDisabled)
+        {
+            System.out.println("[TimeFall] Sounds are now disabled.");
+        }
     }
 
     private void initSounds()
@@ -63,6 +63,11 @@ public class SoundHandler
 
     public void startMusicTitlescreen()
     {
+        if (soundsDisabled)
+        {
+            return;
+        }
+
         Music startupSound = new Music("/music/startup.wav", null);
         FloatControl control = ((FloatControl) startupSound.getControl(FloatControl.Type.MASTER_GAIN));
 

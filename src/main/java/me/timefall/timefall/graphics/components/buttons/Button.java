@@ -30,7 +30,7 @@ public abstract class Button
         {
             for (int y = 0; y < height; y++)
             {
-                if (y == 0 || y == height - 1 || x == 0 || x == width - 1)
+                if (y <= 1 || y >= height - 2 || x <= 1 || x >= width - 2)
                 {
                     bitmap.draw(buttonSkin.getOutsideColour(), x, y);
                 } else
