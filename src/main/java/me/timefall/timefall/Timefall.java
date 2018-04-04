@@ -6,6 +6,7 @@ import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
 import me.timefall.timefall.game.game.Game;
+import me.timefall.timefall.game.menu.Menu;
 import me.timefall.timefall.game.menu.TextOverlay;
 import me.timefall.timefall.game.titlescreen.TitleScreen;
 import me.timefall.timefall.graphics.components.Screen;
@@ -127,6 +128,20 @@ public class Timefall
 
         System.out.println("All Timefall components loaded!");
         System.out.println("\nTick updates:");
+    }
+
+    public static void openMenu()
+    {
+        System.out.println("Opening menu...");
+
+        settings.setState(new Menu(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+    }
+
+    public static void openTitleScreen()
+    {
+        System.out.println("Opening title screen...");
+
+        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
     }
 
     public static void startGame()
