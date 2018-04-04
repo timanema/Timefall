@@ -9,7 +9,6 @@ import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.Vector;
 import me.timefall.timefall.level.tiles.base.Block;
-import me.timefall.timefall.level.tiles.base.MapObject;
 import me.timefall.timefall.level.world.World;
 
 import java.awt.*;
@@ -333,6 +332,11 @@ public class Player implements Mob
 
         for (int x = 0; (negativeXMovement ? x > direction.getxChange() : x < direction.getxChange()); x += xMod)
         {
+            if (!canMove(xMod,0))
+            {
+                break;
+            }
+
             int currentOff = tileManager.getCurrentWorld().getX();
 
             if (currentOff + xMod > 0 && currentOff + xMod + 16 * Timefall.GAME_X_RES / 16 - Timefall.GAME_X_RES % 16 < tileManager.getCurrentWorld().getWidth() * 16 && xCen)
@@ -348,11 +352,17 @@ public class Player implements Mob
                     xOff += xMod;
                 }
             }
+
             this.getLocation().add(xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width ? xMod * .0625F : 0, 0);
         }
 
         for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
         {
+            if (!canMove(0,yMod))
+            {
+                break;
+            }
+
             int currentOff = tileManager.getCurrentWorld().getY();
 
             if (currentOff + yMod > 0 && currentOff + yMod + 16 * Timefall.GAME_Y_RES / 16 - Timefall.GAME_Y_RES % 16 < tileManager.getCurrentWorld().getHeight() * 16 && yCen)
@@ -389,29 +399,19 @@ public class Player implements Mob
                 break;
             }
         }
-
-        if (!canMove(direction))
-        {
-            move(direction.getOpposite());
-        }
     }
 
-    @Override
-    public boolean canMove(Direction direction)
+    public boolean canMove(int xMod, int yMod)
     {
         TileManager tileManager = Timefall.getTileManager();
 
         // Simulating move
-        boolean negativeXMovement = direction.getxChange() < 0;
-        boolean negativeYMovement = direction.getyChange() < 0;
-        int xMod = (negativeXMovement ? -1 : 1);
-        int yMod = (negativeYMovement ? -1 : 1);
-        Vector simulatedMovement = this.getLocation().clone();
+        int simX = getxOff() + xMod;
+        int simY = getyOff() + yMod;
 
-        simulatedMovement.add(xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width ? xMod * .0625F : 0, 0);
-        simulatedMovement.add(0, yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height ? yMod * .0625F : 0);
+        Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
 
-        Rectangle playerRectangle = new Rectangle(getxOff(simulatedMovement), getyOff(simulatedMovement), 16, 24);
+        System.out.println(playerRectangle.getX() + ", " + playerRectangle.getY() + "  -> "+ (playerRectangle.getX() + playerRectangle.getWidth()) + ", " + (playerRectangle.getY() + playerRectangle.getHeight()));
 
         for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
         {

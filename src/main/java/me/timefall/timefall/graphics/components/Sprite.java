@@ -18,7 +18,7 @@ public class Sprite
     public static Bitmap[][] defaultFontNormal = getSubImage("/spritesheets/fonts/default_font_normal.png", 12, 18, 0, 0);
 
     public static Bitmap[][] backgroundImage = getSubImage("/spritesheets/titlescreen_background.png", 1280, 720, 0, 0);
-    public static Bitmap[][] startupLogo = getSubImage("/spritesheets/beta-sterren-logo.png", 350, 263, 0, 0);
+    public static Bitmap[][] startupLogo = getSubImage("/spritesheets/beta-sterren-logo.png", 640, 360, 0, 0);
 
     public static Bitmap[][] getSubImage(String spriteName, int width, int height, int startX, int startY)
     {

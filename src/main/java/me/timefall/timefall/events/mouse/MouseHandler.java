@@ -1,6 +1,7 @@
 package me.timefall.timefall.events.mouse;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.game.menu.TextOverlay;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,8 +14,9 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        // Check if settings is initiated
-        if (Timefall.getSettings() != null)
+        // Check if settings is initiated and if the splashscreen is gone
+        if (Timefall.getSettings() != null &&
+                !TextOverlay.fading)
         {
             mouseX = (int) (e.getX() / Timefall.getSettings().getScale());
             mouseY = (int) (e.getY() / Timefall.getSettings().getScale());

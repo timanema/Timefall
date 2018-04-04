@@ -11,9 +11,7 @@ import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
 import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.threads.GameThread;
-import me.timefall.timefall.time.Time;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,6 +23,7 @@ public class TextOverlay extends GameState {
     public float fadeFactor = 0;
     private float fade = 0;
     private int fadeDelay = 0;
+    public static boolean fading;
 
     public TextOverlay(Settings settings, Screen screen)
     {
@@ -34,7 +33,7 @@ public class TextOverlay extends GameState {
         this.textChanges = false;
 
         this.startFade(1.9, 7);
-        Timefall.getSoundHandler().startMusicTitlescreen();
+        Timefall.getSoundHandler().startMusicTitleScreen();
     }
 
     @Override
@@ -53,6 +52,7 @@ public class TextOverlay extends GameState {
                 {
                     // Setting text changes to true, so fade gets deleted and text rendered properly
                     this.textChanges = true;
+                    fading = false;
                 }
             }
         }
@@ -111,6 +111,7 @@ public class TextOverlay extends GameState {
     public void startFade(double duration,
                           double fadeDelay)
     {
+        fading = true;
         this.fade = 1F;
         this.fadeFactor = (float) (1 / (duration * GameThread.TICKS));
         this.fadeDelay = (int) fadeDelay * GameThread.TICKS;
@@ -122,7 +123,7 @@ public class TextOverlay extends GameState {
         {
             for (int x = 0; x < screen.width; x++) {
                 for (int y = 0; y < screen.height; y++) {
-                    screen.draw(new Colour(this.fade, 0, 0, 0), x, y);
+                    screen.draw(new Colour(this.fade, 0.745F, 0.737F, 0.659F), x, y);
                 }
             }
 

@@ -20,11 +20,14 @@ public class SoundHandler
         this.soundsDisabled = soundsDisabled;
         this.currentSounds = new HashMap<>();
         this.fadeOut = new ArrayList<>();
-        this.initSounds();
+
         if (soundsDisabled)
         {
             System.out.println("[TimeFall] Sounds are now disabled.");
+            return;
         }
+
+        this.initSounds();
     }
 
     private void initSounds()
@@ -61,7 +64,7 @@ public class SoundHandler
         this.fadeOut.addAll(this.currentSounds.keySet());
     }
 
-    public void startMusicTitlescreen()
+    public void startMusicTitleScreen()
     {
         if (soundsDisabled)
         {

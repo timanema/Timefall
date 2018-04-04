@@ -33,7 +33,7 @@ public enum Keys
     {
         this.isPressed = isPressed;
 
-        if (this.cooldown <= 0)
+        if (this.cooldown <= 0 && isPressed)
         {
             this.clicked = true;
         }
