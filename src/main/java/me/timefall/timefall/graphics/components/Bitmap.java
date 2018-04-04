@@ -108,6 +108,11 @@ public class Bitmap
 
     public void draw(Bitmap bitmap, int xLoc, int yLoc, int[] shadows)
     {
+        if (bitmap == null)
+        {
+            return;
+        }
+
         for (int x = 0; x < bitmap.width; x++)
         {
             for (int y = 0; y < bitmap.height; y++)

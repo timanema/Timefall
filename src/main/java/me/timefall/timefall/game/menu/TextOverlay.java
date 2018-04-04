@@ -25,15 +25,20 @@ public class TextOverlay extends GameState {
     private int fadeDelay = 0;
     public static boolean fading;
 
-    public TextOverlay(Settings settings, Screen screen)
+    public TextOverlay(Settings settings,
+                       Screen screen,
+                       boolean disableSplash)
     {
         super(settings, screen);
 
         this.drawnText = new HashMap<>();
         this.textChanges = false;
 
-        this.startFade(1.9, 7);
-        Timefall.getSoundHandler().startMusicTitleScreen();
+        if (!disableSplash)
+        {
+            this.startFade(1.9, 7);
+            Timefall.getSoundHandler().startMusicTitleScreen();
+        }
     }
 
     @Override

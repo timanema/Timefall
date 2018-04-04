@@ -332,7 +332,7 @@ public class Player implements Mob
 
         for (int x = 0; (negativeXMovement ? x > direction.getxChange() : x < direction.getxChange()); x += xMod)
         {
-            if (!canMove(xMod,0))
+            if (!canMove(xMod, 0))
             {
                 break;
             }
@@ -358,7 +358,7 @@ public class Player implements Mob
 
         for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
         {
-            if (!canMove(0,yMod))
+            if (!canMove(0, yMod))
             {
                 break;
             }
@@ -410,8 +410,6 @@ public class Player implements Mob
         int simY = getyOff() + yMod;
 
         Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
-
-        System.out.println(playerRectangle.getX() + ", " + playerRectangle.getY() + "  -> "+ (playerRectangle.getX() + playerRectangle.getWidth()) + ", " + (playerRectangle.getY() + playerRectangle.getHeight()));
 
         for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
         {

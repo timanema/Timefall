@@ -95,18 +95,19 @@ public class World
                         int hexCode = rgbCode & 0xFFFFFF;
                         MapObject mapObject = tileManager.getMapObjectByHex(hexCode);
 
+                        // Check for collision detection
+                        if (mapObject != null &&
+                                mapObject.isSolid())
+                        {
+                            this.collisions.add(new Rectangle(x * 16, y * 16, 16, 16));
+                        }
+
                         // Check if the MapObject is a block
                         if (tileManager.checkBlock(mapObject))
                         {
                             Block block = (Block) mapObject;
                             int[] blockID = block.getBlockID();
                             int[] blockHex = block.getHex();
-
-                            // Check for collision detection
-                            if (block.isSolid())
-                            {
-                                this.collisions.add(new Rectangle(x * 16, y * 16, 16, 16));
-                            }
 
                             // Get the correct ID and set it in the base layer
                             for (int i = 0; i < blockID.length; i++)

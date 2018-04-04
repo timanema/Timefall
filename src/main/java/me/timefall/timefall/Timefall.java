@@ -46,6 +46,7 @@ public class Timefall
     {
         arguments =  new HashMap<>();
         arguments.put("disableSounds", false);
+        arguments.put("disableSplash", false);
 
         for (String argument : args)
         {
@@ -79,7 +80,10 @@ public class Timefall
         }
         System.out.println(" Initializing display ...");
 
-        EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall", settings.getScreenSize().getWidth(), settings.getScreenSize().getHeight(), lockObject));
+        EventQueue.invokeLater(() -> mainDisplay = new Display("Timefall",
+                settings.getScreenSize().getWidth(),
+                settings.getScreenSize().getHeight(),
+                lockObject));
         lock();
     }
 
@@ -113,7 +117,8 @@ public class Timefall
         settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
 
         // Setting up text overlay
-        textOverlay = new TextOverlay(settings, new Screen(1280, 720));
+        textOverlay = new TextOverlay(settings, new Screen(1280, 720),
+                (Boolean) arguments.get("disableSplash"));
         EventQueue.invokeLater(() -> Timefall.getMainDisplay().getMenuCanvas().updateScreen(textOverlay.getScreen()));
 
         // Start main thread
