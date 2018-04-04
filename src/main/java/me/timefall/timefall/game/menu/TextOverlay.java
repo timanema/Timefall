@@ -180,4 +180,9 @@ public class TextOverlay extends GameState {
 
         return null;
     }
+
+    public void requestRedraw()
+    {
+        this.textChanges = true;
+    }
 }

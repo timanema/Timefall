@@ -1,7 +1,9 @@
 package me.timefall.timefall.graphics.handlers;
 
+import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.buttons.Button;
+import me.timefall.timefall.time.Time;
 
 import java.util.ArrayList;
 
