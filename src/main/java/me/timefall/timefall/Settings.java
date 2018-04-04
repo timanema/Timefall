@@ -100,6 +100,10 @@ public class Settings
 
     public void setState(GameState gameState)
     {
+        System.out.println("SWITCHING TO: " + gameState);
+
+        Timefall.getSoundHandler().switchScreen();
+
         if (!states.isEmpty())
             if (states.peek() == gameState)
             {
@@ -166,6 +170,11 @@ public class Settings
 
     public float getScale()
     {
+        if (Timefall.getMainDisplay() == null || Timefall.getMainDisplay().getScreen() == null)
+        {
+            return -1;
+        }
+
         int screenWidth = Timefall.getMainDisplay().getScreen().width, screenHeight = Timefall.getMainDisplay().getScreen().height;
         int windowWidth = this.getScreenSize().width, windowHeight = this.getScreenSize().height;
 

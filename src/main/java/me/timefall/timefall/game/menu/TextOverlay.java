@@ -2,11 +2,16 @@ package me.timefall.timefall.game.menu;
 
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
+import me.timefall.timefall.Timefall;
+import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.components.Sprite;
 import me.timefall.timefall.graphics.font.DrawWrapper;
 import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
 import me.timefall.timefall.graphics.font.FontType;
+import me.timefall.timefall.threads.GameThread;
+import me.timefall.timefall.time.Time;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,20 +22,48 @@ public class TextOverlay extends GameState {
     private HashMap<DrawWrapper, Boolean> drawnText;
     private boolean textChanges;
 
-    public TextOverlay(Settings settings, Screen screen) {
+    public float fadeFactor = 0;
+    private float fade = 0;
+    private int fadeDelay = 0;
+
+    public TextOverlay(Settings settings, Screen screen)
+    {
         super(settings, screen);
 
         this.drawnText = new HashMap<>();
         this.textChanges = false;
+
+        this.startFade(1.9, 7);
+        Timefall.getSoundHandler().startMusicTitlescreen();
     }
 
     @Override
-    public void tick(double deltaTime) {
+    public void tick(double deltaTime)
+    {
+        if (this.fade > 0.0)
+        {
+            if (fadeDelay > 0)
+            {
+                this.fadeDelay -= 1;
+            } else
+            {
+                this.fade -= this.fadeFactor;
 
+                if (this.fade <= 0)
+                {
+                    // Setting text changes to true, so fade gets deleted and text rendered properly
+                    this.textChanges = true;
+                }
+            }
+        }
     }
 
     @Override
-    public void render(Screen screen) {
+    public void render(Screen screen)
+    {
+        // Render fade effects
+        renderFade(screen);
+
         // Check for 'inactive' text
         Iterator iterator = this.drawnText.entrySet().iterator();
 
@@ -53,6 +86,7 @@ public class TextOverlay extends GameState {
         if (this.textChanges)
         {
             screen.clear();
+            renderFade(screen);
 
             for (DrawWrapper drawWrapper : this.drawnText.keySet())
             {
@@ -72,6 +106,33 @@ public class TextOverlay extends GameState {
     @Override
     public void saveState() {
 
+    }
+
+    public void startFade(double duration,
+                          double fadeDelay)
+    {
+        this.fade = 1F;
+        this.fadeFactor = (float) (1 / (duration * GameThread.TICKS));
+        this.fadeDelay = (int) fadeDelay * GameThread.TICKS;
+    }
+
+    private void renderFade(Screen screen)
+    {
+        if (this.fade > 0.0)
+        {
+            for (int x = 0; x < screen.width; x++) {
+                for (int y = 0; y < screen.height; y++) {
+                    screen.draw(new Colour(this.fade, 0, 0, 0), x, y);
+                }
+            }
+
+            if (this.fadeDelay > 0)
+            {
+                screen.draw(Sprite.startupLogo[0][0],
+                        640 - Sprite.startupLogo[0][0].width / 2,
+                        360 - Sprite.startupLogo[0][0].height / 2);
+            }
+        }
     }
 
     public void requestText(FontType fontType,

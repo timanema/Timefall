@@ -13,10 +13,19 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        mouseX = (int) (e.getX() / Timefall.getSettings().getScale());
-        mouseY = (int) (e.getY() / Timefall.getSettings().getScale());
+        // Check if settings is initiated
+        if (Timefall.getSettings() != null)
+        {
+            mouseX = (int) (e.getX() / Timefall.getSettings().getScale());
+            mouseY = (int) (e.getY() / Timefall.getSettings().getScale());
 
-        Timefall.getButtonHandler().clickAction(mouseX, mouseY);
+            // If this statement is false getScale() returned -1,
+            // which means the screen was not yet initiated at the time the user clicked
+            if (mouseX > 0 && mouseY > 0)
+            {
+                Timefall.getButtonHandler().clickAction(mouseX, mouseY);
+            }
+        }
     }
 
     @Override

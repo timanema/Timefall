@@ -4,6 +4,7 @@ import me.timefall.timefall.Timefall;
 import me.timefall.timefall.display.Display;
 import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.time.Time;
 
 import java.awt.image.BufferedImage;
 
@@ -85,7 +86,9 @@ public class GameThread implements Runnable
     private void tick(double deltaTime)
     {
         Timefall.getSettings().getCurrentState().tick(deltaTime);
+        Timefall.getTextOverlay().tick(deltaTime);
         Timefall.getTime().tickTime();
+        Timefall.getSoundHandler().tick();
 
         // Tick button cooldown
         for (Keys key : Keys.values())

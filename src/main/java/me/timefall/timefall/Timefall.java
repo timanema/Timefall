@@ -110,14 +110,11 @@ public class Timefall
         //TODO: Load sounds from files
         soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
 
+        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+
         // Setting up text overlay
         textOverlay = new TextOverlay(settings, new Screen(1280, 720));
         EventQueue.invokeLater(() -> Timefall.getMainDisplay().getMenuCanvas().updateScreen(textOverlay.getScreen()));
-
-        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
-        // Add temp gamestate
-        // TODO: Remove this
-        //startGame();
 
         // Start main thread
         System.out.println(" Initializing game threads ...");

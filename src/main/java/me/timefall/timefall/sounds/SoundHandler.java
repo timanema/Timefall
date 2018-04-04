@@ -1,11 +1,19 @@
 package me.timefall.timefall.sounds;
 
 import me.timefall.timefall.sounds.components.Music;
+import me.timefall.timefall.threads.GameThread;
 
+import javax.sound.sampled.Control;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SoundHandler
 {
+    private HashMap<Music, Float> currentSounds;
+    private ArrayList<Music> fadeOut;
+
     public SoundHandler(boolean soundsDisabled)
     {
         if (soundsDisabled)
@@ -14,12 +22,53 @@ public class SoundHandler
             return;
         }
 
+        this.currentSounds = new HashMap<>();
+        this.fadeOut = new ArrayList<>();
         this.initSounds();
     }
 
     private void initSounds()
     {
-        new Music("/music/tarir.wav", null).start();
+        // Add more things
+    }
+
+    public void tick()
+    {
+        for (Music music : this.currentSounds.keySet())
+        {
+            if (this.fadeOut.contains(music))
+            {
+                this.currentSounds.put(music, this.currentSounds.get(music) - (1F / (GameThread.TICKS * 2.4F)));
+            }
+
+            if (this.currentSounds.get(music) <= 0.0)
+            {
+                this.currentSounds.remove(music);
+                this.fadeOut.remove(music);
+                music.stop();
+                continue;
+            }
+
+            FloatControl control = ((FloatControl) music.getControl(FloatControl.Type.MASTER_GAIN));
+
+            control.setValue((control.getMaximum() - control.getMinimum()) * this.currentSounds.get(music) + control.getMinimum());
+        }
+    }
+
+    public void switchScreen()
+    {
+        // Terminate current tracks
+        this.fadeOut.addAll(this.currentSounds.keySet());
+    }
+
+    public void startMusicTitlescreen()
+    {
+        Music startupSound = new Music("/music/startup.wav", null);
+        FloatControl control = ((FloatControl) startupSound.getControl(FloatControl.Type.MASTER_GAIN));
+
+        this.currentSounds.put(startupSound, 1.0F);
+        startupSound.start();
+        control.setValue(control.getMaximum());
     }
 
     public void triggerLineListener(LineEvent lineEvent)
