@@ -47,11 +47,17 @@ public class TitleScreen extends GameState
     {
         getScreen().draw(Sprite.backgroundImage[0][0], 0, 0);
 
-        NormalButton testButton = ButtonFactory.createNormalButton("asfsf", 400, 100, Timefall::startGame, ButtonSkin.TEST, true);
+        NormalButton testButton = ButtonFactory.createNormalButton("asfsf", 400, 100, Timefall::startGame, ButtonSkin.TRANSPARENT, true);
 
-        testButton.setLocation(Timefall.MENU_X_RES / 2 - 200, Timefall.MENU_Y_RES / 2 - 50);
+        testButton.setLocation(Timefall.MENU_X_RES / 2 - 224, (Timefall.MENU_Y_RES / 2 - 24) + 16);
         testButton.setActive(true);
         testButton.setVisible(true);
+
+        NormalButton quitButton = ButtonFactory.createNormalButton("asfsf", 448, 48, Timefall.getMainDisplay()::onClose, ButtonSkin.TRANSPARENT, true);
+
+        quitButton.setLocation(Timefall.MENU_X_RES / 2 - 224, (Timefall.MENU_Y_RES / 2 - 24) + 272);
+        quitButton.setActive(true);
+        quitButton.setVisible(true);
 
        /* //TODO: Remove example code
         NormalButton normalButton = ButtonFactory.createNormalButton("", 30, 25, Timefall::startGame, ButtonSkin.DEFAULT, true);

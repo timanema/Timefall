@@ -5,7 +5,7 @@ import me.timefall.timefall.graphics.components.Colour;
 public enum ButtonSkin
 {
     DEFAULT(Colour.BLACK, Colour.GREY),
-    TEST(Colour.GREY, Colour.TRANSPARENT);
+    TRANSPARENT(Colour.TRANSPARENT, Colour.TRANSPARENT);
 
     private Colour outsideColour;
     private Colour insideColour;

@@ -132,7 +132,7 @@ public class Display
      * Gets called when the main display is being closed
      * This way everything can be saved before exiting
      */
-    private void onClose()
+    public void onClose()
     {
         Timefall.getSettings().getCurrentState().saveState();
 
