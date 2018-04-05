@@ -390,6 +390,8 @@ public class Player implements Mob
 
             if (block.getBlockID()[0] == 1)
             {
+                //TODO reload collisions and such, maybe tp to original location
+
                 // TP player
                 teleport((tileManager.getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
 
@@ -509,6 +511,7 @@ public class Player implements Mob
 
         // Update world
         Timefall.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
+        world.reloadCollisions();
     }
 
     public int getxOff()

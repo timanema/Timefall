@@ -100,10 +100,6 @@ public class Settings
 
     public void setState(GameState gameState)
     {
-        System.out.println("SWITCHING TO: " + gameState);
-
-        Timefall.getSoundHandler().switchScreen();
-
         if (!states.isEmpty())
             if (states.peek() == gameState)
             {
@@ -114,6 +110,17 @@ public class Settings
         states.push(gameState);
 
         EventQueue.invokeLater(() -> Timefall.getMainDisplay().getGameCanvas().updateScreen(gameState.getScreen()));
+    }
+
+    public void switchState (GameState newState)
+    {
+        getCurrentState().saveState();
+
+        System.out.println("SWITCHING TO: " + newState);
+
+        Timefall.getSoundHandler().switchScreen();
+
+        setState(newState);
     }
 
     public void removeState(GameState gameState)

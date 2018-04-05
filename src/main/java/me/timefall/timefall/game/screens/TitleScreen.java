@@ -1,17 +1,12 @@
-package me.timefall.timefall.game.titlescreen;
+package me.timefall.timefall.game.screens;
 
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
-import me.timefall.timefall.graphics.components.Bitmap;
-import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.Sprite;
 import me.timefall.timefall.graphics.components.buttons.ButtonSkin;
 import me.timefall.timefall.graphics.components.buttons.NormalButton;
-import me.timefall.timefall.graphics.font.Font;
-import me.timefall.timefall.graphics.font.FontSize;
-import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.graphics.utils.ButtonFactory;
 
 public class TitleScreen extends GameState

@@ -13,7 +13,8 @@ public enum Keys
     VK_LEFT(37, 0),
     VK_RIGHT(39, 0),
     VK_I(73, 0),
-    VK_F3(114, 0.2 * GameThread.TICKS);
+    VK_F3(114, 0.2 * GameThread.TICKS),
+    VK_ESC(27, 0);
 
     private int keyID;
     private boolean isPressed;

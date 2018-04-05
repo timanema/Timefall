@@ -41,6 +41,12 @@ public class Game extends GameState
             this.debugInfo = !this.debugInfo;
         }
 
+        if (Keys.VK_ESC.isClicked())
+        {
+            Timefall.openMenu();
+            //tileManager.getCurrentWorld().reloadCollisions();
+        }
+
         // Get which keys are pressed and pair them with direction
         boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed(), leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed(), upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed(), downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();
         boolean northDirection = upKey && !downKey, southDirection = downKey && !upKey, westDirection = leftKey && !rightKey, eastDirection = rightKey && !leftKey;

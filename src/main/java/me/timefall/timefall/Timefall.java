@@ -1,14 +1,13 @@
 package me.timefall.timefall;
 
 import me.timefall.timefall.display.Display;
-import me.timefall.timefall.display.GamePanel;
 import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
 import me.timefall.timefall.game.game.Game;
-import me.timefall.timefall.game.menu.Menu;
+import me.timefall.timefall.game.screens.Menu;
 import me.timefall.timefall.game.menu.TextOverlay;
-import me.timefall.timefall.game.titlescreen.TitleScreen;
+import me.timefall.timefall.game.screens.TitleScreen;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.handlers.ButtonHandler;
 import me.timefall.timefall.level.TileManager;
@@ -18,6 +17,8 @@ import me.timefall.timefall.time.Time;
 
 import java.awt.*;
 import java.util.HashMap;
+
+import static java.lang.Thread.sleep;
 
 public class Timefall
 {
@@ -134,24 +135,35 @@ public class Timefall
     {
         System.out.println("Opening menu...");
 
-        settings.setState(new Menu(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+        settings.switchState(new Menu(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
     }
 
     public static void openTitleScreen()
     {
         System.out.println("Opening title screen...");
 
-        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+        settings.switchState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
     }
 
     public static void startGame()
     {
         //TODO: Verander settings later nog vanuit files
         Game game = new Game(settings, new Screen(GAME_X_RES, GAME_Y_RES));
-        settings.setState(game);
+        settings.switchState(game);
 
         tileManager = game.tileManager;
         settings.setLightEnabled(true);
+    }
+
+    public static void reloadGame()
+    {
+        fileManager = new FileManager(settings);
+        startGame();
+    }
+
+    public static void switchWorld()
+    {
+
     }
 
     public static void initThreads()

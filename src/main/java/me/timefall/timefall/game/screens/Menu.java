@@ -1,4 +1,4 @@
-package me.timefall.timefall.game.menu;
+package me.timefall.timefall.game.screens;
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
@@ -25,15 +25,13 @@ public class Menu extends GameState
 
     private void init()
     {
-        getScreen().draw(Sprite.startupLogo[0][0], 0, 0);
-
         for (int x = 0; x < getScreen().width; x++) {
             for (int y = 0; y < getScreen().height; y++) {
                 getScreen().draw(new Colour(1, 0.745F, 0.737F, 0.659F), x, y);
             }
         }
 
-        NormalButton backButton = ButtonFactory.createNormalButton("asfsf", 400, 50, Timefall::openTitleScreen, ButtonSkin.DEFAULT, true);
+        NormalButton backButton = ButtonFactory.createNormalButton("asfsf", 400, 50, Timefall::reloadGame, ButtonSkin.DEFAULT, true);
 
         backButton.setLocation(Timefall.MENU_X_RES / 2 - 200, (Timefall.MENU_Y_RES / 2 - 25) - 25);
         backButton.setActive(true);

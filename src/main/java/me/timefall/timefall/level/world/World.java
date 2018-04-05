@@ -152,6 +152,76 @@ public class World
         }
     }
 
+    public void reloadCollisions()
+    {
+        collisions.clear();
+
+        String mapPath = "/worlds/" + worldName + ".png";
+
+        try
+        {
+            System.out.println("    Trying to load map file ...");
+
+            BufferedImage[] bufferedImages = new BufferedImage[]{
+                    ImageIO.read(Timefall.class.getResourceAsStream(mapPath)),
+                    ImageIO.read(Timefall.class.getResourceAsStream(
+                            mapPath.replaceAll(worldName + ".png", worldName + "_flora.png")
+                            )
+                    )
+            };
+            BufferedImage mapImage = bufferedImages[0];
+            BufferedImage floraImage = bufferedImages[1];
+
+            this.width = mapImage.getWidth();
+            this.height = mapImage.getHeight();
+
+            baseLayer = new int[width][height];
+            floraLayer = new int[width][height];
+
+            System.out.println("    Getting tiles from hex codes ...");
+
+            // Checking if the images are the same size
+            if (floraImage.getWidth() != width || floraImage.getHeight() != height)
+            {
+                System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! " +
+                        "FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
+
+                Timefall.getFileManager().worldFiles.remove(worldName);
+
+                // Check if there are any other worlds left
+                if (Timefall.getFileManager().worldFiles.isEmpty())
+                {
+                    System.out.println("NO WORLDS LEFT, ABORTING!");
+                    System.exit(-1);
+                }
+            }
+
+            // Loop through all the images
+            for (BufferedImage image : bufferedImages)
+            {
+                // Looping through the base image
+                for (int x = 0; x < width; x++)
+                    for (int y = 0; y < height; y++)
+                    {
+                        // Getting the hex code and the MapObject
+                        int rgbCode = image.getRGB(x, y);
+                        int hexCode = rgbCode & 0xFFFFFF;
+                        MapObject mapObject = tileManager.getMapObjectByHex(hexCode);
+
+                        // Check for collision detection
+                        if (mapObject != null &&
+                                mapObject.isSolid())
+                        {
+                            this.collisions.add(new Rectangle(x * 16, y * 16, 16, 16));
+                        }
+                    }
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public String getWorldName()
     {
         return worldName;
