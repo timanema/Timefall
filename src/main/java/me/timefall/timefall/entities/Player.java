@@ -2,6 +2,7 @@ package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.utils.PixelUtils;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.Sprite;
@@ -407,11 +408,33 @@ public class Player implements Mob
     {
         TileManager tileManager = Timefall.getTileManager();
 
+        int xOff = getxOff();
+        int yOff = getyOff();
+
         // Simulating move
-        int simX = getxOff() + xMod;
-        int simY = getyOff() + yMod;
+        int simX = xOff + xMod;
+        int simY = yOff + yMod;
 
         Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
+
+        //TODO remove debug
+        for (int j = (int) playerRectangle.getX(); j < playerRectangle.getWidth() + playerRectangle.getX(); j++)
+        {
+            for (int z = (int) playerRectangle.getY(); z < playerRectangle.getHeight() + playerRectangle.getY(); z++)
+            {
+                Timefall.getMainDisplay().getScreen().draw(Colour.BLUE, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
+            }
+        }
+
+        Rectangle debugRectangle = new Rectangle(xOff, yOff, 16, 24);
+
+        for (int j = (int) debugRectangle.getX(); j < debugRectangle.getWidth() + debugRectangle.getX(); j++)
+        {
+            for (int z = (int) debugRectangle.getY(); z < debugRectangle.getHeight() + debugRectangle.getY(); z++)
+            {
+                Timefall.getMainDisplay().getScreen().draw(Colour.RED, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
+            }
+        }
 
         for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
         {
@@ -511,7 +534,7 @@ public class Player implements Mob
 
         // Update world
         Timefall.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
-        world.reloadCollisions();
+        //world.reloadCollisions();
     }
 
     public int getxOff()

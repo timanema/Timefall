@@ -41,10 +41,19 @@ public class Game extends GameState
             this.debugInfo = !this.debugInfo;
         }
 
+        if (Keys.VK_P.isClicked())
+        {
+            tileManager.getCurrentWorld().reloadCollisions();
+        }
+
         if (Keys.VK_ESC.isClicked())
         {
             Timefall.openMenu();
-            //tileManager.getCurrentWorld().reloadCollisions();
+        }
+
+        if (Keys.VK_O.isClicked())
+        {
+            tileManager.getCurrentWorld().clearCollisions();
         }
 
         // Get which keys are pressed and pair them with direction
@@ -166,9 +175,9 @@ public class Game extends GameState
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "xLoc: " + xLoc, 0, 40);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "yLoc: " + yLoc, 0, 60);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xWOff: " + playerXWOFF, 0, 80);
-            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xWOff: " + playerYWOFF, 0, 100);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player yWOff: " + playerYWOFF, 0, 100);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xOff: " + playerXOFF, 0, 120);
-            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xOff: " + playerYOFF, 0, 140);
+            Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player yOff: " + playerYOFF, 0, 140);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player xCen: " + xCen, 0, 160);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "Player yCen: " + yCen, 0, 180);
             Font.requestText(FontType.DEFAULT, FontSize.NORMAL, "World: " + worldName, 0, 200);

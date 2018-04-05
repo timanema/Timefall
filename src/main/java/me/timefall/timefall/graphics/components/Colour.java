@@ -8,6 +8,9 @@ public class Colour implements Cloneable
     public static Colour BLACK = new Colour(1, 0, 0, 0);
     public static Colour GREY = new Colour(1, 0.5F, 0.5F, 0.5F);
     public static Colour TRANSPARENT = new Colour(0.01F, 0, 0, 0);
+    public static Colour BLUE = new Colour(1, 0, 0, 1F);
+    public static Colour RED = new Colour(1, 1F, 0, 0);
+
 
     public float alpha, red, green, blue;
 

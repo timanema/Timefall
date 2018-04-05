@@ -152,6 +152,13 @@ public class World
         }
     }
 
+    public void clearCollisions()
+    {
+        System.out.println("Clearing collisions ...");
+
+        collisions.clear();
+    }
+
     public void reloadCollisions()
     {
         collisions.clear();
@@ -160,7 +167,7 @@ public class World
 
         try
         {
-            System.out.println("    Trying to load map file ...");
+            System.out.println("Reloading collisions ...");
 
             BufferedImage[] bufferedImages = new BufferedImage[]{
                     ImageIO.read(Timefall.class.getResourceAsStream(mapPath)),
@@ -169,39 +176,13 @@ public class World
                             )
                     )
             };
-            BufferedImage mapImage = bufferedImages[0];
-            BufferedImage floraImage = bufferedImages[1];
-
-            this.width = mapImage.getWidth();
-            this.height = mapImage.getHeight();
-
-            baseLayer = new int[width][height];
-            floraLayer = new int[width][height];
-
-            System.out.println("    Getting tiles from hex codes ...");
-
-            // Checking if the images are the same size
-            if (floraImage.getWidth() != width || floraImage.getHeight() != height)
-            {
-                System.out.println("FAILED TO LOAD WORLD (" + worldName + ")! " +
-                        "FLORA IMAGE IS NOT THE SAME SIZE AS MAP IMAGE");
-
-                Timefall.getFileManager().worldFiles.remove(worldName);
-
-                // Check if there are any other worlds left
-                if (Timefall.getFileManager().worldFiles.isEmpty())
-                {
-                    System.out.println("NO WORLDS LEFT, ABORTING!");
-                    System.exit(-1);
-                }
-            }
 
             // Loop through all the images
             for (BufferedImage image : bufferedImages)
             {
                 // Looping through the base image
-                for (int x = 0; x < width; x++)
-                    for (int y = 0; y < height; y++)
+                for (int x = 0; x <  bufferedImages[0].getWidth(); x++)
+                    for (int y = 0; y <  bufferedImages[0].getHeight(); y++)
                     {
                         // Getting the hex code and the MapObject
                         int rgbCode = image.getRGB(x, y);
