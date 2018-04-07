@@ -5,6 +5,7 @@ import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.files.NFileManager;
+import me.timefall.timefall.files.Save;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
@@ -54,7 +55,7 @@ public class Game extends GameState
 
         if (Keys.VK_O.isClicked())
         {
-            NFileManager NFileManager = new NFileManager();
+            saveState();
         }
 
         // Get which keys are pressed and pair them with direction
@@ -198,7 +199,18 @@ public class Game extends GameState
         Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
         Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));
 
+        String worldName = Timefall.getTileManager().getCurrentWorld().getWorldName();
+        int cameraXOff = Timefall.getTileManager().getCurrentWorld().getX();
+        int cameraYOff = Timefall.getTileManager().getCurrentWorld().getY();
+        int playerXOff = Timefall.getTileManager().getEntityManager().getPlayer().getxOff();
+        int playerYOff = Timefall.getTileManager().getEntityManager().getPlayer().getyOff();
+        int gender = Timefall.getTileManager().getEntityManager().getPlayer().getGender();
 
+
+
+        Save save = new Save(worldName, cameraXOff, cameraYOff, playerXOff, playerYOff, gender);
+
+        Timefall.getNFileManager().writeSave(save);
 
         System.out.println("Saved game data!");
     }

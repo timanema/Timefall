@@ -11,10 +11,7 @@ import org.xml.sax.SAXException;
 
 import java.io.FileOutputStream;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.*;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartDocument;
@@ -55,6 +52,8 @@ public class NFileManager
 
 
     public ArrayList<String> worldFiles;
+
+    Save save;
 
     public NFileManager(/*Settings options*/)
     {
@@ -113,7 +112,13 @@ public class NFileManager
         */
     }
 
-    public void writeSave() throws Exception
+    public void writeSave(Save save)
+    {
+        this.save = save;
+        writeSave();
+    }
+
+    public void writeSave()
     {
         try {
             String outputDirectory = new File(NFileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
@@ -121,8 +126,7 @@ public class NFileManager
             // create an XMLOutputFactory
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             // create XMLEventWriter
-            XMLEventWriter eventWriter = outputFactory
-                    .createXMLEventWriter(new FileOutputStream(outputDirectory + "/" + "save.xml"));
+            XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new FileOutputStream(outputDirectory + "/" + "save.xml"));
             // create an EventFactory
             XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
@@ -142,14 +146,15 @@ public class NFileManager
 
             crEl(eventWriter, "camera", 1);
             crEl(eventWriter, "currentWorld", 1);
-            crNd(eventWriter, "xOff", "0");
-            crNd(eventWriter, "yOff", "0");
+            crNd(eventWriter, "name", save.getWorldName());
+            crNd(eventWriter, "xOff", String.valueOf(save.getCameraXOff()));
+            crNd(eventWriter, "yOff", String.valueOf(save.getCameraYOff()));
             crEl(eventWriter, "player", -1);
             crEl(eventWriter, "currentWorld", 1);
-            crNd(eventWriter, "xOff", "0");
-            crNd(eventWriter, "yOff", "0");
+            crNd(eventWriter, "xOff", String.valueOf(save.getPlayerXOff()));
+            crNd(eventWriter, "yOff", String.valueOf(save.getPlayerYOff()));
             clsEls(eventWriter, 1);
-            crNd(eventWriter, "gender", "0");
+            crNd(eventWriter, "gender", String.valueOf(save.getGender()));
             clsEls(eventWriter, toClose.size());
 
 
@@ -228,7 +233,7 @@ public class NFileManager
                 eventWriter.add(tab);
             }
 
-            System.out.println("start:"+ name);
+            //System.out.println("start:"+ name);
 
             eventWriter.add(tab);
             eventWriter.add(eventFactory.createStartElement("", "", name));
@@ -246,7 +251,7 @@ public class NFileManager
                 eventWriter.add(tab);
             }
 
-            System.out.println("start:"+ name);
+            //System.out.println("start:"+ name);
 
             eventWriter.add(tab);
             eventWriter.add(eventFactory.createStartElement("", "", name));
@@ -264,7 +269,7 @@ public class NFileManager
                 eventWriter.add(tab);
             }
 
-            System.out.println("start:"+ name);
+            //System.out.println("start:"+ name);
 
             eventWriter.add(tab);
             eventWriter.add(eventFactory.createStartElement("", "", name));
@@ -303,21 +308,21 @@ public class NFileManager
         Collections.reverse(toClose);
 
         int indentation = toClose.size();
-        System.out.println(indentation);
+        //System.out.println(indentation);
 
         for (int i = 0; i < amount; i++)
         {
             String name = toClose.get(i);
 
-            System.out.println("indent:"+ indentation);
-            System.out.println("end:"+ name);
+            //System.out.println("indent:"+ indentation);
+            //System.out.println("end:"+ name);
             for (int x = 0; x < indentation; x++)
             {
                 eventWriter.add(tab);
             }
             eventWriter.add(eventFactory.createEndElement("", "", name));
             eventWriter.add(end);
-            System.out.println("toClose:"+ toClose);
+            //System.out.println("toClose:"+ toClose);
             indentation--;
         }
 
@@ -353,6 +358,90 @@ public class NFileManager
             eventWriter.add(eventFactory.createEndElement("", "", name));
             eventWriter.add(end);
         }
+    }
+
+    public Save readSave()
+    {
+        String worldName = "";
+        int cameraXOff = 0;
+        int cameraYOff = 0;
+        int playerXOff = 0;
+        int playerYOff = 0;
+        int gender = 0;
+
+        try {
+            String inputDirectory = new File(NFileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+
+            // create an XMLOutputFactory
+            XMLInputFactory inputFactory= XMLInputFactory.newInstance();
+            // create XMLEventWriter
+            XMLEventReader eventReader = inputFactory.createXMLEventReader(new FileInputStream(inputDirectory + "/" + "save.xml"));
+
+            HashMap<String, Object> currentData = new HashMap<>();
+
+            while (eventReader.hasNext())
+            {
+                XMLEvent event = eventReader.nextEvent();
+
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("name")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("name", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("xOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("xOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("yOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("yOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("xOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("xOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("yOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("yOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("gender")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("gender", event.asCharacters().getData());
+                    }
+                }
+
+                // If we reach the end of an item element, we add it to the list
+                if (event.isEndElement()) {
+                    if (event.asEndElement().getName().getLocalPart().equals("camera")) {
+                        worldName = String.valueOf(currentData.get("name"));
+                        cameraXOff = Integer.parseInt(String.valueOf(currentData.get("xOff")));
+                        cameraYOff = Integer.parseInt(String.valueOf(currentData.get("yOff")));
+                        currentData.clear();
+                    }
+
+                    if (event.asEndElement().getName().getLocalPart().equals("player")) {
+                        playerXOff = Integer.parseInt(String.valueOf(currentData.get("xOff")));
+                        playerYOff = Integer.parseInt(String.valueOf(currentData.get("yOff")));
+                        gender = Integer.parseInt(String.valueOf(currentData.get("gender")));
+                        currentData.clear();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new Save(worldName, cameraXOff, cameraYOff, playerXOff, playerYOff, gender);
     }
 
     public void changeOption(String file, String option, String value)
