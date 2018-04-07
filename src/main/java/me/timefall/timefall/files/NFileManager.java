@@ -34,6 +34,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -50,17 +51,13 @@ public class NFileManager
     private File tfsaveFile;
     private Settings options;
 
+    private ArrayList<String> toClose;
+
 
     public ArrayList<String> worldFiles;
 
     public NFileManager(/*Settings options*/)
     {
-        try {
-            saveSave();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         /*this.options = options;
         worldFiles = new ArrayList<>();
 
@@ -116,107 +113,246 @@ public class NFileManager
         */
     }
 
-    public void saveSave() throws Exception
+    public void writeSave() throws Exception
     {
+        try {
+            String outputDirectory = new File(NFileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
 
-        String outputDirectory = new File(NFileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+            // create an XMLOutputFactory
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            // create XMLEventWriter
+            XMLEventWriter eventWriter = outputFactory
+                    .createXMLEventWriter(new FileOutputStream(outputDirectory + "/" + "save.xml"));
+            // create an EventFactory
+            XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
-        // create an XMLOutputFactory
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        // create XMLEventWriter
-        XMLEventWriter eventWriter = outputFactory
-                .createXMLEventWriter(new FileOutputStream(outputDirectory + "/" + "save.xml"));
-        // create an EventFactory
-        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+            //add types
+            XMLEvent end = eventFactory.createDTD("\n");
+            XMLEvent tab = eventFactory.createDTD("\t");
+            //start
+            StartDocument startDocument = eventFactory.createStartDocument();
+            eventWriter.add(startDocument);
+            eventWriter.add(end);
+            eventWriter.add(eventFactory.createStartElement("", "", "data"));
+            eventWriter.add(end);
 
-        //add types
-        XMLEvent end = eventFactory.createDTD("\n");
-        XMLEvent tab = eventFactory.createDTD("\t");
-        // create and write Start Tag
-        StartDocument startDocument = eventFactory.createStartDocument();
-        eventWriter.add(startDocument);
-        eventWriter.add(end);
+            toClose = new ArrayList<>();
 
-        //open data
-        eventWriter.add(eventFactory.createStartElement("", "", "data"));
-        eventWriter.add(end);
+            //for now location can be -1, one back, 0, same height or 1, one further
 
-        //open camera
-        eventWriter.add(eventFactory.createStartElement("", "", "camera"));
-        eventWriter.add(end);
+            crEl(eventWriter, "camera", 1);
+            crEl(eventWriter, "currentWorld", 1);
+            crNd(eventWriter, "xOff", "0");
+            crNd(eventWriter, "yOff", "0");
+            crEl(eventWriter, "player", -1);
+            crEl(eventWriter, "currentWorld", 1);
+            crNd(eventWriter, "xOff", "0");
+            crNd(eventWriter, "yOff", "0");
+            clsEls(eventWriter, 1);
+            crNd(eventWriter, "gender", "0");
+            clsEls(eventWriter, toClose.size());
 
-        // Write the different nodes
-        //createNode(eventWriter, "currentWorld", "1");
-        //open currentWorld
-        eventWriter.add(tab);
-        eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
-        eventWriter.add(end);
 
-        eventWriter.add(tab);
-        createNode(eventWriter, "xOff", "0");
-        eventWriter.add(tab);
-        createNode(eventWriter, "yOff", "0");
+            /*
+            //open camera
+            eventWriter.add(eventFactory.createStartElement("", "", "camera"));
+            eventWriter.add(end);
 
-        //end currentWorld
-        eventWriter.add(tab);
-        eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
-        eventWriter.add(end);
+            // Write the different nodes
+            //createNode(eventWriter, "currentWorld", "1");
+            //open currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
+            eventWriter.add(end);
 
-        //end camera
-        eventWriter.add(eventFactory.createEndElement("", "", "camera"));
-        eventWriter.add(end);
+            eventWriter.add(tab);
+            createNode(eventWriter, "xOff", "0");
+            eventWriter.add(tab);
+            createNode(eventWriter, "yOff", "0");
 
-        //open player
-        eventWriter.add(eventFactory.createStartElement("", "", "player"));
-        eventWriter.add(end);
+            //end currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
+            eventWriter.add(end);
 
-        //open player
-        eventWriter.add(tab);
-        eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
-        eventWriter.add(end);
+            //end camera
+            eventWriter.add(eventFactory.createEndElement("", "", "camera"));
+            eventWriter.add(end);
 
-        eventWriter.add(tab);
-        createNode(eventWriter, "xOff", "0");
-        eventWriter.add(tab);
-        createNode(eventWriter, "yOff", "0");
+            //open player
+            eventWriter.add(eventFactory.createStartElement("", "", "player"));
+            eventWriter.add(end);
 
-        //end currentWorld
-        eventWriter.add(tab);
-        eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
-        eventWriter.add(end);
+            //open player
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
+            eventWriter.add(end);
 
-        createNode(eventWriter, "gender", "0");
+            eventWriter.add(tab);
+            createNode(eventWriter, "xOff", "0");
+            eventWriter.add(tab);
+            createNode(eventWriter, "yOff", "0");
 
-        //end player
-        eventWriter.add(eventFactory.createEndElement("", "", "player"));
-        eventWriter.add(end);
+            //end currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
+            eventWriter.add(end);
 
-        //end data
-        eventWriter.add(eventFactory.createEndElement("", "", "data"));
-        eventWriter.add(end);
+            createNode(eventWriter, "gender", "0");
 
-        eventWriter.add(eventFactory.createEndDocument());
-        eventWriter.close();
+            //end player
+            eventWriter.add(eventFactory.createEndElement("", "", "player"));
+            eventWriter.add(end);
+            */
+
+            //end
+            eventWriter.add(eventFactory.createEndElement("", "", "data"));
+            eventWriter.add(end);
+            eventWriter.add(eventFactory.createEndDocument());
+            eventWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void createNode(XMLEventWriter eventWriter, String name,
-                            String value) throws XMLStreamException {
+    private void crEl(XMLEventWriter eventWriter, String name, int location) throws XMLStreamException
+    {
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent end = eventFactory.createDTD("\n");
+        XMLEvent tab = eventFactory.createDTD("\t");
+
+        if (location == 1)
+        {
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+
+        if (location == 0)
+        {
+            clsEls(eventWriter, 1);
+
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+
+        if (location == -1)
+        {
+            clsEls(eventWriter, 2);
+
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+    }
+
+    private void crNd(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException
+    {
 
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
         XMLEvent end = eventFactory.createDTD("\n");
         XMLEvent tab = eventFactory.createDTD("\t");
+        for (int x = 0; x < toClose.size() + 1; x++)
+        {
+            eventWriter.add(tab);
+        }
         // create Start node
-        StartElement sElement = eventFactory.createStartElement("", "", name);
-        eventWriter.add(tab);
-        eventWriter.add(sElement);
+        eventWriter.add(eventFactory.createStartElement("", "", name));
         // create Content
-        Characters characters = eventFactory.createCharacters(value);
-        eventWriter.add(characters);
+        eventWriter.add(eventFactory.createCharacters(value));
         // create End node
-        EndElement eElement = eventFactory.createEndElement("", "", name);
-        eventWriter.add(eElement);
+        eventWriter.add(eventFactory.createEndElement("", "", name));
         eventWriter.add(end);
 
+    }
+
+    private void clsEls(XMLEventWriter eventWriter, int amount) throws XMLStreamException
+    {
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent end = eventFactory.createDTD("\n");
+        XMLEvent tab = eventFactory.createDTD("\t");
+
+        Collections.reverse(toClose);
+
+        int indentation = toClose.size();
+        System.out.println(indentation);
+
+        for (int i = 0; i < amount; i++)
+        {
+            String name = toClose.get(i);
+
+            System.out.println("indent:"+ indentation);
+            System.out.println("end:"+ name);
+            for (int x = 0; x < indentation; x++)
+            {
+                eventWriter.add(tab);
+            }
+            eventWriter.add(eventFactory.createEndElement("", "", name));
+            eventWriter.add(end);
+            System.out.println("toClose:"+ toClose);
+            indentation--;
+        }
+
+        for (int i = amount - 1; i >= 0; i--)
+        {
+            toClose.remove(i);
+        }
+
+        if (toClose != null)
+        {
+            Collections.reverse(toClose);
+        }
+    }
+
+    private void crNds (XMLEventWriter eventWriter, HashMap<String, Object> nodeMap,
+                        int indentation) throws XMLStreamException {
+
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+
+        for ( String name : nodeMap.keySet() ) {
+
+            XMLEvent end = eventFactory.createDTD("\n");
+            XMLEvent tab = eventFactory.createDTD("\t");
+            for (int x = 0; x < indentation; x++)
+            {
+                eventWriter.add(tab);
+            }
+            // create Start node
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            // create Content
+            eventWriter.add(eventFactory.createCharacters(nodeMap.get(name).toString()));
+            // create End node
+            eventWriter.add(eventFactory.createEndElement("", "", name));
+            eventWriter.add(end);
+        }
     }
 
     public void changeOption(String file, String option, String value)

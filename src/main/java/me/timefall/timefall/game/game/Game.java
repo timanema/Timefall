@@ -198,6 +198,8 @@ public class Game extends GameState
         Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
         Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));
 
+
+
         System.out.println("Saved game data!");
     }
 }
