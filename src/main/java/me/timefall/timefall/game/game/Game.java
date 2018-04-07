@@ -4,6 +4,7 @@ import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.keys.Keys;
+import me.timefall.timefall.files.NFileManager;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.font.Font;
 import me.timefall.timefall.graphics.font.FontSize;
@@ -53,7 +54,7 @@ public class Game extends GameState
 
         if (Keys.VK_O.isClicked())
         {
-            tileManager.getCurrentWorld().clearCollisions();
+            NFileManager NFileManager = new NFileManager();
         }
 
         // Get which keys are pressed and pair them with direction

@@ -418,23 +418,23 @@ public class Player implements Mob
         Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
 
         //TODO remove debug
-        for (int j = (int) playerRectangle.getX(); j < playerRectangle.getWidth() + playerRectangle.getX(); j++)
+        /*for (int j = (int) playerRectangle.getX(); j < playerRectangle.getWidth() + playerRectangle.getX(); j++)
         {
             for (int z = (int) playerRectangle.getY(); z < playerRectangle.getHeight() + playerRectangle.getY(); z++)
             {
                 Timefall.getMainDisplay().getScreen().draw(Colour.BLUE, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
             }
-        }
+        }*/
 
         Rectangle debugRectangle = new Rectangle(xOff, yOff, 16, 24);
 
-        for (int j = (int) debugRectangle.getX(); j < debugRectangle.getWidth() + debugRectangle.getX(); j++)
+        /*for (int j = (int) debugRectangle.getX(); j < debugRectangle.getWidth() + debugRectangle.getX(); j++)
         {
             for (int z = (int) debugRectangle.getY(); z < debugRectangle.getHeight() + debugRectangle.getY(); z++)
             {
                 Timefall.getMainDisplay().getScreen().draw(Colour.RED, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
             }
-        }
+        }*/
 
         for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
         {

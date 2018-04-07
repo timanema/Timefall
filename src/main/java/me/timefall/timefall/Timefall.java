@@ -4,6 +4,7 @@ import me.timefall.timefall.display.Display;
 import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
+import me.timefall.timefall.files.NFileManager;
 import me.timefall.timefall.game.game.Game;
 import me.timefall.timefall.game.screens.Menu;
 import me.timefall.timefall.game.menu.TextOverlay;
@@ -116,7 +117,17 @@ public class Timefall
         //TODO: Load sounds from files
         soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
 
-        settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+        if ((Boolean) arguments.get("disableSplash"))
+        {
+            Game game = new Game(settings, new Screen(GAME_X_RES, GAME_Y_RES));
+            settings.setState(game);
+
+            tileManager = game.tileManager;
+            settings.setLightEnabled(true);
+        } else
+        {
+            settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+        }
 
         // Setting up text overlay
         textOverlay = new TextOverlay(settings, new Screen(1280, 720),
