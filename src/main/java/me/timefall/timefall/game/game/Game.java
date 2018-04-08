@@ -56,6 +56,7 @@ public class Game extends GameState
 
         if (Keys.VK_O.isClicked())
         {
+            Timefall.getFileManager().getSaveMap();
             Sheep sheep = new Sheep(new Vector("world", 0, 0));
             sheep.spawn(0, 0);
             //saveState();
@@ -124,22 +125,12 @@ public class Game extends GameState
     {
         System.out.println("\nSaving game data ...");
 
-        /*// Save all necessary data
-        Timefall.getFileManager().changeSetting("settings", "xOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getX()));
-        Timefall.getFileManager().changeSetting("settings", "yOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getY()));
-        Timefall.getFileManager().changeSetting("settings", "gender", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getGender()));
-        Timefall.getFileManager().changeSetting("lvl", "world", Timefall.getTileManager().getCurrentWorld().getWorldName());
-        Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
-        Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));*/
-
         String worldName = Timefall.getTileManager().getCurrentWorld().getWorldName();
         int cameraXOff = Timefall.getTileManager().getCurrentWorld().getX();
         int cameraYOff = Timefall.getTileManager().getCurrentWorld().getY();
         int playerXOff = Timefall.getTileManager().getEntityManager().getPlayer().getxOff();
         int playerYOff = Timefall.getTileManager().getEntityManager().getPlayer().getyOff();
         int gender = Timefall.getTileManager().getEntityManager().getPlayer().getGender();
-
-
 
         Save save = new Save(worldName, cameraXOff, cameraYOff, playerXOff, playerYOff, gender);
 

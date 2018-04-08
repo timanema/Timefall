@@ -11,11 +11,13 @@ import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -141,57 +143,6 @@ public class FileManager
             clsEls(eventWriter, toClose.size());
 
 
-            /*
-            //open camera
-            eventWriter.add(eventFactory.createStartElement("", "", "camera"));
-            eventWriter.add(end);
-
-            // Write the different nodes
-            //createNode(eventWriter, "currentWorld", "1");
-            //open currentWorld
-            eventWriter.add(tab);
-            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
-            eventWriter.add(end);
-
-            eventWriter.add(tab);
-            createNode(eventWriter, "xOff", "0");
-            eventWriter.add(tab);
-            createNode(eventWriter, "yOff", "0");
-
-            //end currentWorld
-            eventWriter.add(tab);
-            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
-            eventWriter.add(end);
-
-            //end camera
-            eventWriter.add(eventFactory.createEndElement("", "", "camera"));
-            eventWriter.add(end);
-
-            //open player
-            eventWriter.add(eventFactory.createStartElement("", "", "player"));
-            eventWriter.add(end);
-
-            //open player
-            eventWriter.add(tab);
-            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
-            eventWriter.add(end);
-
-            eventWriter.add(tab);
-            createNode(eventWriter, "xOff", "0");
-            eventWriter.add(tab);
-            createNode(eventWriter, "yOff", "0");
-
-            //end currentWorld
-            eventWriter.add(tab);
-            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
-            eventWriter.add(end);
-
-            createNode(eventWriter, "gender", "0");
-
-            //end player
-            eventWriter.add(eventFactory.createEndElement("", "", "player"));
-            eventWriter.add(end);
-            */
 
             //end
             eventWriter.add(eventFactory.createEndElement("", "", "data"));
@@ -320,29 +271,6 @@ public class FileManager
         }
     }
 
-    private void crNds (XMLEventWriter eventWriter, HashMap<String, Object> nodeMap,
-                        int indentation) throws XMLStreamException {
-
-        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-
-        for ( String name : nodeMap.keySet() ) {
-
-            XMLEvent end = eventFactory.createDTD("\n");
-            XMLEvent tab = eventFactory.createDTD("\t");
-            for (int x = 0; x < indentation; x++)
-            {
-                eventWriter.add(tab);
-            }
-            // create Start node
-            eventWriter.add(eventFactory.createStartElement("", "", name));
-            // create Content
-            eventWriter.add(eventFactory.createCharacters(nodeMap.get(name).toString()));
-            // create End node
-            eventWriter.add(eventFactory.createEndElement("", "", name));
-            eventWriter.add(end);
-        }
-    }
-
     public void loadSave()
     {
         Save saveToLoad = readSave();
@@ -354,6 +282,281 @@ public class FileManager
         Vector.setPlayerVariables(Vector.playerxPos, saveToLoad.getPlayerYOff());
         Timefall.getSettings().setGender(saveToLoad.getGender());
     }
+
+    public HashMap<String, Object> getSaveMap()
+    {
+        String worldName = "";
+        int cameraXOff = 0;
+        int cameraYOff = 0;
+        int playerXOff = 0;
+        int playerYOff = 0;
+        int gender = 0;
+
+        try {
+            String inputDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+
+            // create an XMLOutputFactory
+            XMLInputFactory inputFactory= XMLInputFactory.newInstance();
+            // create XMLEventWriter
+            XMLEventReader eventReader = inputFactory.createXMLEventReader(new FileInputStream(inputDirectory + "/" + "save.xml"));
+
+            HashMap<String, Object> allData = new HashMap<>();
+            LinkedHashMap<String, Object> elementData = new LinkedHashMap<>();
+            ArrayList<String> elementList = new ArrayList<>();
+            LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+            LinkedHashMap<String, Object> newData = new LinkedHashMap<>();
+            LinkedHashMap<String, Object> newAllData = new LinkedHashMap<>();
+            int dataLocation = 0;
+            String previousEnd = "";
+
+            LinkedHashMap<String, Object> nestElementData = new LinkedHashMap<>();
+
+            LinkedHashMap<String, Object> childList = new LinkedHashMap<String, Object>();
+
+
+
+            while (eventReader.hasNext())
+            {
+                XMLEvent event = eventReader.nextEvent();
+
+                //checks if its start element and not data; gets all the element data
+                /*if (event.isStartElement() && !event.asStartElement().getName().getLocalPart().equals("data")) {
+                    //if it contains whitespace it doesnt have data
+                    if (eventReader.peek().asCharacters().isWhiteSpace())
+                    {
+                        //set as elements with no data, so false
+                        data.put(event.asStartElement().getName().getLocalPart(), false);
+                    }
+                    //does with nonwhitespace have data
+                    else if (!eventReader.peek().asCharacters().isWhiteSpace())
+                    {
+                        //System.out.println(event.asStartElement().getName().getLocalPart());
+
+                        //add tag name and its data to hashmap
+                        elementData.put(event.asStartElement().getName().getLocalPart(), eventReader.peek().asCharacters().getData());
+                        //set as element with data
+                        data.put(event.asStartElement().getName().getLocalPart(), true);
+                    }
+                    elementList.add(event.asStartElement().getName().getLocalPart());
+                }*/
+
+
+
+                if (event.isStartElement())
+                {
+                    String parent = event.asStartElement().getName().getLocalPart();
+                    //System.out.println(parent);
+
+                    boolean loop = true;
+                    while (loop && eventReader.hasNext())
+                    {
+                        event = eventReader.nextEvent();
+
+                        if (event.isStartElement())
+                        {
+                            String child = event.asStartElement().getName().getLocalPart();
+                            LinkedHashMap<String, Object> childChildList = new LinkedHashMap<>();
+                            System.out.println(child);
+                            childList.put(child, childChildList);
+
+                            boolean childloop = true;
+                            while (childloop && eventReader.hasNext())
+                            {
+                                event = eventReader.nextEvent();
+
+                                if (event.isStartElement())
+                                {
+                                    String childChild = event.asStartElement().getName().getLocalPart();
+                                    //System.out.println("childChild: " + childChild);
+                                    childChildList.put(childChild, "");
+                                    LinkedHashMap<String, Object> childChildChildList = new LinkedHashMap<>();
+                                    boolean childChildLoop = true;
+                                    while (childChildLoop && eventReader.hasNext())
+                                    {
+                                        event = eventReader.nextEvent();
+                                        if (event.isStartElement()) {
+                                            String childChildChild = event.asStartElement().getName().getLocalPart();
+                                            //System.out.println("childChildChild: " + childChildChild);
+                                            childChildChildList.put(childChildChild, "");
+                                            //System.out.println("childChildChildList: " + childChildChildList);
+                                            boolean childChildChildLoop = true;
+                                            while (childChildChildLoop && eventReader.hasNext())
+                                            {
+                                                event = eventReader.nextEvent();
+
+                                                if (event.isCharacters())
+                                                {
+                                                    if (!event.asCharacters().isWhiteSpace())
+                                                    {
+                                                        childChildChildList.replace(childChildChild, event.asCharacters().getData());
+                                                    }
+                                                }
+
+                                                //System.out.println("childChildChildList: " + childChildChildList);
+
+                                                if (event.isEndElement())
+                                                {
+                                                    if (event.asEndElement().getName().getLocalPart().equals(childChildChild))
+                                                    {
+                                                        childChildChildLoop = false;
+                                                    }
+                                                }
+                                            }
+                                            childChildList.replace(childChild, childChildChildList);
+                                        }
+                                        if (event.isCharacters())
+                                        {
+                                            if (!event.asCharacters().isWhiteSpace())
+                                            {
+                                                childChildList.replace(childChild, event.asCharacters().getData());
+                                            }
+                                        }
+
+                                        if (event.isEndElement())
+                                        {
+                                            if (event.asEndElement().getName().getLocalPart().equals(childChild))
+                                            {
+                                                childChildLoop = false;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (event.isEndElement())
+                                {
+                                    if (event.asEndElement().getName().getLocalPart().equals(child))
+                                    {
+                                        childloop = false;
+                                    }
+                                }
+
+                            }
+                        }
+                        if (event.isEndElement())
+                        {
+                            if (event.asEndElement().getName().getLocalPart().equals(parent))
+                            {
+                                loop = false;
+                            }
+                        }
+                    }
+                }
+
+                /*if (elementList.size() != 0)
+                {
+                    if (event.isEndElement() && event.asEndElement().getName().getLocalPart().equals(elementList.get(0))) {
+                        allData.put(event.asEndElement().getName().getLocalPart(), currentData.clone());
+                        currentData.clear();
+                        for (int i = elementList.size() - 1; i > 0; i--)
+                        {
+                            elementList.remove(i);
+                        }
+                    }
+                }*/
+
+                /*if (event.isCharacters() && !previousEnd.equals(""))
+                {
+                    if (!(boolean) data.get(previousEnd) && eventReader.peek().isEndElement())
+                    {
+                        System.out.println("nondataelement: " + previousEnd);
+                        System.out.println("nextnon: " + eventReader.peek().asEndElement().getName().getLocalPart());
+                    }
+                }*/
+
+                //checks if endelement and not data
+                /*if (event.isEndElement() && !event.asEndElement().getName().getLocalPart().equals("data"))
+                {
+                    previousEnd = event.asEndElement().getName().getLocalPart();
+
+                    //checks if it's an element without data
+                    if (!(boolean) data.get(event.asEndElement().getName().getLocalPart()))
+                    {
+                        if (nestElementData.get(0) instanceof LinkedHashMap)
+                        {
+
+                        }
+
+                        nestElementData.put(event.asEndElement().getName().getLocalPart(), elementData.clone());
+                        elementData.clear();
+                    }
+
+
+                    System.out.println(event.asEndElement().getName().getLocalPart());
+                    System.out.println("1st: " + data.get(event.asEndElement().getName().getLocalPart()));
+                    if (eventReader.peek().isCharacters())
+                    {
+                        XMLEvent nextElement = eventReader.nextTag();
+                        if (nextElement.isEndElement())
+                        {
+                            System.out.println("2: " + nextElement.isEndElement());
+                            System.out.println("3: " + data.get(nextElement.asEndElement().getName().getLocalPart()));
+                        } else {
+                            System.out.println("2: " + nextElement.isEndElement());
+                        }
+                    } else {
+                        System.out.println("2: " + false);
+                    }
+                    if (!(boolean) data.get(event.asEndElement().getName().getLocalPart()) && eventReader.peek().isEndElement() && !(boolean) data.get(eventReader.peek().asEndElement().getName().getLocalPart()))
+                    {
+                        newAllData.put(eventReader.peek().asEndElement().getName().getLocalPart(), newData.clone());
+                        //System.out.println(currentData);
+                        currentData.clear();
+                        newData.clear();
+                    }
+
+                    if (!(boolean) data.get(event.asEndElement().getName().getLocalPart()))
+                    {
+                        newData.put(event.asEndElement().getName().getLocalPart(), currentData.clone());
+                        //System.out.println(currentData);
+                        currentData.clear();
+                    }
+
+                      if (!(boolean) data.get(event.asEndElement().getName().getLocalPart()))
+                      {
+                        System.out.println("nondataelement: " + event.asEndElement().getName().getLocalPart());
+
+                        if (eventReader.peek().isCharacters())
+                        {
+                            System.out.println("nextevent is characters: "+ true);
+                            if (eventReader.nextTag().isEndElement())
+                            {
+                                System.out.println("nextag is endelement: "+ true);
+                            }
+                            System.out.println("nextevent: " + eventReader.peek().asEndElement().getName().getLocalPart());
+                        }
+                      }
+
+                } else {
+                    previousEnd = "";
+                }/*
+
+
+
+                /*if (elementList.size() != 0)
+                {
+
+                    if (event.isEndElement() && event.asEndElement().getName().getLocalPart().equals(elementList.get(0))) {
+                        allData.put(event.asEndElement().getName().getLocalPart(), currentData.clone());
+                        currentData.clear();
+                        for (int i = elementList.size() - 1; i > 0; i--)
+                        {
+                            elementList.remove(i);
+                        }
+                    }
+                }*/
+            }
+            //System.out.println(data);
+            //System.out.println(newData);
+            //System.out.println(newAllData);
+            //return null;
+            System.out.println(childList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
 
     public Save readSave()
     {
