@@ -19,7 +19,6 @@ public class Font
 
     /**
      * Draws text directly onto given bitmap
-     * Should not be used before the overlay has been cleared
      */
     public static void drawText(Bitmap bitmap,
                                 FontType fontType,
