@@ -16,7 +16,8 @@ import me.timefall.timefall.graphics.utils.ButtonFactory;
 public class Menu extends GameState
 {
 
-    public Menu(Settings settings, Screen screen)
+    public Menu(Settings settings,
+                Screen screen)
     {
         super(settings, screen);
 
@@ -31,9 +32,14 @@ public class Menu extends GameState
             }
         }
 
-        NormalButton backButton = ButtonFactory.createNormalButton("asfsf", 400, 50, Timefall::reloadGame, ButtonSkin.DEFAULT, true);
+        NormalButton backButton = ButtonFactory.createNormalButton(400,
+                50,
+                Timefall::reloadGame,
+                ButtonSkin.DEFAULT,
+                true);
 
-        backButton.setLocation(Timefall.MENU_X_RES / 2 - 200, (Timefall.MENU_Y_RES / 2 - 25) - 25);
+        backButton.setLocation(Timefall.MENU_X_RES / 2 - 200,
+                (Timefall.MENU_Y_RES / 2 - 25) - 25);
         backButton.setActive(true);
         backButton.setVisible(true);
     }

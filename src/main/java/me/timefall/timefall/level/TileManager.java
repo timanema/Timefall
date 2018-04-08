@@ -12,6 +12,7 @@ import me.timefall.timefall.level.tiles.trees.OakTree;
 import me.timefall.timefall.level.tiles.trees.SpruceTree;
 import me.timefall.timefall.level.world.World;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +105,44 @@ public class TileManager
 
         level = new Level(this, worldX, worldY);
         entityManager = new EntityManager(worldX, worldY);
+    }
+
+    public int getxOff(Vector vector)
+    {
+        int remainderX = (int) Math.round((vector.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int xPos = (int) vector.getX();
+
+        return xPos * 16 + (int) (remainderX / 62.5);
+    }
+
+    public int getyOff(Vector vector)
+    {
+        int remainderY = (int) Math.round((vector.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
+        int yPos = (int) vector.getY();
+
+        return yPos * 16 + (int) (remainderY / 62.5);
+    }
+
+    public boolean intersection(Rectangle entityRectangle)
+    {
+        for (Rectangle rectangle : getCurrentWorld().getCollisions())
+        {
+            int deltaX = (int) Math.abs(entityRectangle.getX() - rectangle.getX());
+            int deltaY = (int) Math.abs(entityRectangle.getY() - rectangle.getY());
+
+            // Skip rectangles than cannot intersect
+            if (deltaX > 32 || deltaY > 32)
+            {
+                continue;
+            }
+
+            if (entityRectangle.intersects(rectangle))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Level getLevel()

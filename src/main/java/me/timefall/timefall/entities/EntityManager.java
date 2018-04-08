@@ -10,6 +10,11 @@ import java.util.List;
 
 public class EntityManager
 {
+    // Character index - Start
+    public static final int NPC_AMOUNT = 1;
+    public static final int CHARACTER_SHEEP = 0;
+    // Character index - End
+
     private List<Entity> entities;
     private Player player;
 
@@ -26,7 +31,18 @@ public class EntityManager
     public void tickEntities()
     {
         // Loop through all the entities and tick the entities in the current world
-        entities.stream().filter(entity -> entity.getLocation().getWorldName().equals(Timefall.getTileManager().getCurrentWorld().getWorldName())).forEach(Entity::tick);
+        for (Entity entity : this.entities)
+        {
+            if (entity.getLocation() == null || entity.getLocation().getWorldName() == null)
+            {
+                continue;
+            }
+
+            if (entity.getLocation().getWorldName().equals(Timefall.getTileManager().getCurrentWorld().getWorldName()))
+            {
+                entity.tick();
+            }
+        }
 
         // Tick the player
         player.tick();
@@ -35,10 +51,30 @@ public class EntityManager
     public void renderEntities(Screen screen)
     {
         // Loop through all the entities and render the entities in the current world
-        entities.stream().filter(entity -> entity.getLocation().getWorldName().equals(Timefall.getTileManager().getCurrentWorld().getWorldName())).forEach(entity -> entity.render(screen));
+        for (Entity entity : this.entities)
+        {
+            if (entity.getLocation() == null || entity.getLocation().getWorldName() == null)
+            {
+                continue;
+            }
 
+            if (entity.getLocation().getWorldName().equals(Timefall.getTileManager().getCurrentWorld().getWorldName()))
+            {
+                entity.render(screen);
+            }
+        }
         // Render the player
         player.render(screen);
+    }
+
+    public void addNPC(NPC npc)
+    {
+        this.entities.add(npc);
+    }
+
+    public void removeNPC(NPC npc)
+    {
+        this.entities.remove(npc);
     }
 
     public Player getPlayer()

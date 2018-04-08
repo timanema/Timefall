@@ -192,18 +192,6 @@ public class Level
             x++;
         }
 
-        // TODO: Remove debug code
-        /*for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
-        {
-            for (int j = (int) rectangle.getX(); j < rectangle.getWidth() + rectangle.getX(); j++)
-            {
-                for (int z = (int) rectangle.getY(); z < rectangle.getHeight() + rectangle.getY(); z++)
-                {
-                    screen.draw(Colour.BLACK, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
-                }
-            }
-        }*/
-
         screen.drawLight(testLight2, 80 - tileManager.getCurrentWorld().getX(), 80 - tileManager.getCurrentWorld().getY());
         screen.drawLight(testLight, Timefall.getTileManager().getEntityManager().getPlayer().xOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().width / 2), Timefall.getTileManager().getEntityManager().getPlayer().yOff + (Timefall.getTileManager().getEntityManager().getPlayer().getCurrentBitmap().height / 2));
     }

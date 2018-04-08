@@ -163,22 +163,39 @@ public class Player implements Mob
         switch (getDirection())
         {
             case NORTH:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][4] :
+                                Sprite.completeCharacters[gender][5]));
             case NORTHEAST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][4] :
+                                Sprite.completeCharacters[gender][5]));
             case NORTHWEST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] : (animationStatus == 1 ? Sprite.completeCharacters[gender][4] : Sprite.completeCharacters[gender][5]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][3] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][4] :
+                                Sprite.completeCharacters[gender][5]));
             case EAST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6].flipVert() : (animationStatus == 1 ? Sprite.completeCharacters[gender][7].flipVert() : Sprite.completeCharacters[gender][8].flipVert()));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6].flipVert() :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][7].flipVert() :
+                                Sprite.completeCharacters[gender][8].flipVert()));
             case SOUTH:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][1] :
+                                Sprite.completeCharacters[gender][2]));
             case SOUTHEAST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][1] :
+                                Sprite.completeCharacters[gender][2]));
             case SOUTHWEST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] : (animationStatus == 1 ? Sprite.completeCharacters[gender][1] : Sprite.completeCharacters[gender][2]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][0] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][1] :
+                                Sprite.completeCharacters[gender][2]));
             case WEST:
-                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6] : (animationStatus == 1 ? Sprite.completeCharacters[gender][7] : Sprite.completeCharacters[gender][8]));
+                return (animationStatus == 0 ? Sprite.completeCharacters[gender][6] :
+                        (animationStatus == 1 ? Sprite.completeCharacters[gender][7] :
+                                Sprite.completeCharacters[gender][8]));
             default:
+                // Shouldn't happen
                 return Sprite.terrain[0][0];
         }
     }
@@ -260,27 +277,10 @@ public class Player implements Mob
         }
     }
 
-    public boolean isXCentred()
-    {
-        return xCen;
-    }
-
-    public boolean isYCentred()
-    {
-        return yCen;
-    }
-
     @Override
     public void tick()
     {
         TileManager tileManager = Timefall.getTileManager();
-        // Calculate max and current values and use these for center calculations
-        int xMax = 16 * tileManager.worldX - (xAxis % 16);
-        int yMax = 16 * tileManager.worldY - (yAxis % 16);
-        int xPlayer = getxOff();
-        int yPlayer = getyOff();
-
-        this.checkCentred(xMax, yMax, xPlayer, yPlayer);
 
         // Just in case the player somehow gets an offset outside the borders
         if (xOff < 0) xOff = 0;
@@ -288,24 +288,30 @@ public class Player implements Mob
         if (xOff > tileManager.getCurrentWorld().getWidth() * 16)
             xOff = tileManager.getCurrentWorld().getWidth() * 16 - getCurrentBitmap().width;
         if (yOff > tileManager.getCurrentWorld().getHeight() * 16)
-            yOff = tileManager.getCurrentWorld().getHeight() * 16 -  - getCurrentBitmap().height;
+            yOff = tileManager.getCurrentWorld().getHeight() * 16 - getCurrentBitmap().height;
 
         // Update the current animationCount to set the correct animationStatus
         if (isMoving())
         {
-            animationCount++;
+            if (animationCount == -1)
+            {
+                animationStatus = 1;
+                animationCount += 1;
+            }
+
+            animationCount += 1;
 
             if (animationCount == 3)
             {
                 animationCount = 0;
-                animationStatus++;
+                animationStatus += 1;
 
                 if (animationStatus == 3)
                     animationStatus = 0;
             }
         } else
         {
-            animationCount = 0;
+            animationCount = -1;
             animationStatus = 0;
         }
     }
@@ -319,7 +325,6 @@ public class Player implements Mob
     @Override
     public void move(Direction direction)
     {
-        //TODO: Add collision detection
         TileManager tileManager = Timefall.getTileManager();
 
         // Move the player in a direction
@@ -330,57 +335,71 @@ public class Player implements Mob
         boolean negativeYMovement = direction.getyChange() < 0;
         int xMod = (negativeXMovement ? -1 : 1);
         int yMod = (negativeYMovement ? -1 : 1);
+        int xMoved = 0;
+        int yMoved = 0;
 
-        for (int x = 0; (negativeXMovement ? x > direction.getxChange() : x < direction.getxChange()); x += xMod)
+        while ((negativeXMovement ? xMoved > direction.getxChange() : xMoved < direction.getxChange()) ||
+                (negativeYMovement ? yMoved > direction.getyChange() : yMoved < direction.getyChange()))
         {
-            if (!canMove(xMod, 0))
+            // Move on x-axis
+            if (negativeXMovement ? xMoved > direction.getxChange() : xMoved < direction.getxChange())
             {
-                break;
-            }
+                if (canMove(xMod, 0)) {
+                    int currentOff = tileManager.getCurrentWorld().getX();
 
-            int currentOff = tileManager.getCurrentWorld().getX();
+                    if (currentOff + xMod >= 0 &&
+                            currentOff + xMod + 16 * Timefall.GAME_X_RES / 16 - Timefall.GAME_X_RES % 16 <= tileManager.getCurrentWorld().getWidth() * 16
+                            && xCen)
+                    {
+                        // Screen can move
+                        tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() + xMod, tileManager.getCurrentWorld().getY());
 
-            if (currentOff + xMod > 0 && currentOff + xMod + 16 * Timefall.GAME_X_RES / 16 - Timefall.GAME_X_RES % 16 < tileManager.getCurrentWorld().getWidth() * 16 && xCen)
-            {
-                // Screen can move
-                tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() + xMod, tileManager.getCurrentWorld().getY());
-            } else
-            {
-                // Screen cannot move
-                if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width)
-                {
-                    xCen = false;
-                    xOff += xMod;
+                        this.getLocation().add(xMod * .0625F, 0);
+                    } else {
+                        // Screen cannot move
+                        if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width) {
+                            xCen = false;
+                            xOff += xMod;
+
+                            this.getLocation().add(xMod * .0625F, 0);
+                        }
+                    }
+
                 }
+
+                xMoved += xMod;
             }
 
-            this.getLocation().add(xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width ? xMod * .0625F : 0, 0);
-        }
-
-        for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
-        {
-            if (!canMove(0, yMod))
+            // Move on y-axis
+            if (negativeYMovement ? yMoved > direction.getyChange() : yMoved < direction.getyChange())
             {
-                break;
-            }
+                if (canMove(0, yMod)) {
+                    int currentOff = tileManager.getCurrentWorld().getY();
 
-            int currentOff = tileManager.getCurrentWorld().getY();
-
-            if (currentOff + yMod > 0 && currentOff + yMod + 16 * Timefall.GAME_Y_RES / 16 - Timefall.GAME_Y_RES % 16 < tileManager.getCurrentWorld().getHeight() * 16 && yCen)
-            {
-                // Screen can move
-                tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() + yMod);
-            } else
-            {
-                // Screen cannot move
-                if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height)
-                {
-                    yCen = false;
-                    yOff += yMod;
+                    if (currentOff + yMod >= 0 && currentOff + yMod + 16 * Timefall.GAME_Y_RES / 16 - Timefall.GAME_Y_RES % 16 <= tileManager.getCurrentWorld().getHeight() * 16 && yCen) {
+                        // Screen can move
+                        tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() + yMod);
+                        this.getLocation().add(0, yMod * .0625F);
+                    } else {
+                        // Screen cannot move
+                        if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height) {
+                            yCen = false;
+                            yOff += yMod;
+                            this.getLocation().add(0, yMod * .0625F);
+                        }
+                    }
                 }
+
+                yMoved += yMod;
             }
 
-            this.getLocation().add(0, yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height ? yMod * .0625F : 0);
+            // Calculate max and current values and use these for center calculations
+            int xMax = 16 * tileManager.worldX - (xAxis % 16);
+            int yMax = 16 * tileManager.worldY - (yAxis % 16);
+            int xPlayer = getxOff();
+            int yPlayer = getyOff();
+
+            this.checkCentred(xMax, yMax, xPlayer, yPlayer);
         }
 
         //TODO: Remove this debug code
@@ -391,8 +410,6 @@ public class Player implements Mob
 
             if (block.getBlockID()[0] == 1)
             {
-                //TODO reload collisions and such, maybe tp to original location
-
                 // TP player
                 teleport((tileManager.getWorld(getLocation().getWorldName().equals("world") ? "test" : "world")), 30, 18);
 
@@ -404,72 +421,22 @@ public class Player implements Mob
         }
     }
 
+    @Override
     public boolean canMove(int xMod, int yMod)
     {
-        TileManager tileManager = Timefall.getTileManager();
-
-        int xOff = getxOff();
-        int yOff = getyOff();
-
         // Simulating move
-        int simX = xOff + xMod;
-        int simY = yOff + yMod;
+        int simX = getxOff() + xMod;
+        int simY = getyOff() + yMod;
 
         Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
 
-        //TODO remove debug
-        /*for (int j = (int) playerRectangle.getX(); j < playerRectangle.getWidth() + playerRectangle.getX(); j++)
-        {
-            for (int z = (int) playerRectangle.getY(); z < playerRectangle.getHeight() + playerRectangle.getY(); z++)
-            {
-                Timefall.getMainDisplay().getScreen().draw(Colour.BLUE, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
-            }
-        }*/
-
-        Rectangle debugRectangle = new Rectangle(xOff, yOff, 16, 24);
-
-        /*for (int j = (int) debugRectangle.getX(); j < debugRectangle.getWidth() + debugRectangle.getX(); j++)
-        {
-            for (int z = (int) debugRectangle.getY(); z < debugRectangle.getHeight() + debugRectangle.getY(); z++)
-            {
-                Timefall.getMainDisplay().getScreen().draw(Colour.RED, j - tileManager.getCurrentWorld().getX(), z - tileManager.getCurrentWorld().getY());
-            }
-        }*/
-
-        for (Rectangle rectangle : tileManager.getCurrentWorld().getCollisions())
-        {
-            int deltaX = (int) Math.abs(playerRectangle.getX() - rectangle.getX());
-            int deltaY = (int) Math.abs(playerRectangle.getY() - rectangle.getY());
-
-            // Skip rectangles than cannot intersect
-            if (deltaX > 32 || deltaY > 32)
-            {
-                continue;
-            }
-
-            if (playerRectangle.intersects(rectangle))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return !Timefall.getTileManager().intersection(playerRectangle);
     }
 
     @Override
     public void moveAnimationToggle()
     {
         this.currentlyMoving = !this.currentlyMoving;
-    }
-
-    @Override
-    public void spawn(int x, int y)
-    {
-    }
-
-    @Override
-    public void despawn()
-    {
     }
 
     @Override
@@ -485,8 +452,8 @@ public class Player implements Mob
         x = x - (((int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
         y = y - (((int) Math.round((y * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
 
-        int xOff = getxOff(new Vector(x, 0));
-        int yOff = getyOff(new Vector(0, y));
+        int xOff = Timefall.getTileManager().getxOff(new Vector(x, 0));
+        int yOff = Timefall.getTileManager().getyOff(new Vector(0, y));
 
         getLocation().setLocation(world.getWorldName(), x, y);
 
@@ -535,28 +502,12 @@ public class Player implements Mob
 
     public int getxOff()
     {
-        return getxOff(getLocation());
+        return Timefall.getTileManager().getxOff(getLocation());
     }
 
     public int getyOff()
     {
-        return getyOff(getLocation());
-    }
-
-    private int getxOff(Vector vector)
-    {
-        int remainderX = (int) Math.round((vector.getX() * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int xPos = (int) vector.getX();
-
-        return xPos * 16 + (int) (remainderX / 62.5);
-    }
-
-    private int getyOff(Vector vector)
-    {
-        int remainderY = (int) Math.round((vector.getY() * Math.pow(10, 3)) % (Math.pow(10, 3)));
-        int yPos = (int) vector.getY();
-
-        return yPos * 16 + (int) (remainderY / 62.5);
+        return Timefall.getTileManager().getyOff(getLocation());
     }
 
     public int getGender()

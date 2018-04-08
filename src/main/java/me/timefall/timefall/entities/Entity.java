@@ -22,10 +22,6 @@ public interface Entity
 
     public void render(Screen screen);
 
-    public void spawn(int x, int y);
-
-    public void despawn();
-
     public boolean isAlive();
 
     public void teleport(World world, float x, float y);

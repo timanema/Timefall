@@ -9,6 +9,7 @@ import me.timefall.timefall.game.screens.Menu;
 import me.timefall.timefall.game.menu.TextOverlay;
 import me.timefall.timefall.game.screens.TitleScreen;
 import me.timefall.timefall.graphics.components.Screen;
+import me.timefall.timefall.graphics.components.Sprite;
 import me.timefall.timefall.graphics.handlers.ButtonHandler;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.sounds.SoundHandler;
@@ -61,6 +62,10 @@ public class Timefall
             }
         }
 
+        // Load NPC sprites
+        Sprite.loadNPC();
+
+        // Start Timefall
         new Timefall();
     }
 
