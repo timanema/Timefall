@@ -6,9 +6,25 @@ public class NormalButton extends Button
 {
     public boolean disappearOnClick;
 
-    public NormalButton(String buttonText, int width, int height, Runnable runnable, ButtonSkin buttonSkin, boolean disappearOnClick)
+    public NormalButton(String buttonText,
+                        int width,
+                        int height,
+                        Runnable runnable,
+                        ButtonSkin buttonSkin,
+                        boolean disappearOnClick)
     {
         super(buttonText, width, height, runnable, buttonSkin);
+
+        this.disappearOnClick = disappearOnClick;
+    }
+
+    public NormalButton(int width,
+                        int height,
+                        Runnable runnable,
+                        ButtonSkin buttonSkin,
+                        boolean disappearOnClick)
+    {
+        super(width, height, runnable, buttonSkin);
 
         this.disappearOnClick = disappearOnClick;
     }

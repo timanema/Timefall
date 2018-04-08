@@ -1,6 +1,9 @@
 package me.timefall.timefall.graphics.components.buttons;
 
 import me.timefall.timefall.graphics.components.Bitmap;
+import me.timefall.timefall.graphics.font.Font;
+import me.timefall.timefall.graphics.font.FontSize;
+import me.timefall.timefall.graphics.font.FontType;
 
 public abstract class Button
 {
@@ -11,9 +14,26 @@ public abstract class Button
     private Runnable runnable;
     private Bitmap bitmap;
 
-    public Button(String buttonText, int width, int height, Runnable runnable, ButtonSkin buttonSkin)
+    public Button(String buttonText,
+                  int width,
+                  int height,
+                  Runnable runnable,
+                  ButtonSkin buttonSkin)
     {
         this.buttonText = buttonText;
+        this.width = width;
+        this.height = height;
+        this.runnable = runnable;
+        this.xOff = 0;
+        this.yOff = 0;
+        this.generateBitmap(buttonSkin);
+    }
+
+    public Button(int width,
+                  int height,
+                  Runnable runnable,
+                  ButtonSkin buttonSkin)
+    {
         this.width = width;
         this.height = height;
         this.runnable = runnable;
@@ -39,6 +59,21 @@ public abstract class Button
                 }
             }
         }
+
+        // Check if this button needs text drawn
+        if (this.buttonText == null)
+        {
+            return;
+        }
+
+        int textWidth = this.buttonText.length() * 12;
+
+        Font.drawText(bitmap,
+                FontType.DEFAULT,
+                FontSize.NORMAL,
+                this.buttonText,
+                this.width / 2 - textWidth / 2,
+                this.height / 2 - 9);
     }
 
     public String getText()
