@@ -4,7 +4,6 @@ import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.events.keys.Keys;
-import me.timefall.timefall.files.NFileManager;
 import me.timefall.timefall.files.Save;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.font.Font;
@@ -191,13 +190,13 @@ public class Game extends GameState
     {
         System.out.println("\nSaving game data ...");
 
-        // Save all necessary data
+        /*// Save all necessary data
         Timefall.getFileManager().changeSetting("settings", "xOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getX()));
         Timefall.getFileManager().changeSetting("settings", "yOff", String.valueOf(Timefall.getTileManager().getCurrentWorld().getY()));
         Timefall.getFileManager().changeSetting("settings", "gender", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getGender()));
         Timefall.getFileManager().changeSetting("lvl", "world", Timefall.getTileManager().getCurrentWorld().getWorldName());
         Timefall.getFileManager().changeSetting("lvl", "xOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getxOff()));
-        Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));
+        Timefall.getFileManager().changeSetting("lvl", "yOff", String.valueOf(Timefall.getTileManager().getEntityManager().getPlayer().getyOff()));*/
 
         String worldName = Timefall.getTileManager().getCurrentWorld().getWorldName();
         int cameraXOff = Timefall.getTileManager().getCurrentWorld().getX();
@@ -210,7 +209,7 @@ public class Game extends GameState
 
         Save save = new Save(worldName, cameraXOff, cameraYOff, playerXOff, playerYOff, gender);
 
-        Timefall.getNFileManager().writeSave(save);
+        Timefall.getFileManager().writeSave(save);
 
         System.out.println("Saved game data!");
     }

@@ -4,38 +4,46 @@ import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.level.Vector;
 
+import java.io.FileOutputStream;
+
+import javax.xml.stream.*;
+import javax.xml.stream.events.StartDocument;
+import javax.xml.stream.events.XMLEvent;
+
 import java.io.*;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * @deprecated Needs a recode asap
- */
 public class FileManager
 {
-    private String settingsPath = "";
-    private String lvlPath = "";
+    private String optionsPath = "";
+    private String savePath = "";
     private String readLine = null;
     private String mainDir = "";
 
     private File mainDirectory;
-    private File settingFile;
-    private File lvlFile;
-    private Settings settings;
+    private File optionFile;
+    private File saveFile;
+    private Settings options;
+
+    private ArrayList<String> toClose;
 
 
     public ArrayList<String> worldFiles;
 
-    public FileManager(Settings settings)
+    Save save;
+
+    public FileManager(Settings options)
     {
-        this.settings = settings;
+        this.options = options;
         worldFiles = new ArrayList<>();
 
-        System.out.println(" Loading files ...");
+        System.out.println(" Loading Nfiles ...");
 
         try
         {
@@ -43,42 +51,33 @@ public class FileManager
             mainDir = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
 
             mainDirectory = new File(mainDir);
-            settingFile = new File(mainDir + "/settings.txt/");
-            lvlFile = new File(mainDir + "/lvl.txt/");
+            optionFile = new File(mainDir + "/options.txt/");
+            saveFile = new File(mainDir + "/save.xml/");
 
-            // Check if setting file exists, if not create it
-            if (!settingFile.exists())
+            // Check if option file exists, if not create it
+            if (!optionFile.exists())
             {
-                System.out.println("  Creating file: " + mainDir + "/settings.txt ...");
+                System.out.println("  Creating file: " + mainDir + "/options.txt ...");
 
-                settingFile.getParentFile().mkdirs();
-                settingFile.createNewFile();
+                optionFile.getParentFile().mkdirs();
+                optionFile.createNewFile();
 
-                settingsPath = exportSettingsFile("settings");
+                optionsPath = exportOptionsFile("options");
 
-                settingFile = new File(mainDir + settingsPath);
+                optionFile = new File(mainDir + optionsPath);
 
-                changeSetting("settings", "xOff", "0");
+                //write defaults
+                changeOption("options", "max_fps", "60");
+                changeOption("options", "sound", "100");
+                changeOption("options", "music", "100");
+                changeOption("options", "screen_size", "2");
             }
 
-            // Check if level file exists, if not create it
-            if (!lvlFile.exists())
+            if (!saveFile.exists())
             {
-                System.out.println("  Creating file: " + mainDir + "/lvl.txt ...");
-
-                lvlFile.getParentFile().mkdirs();
-                lvlFile.createNewFile();
-
-                lvlPath = exportSettingsFile("lvl");
-
-                lvlFile = new File(mainDir + lvlPath);
-
-                changeSetting("lvl", "xOff", "0");
+                Save newSave = new Save("world", 0, 0, 0, 0, 0);
+                writeSave(newSave);
             }
-
-            // Set paths
-            lvlPath = mainDir + "/lvl.txt";
-            settingsPath = mainDir + "/settings.txt";
 
             // Start reading world files
             readWorldFiles();
@@ -88,55 +87,387 @@ public class FileManager
             return;
         }
 
-        // Read setting and level files
-        readSettingsFile("settings");
+        // Read option and level files
+        readOptionsFile("options");
         System.out.println("\n");
-        readSettingsFile("lvl");
+        //TODO xml tfsave
+        loadSave();
+
     }
 
-    public void changeSetting(String file, String setting, String value)
+    public void writeSave(Save save)
+    {
+        this.save = save;
+        writeSave();
+    }
+
+    public void writeSave()
+    {
+        try {
+            String outputDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+
+            // create an XMLOutputFactory
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            // create XMLEventWriter
+            XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new FileOutputStream(outputDirectory + "/" + "save.xml"));
+            // create an EventFactory
+            XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+
+            //add types
+            XMLEvent end = eventFactory.createDTD("\n");
+            XMLEvent tab = eventFactory.createDTD("\t");
+            //start
+            StartDocument startDocument = eventFactory.createStartDocument();
+            eventWriter.add(startDocument);
+            eventWriter.add(end);
+            eventWriter.add(eventFactory.createStartElement("", "", "data"));
+            eventWriter.add(end);
+
+            toClose = new ArrayList<>();
+
+            //for now location can be -1, one back, 0, same height or 1, one further
+
+            crEl(eventWriter, "camera", 1);
+            crEl(eventWriter, "currentWorld", 1);
+            crNd(eventWriter, "name", save.getWorldName());
+            crNd(eventWriter, "xOff", String.valueOf(save.getCameraXOff()));
+            crNd(eventWriter, "yOff", String.valueOf(save.getCameraYOff()));
+            crEl(eventWriter, "player", -1);
+            crEl(eventWriter, "currentWorld", 1);
+            crNd(eventWriter, "xOff", String.valueOf(save.getPlayerXOff()));
+            crNd(eventWriter, "yOff", String.valueOf(save.getPlayerYOff()));
+            clsEls(eventWriter, 1);
+            crNd(eventWriter, "gender", String.valueOf(save.getGender()));
+            clsEls(eventWriter, toClose.size());
+
+
+            /*
+            //open camera
+            eventWriter.add(eventFactory.createStartElement("", "", "camera"));
+            eventWriter.add(end);
+
+            // Write the different nodes
+            //createNode(eventWriter, "currentWorld", "1");
+            //open currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
+            eventWriter.add(end);
+
+            eventWriter.add(tab);
+            createNode(eventWriter, "xOff", "0");
+            eventWriter.add(tab);
+            createNode(eventWriter, "yOff", "0");
+
+            //end currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
+            eventWriter.add(end);
+
+            //end camera
+            eventWriter.add(eventFactory.createEndElement("", "", "camera"));
+            eventWriter.add(end);
+
+            //open player
+            eventWriter.add(eventFactory.createStartElement("", "", "player"));
+            eventWriter.add(end);
+
+            //open player
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", "currentWorld"));
+            eventWriter.add(end);
+
+            eventWriter.add(tab);
+            createNode(eventWriter, "xOff", "0");
+            eventWriter.add(tab);
+            createNode(eventWriter, "yOff", "0");
+
+            //end currentWorld
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createEndElement("", "", "currentWorld"));
+            eventWriter.add(end);
+
+            createNode(eventWriter, "gender", "0");
+
+            //end player
+            eventWriter.add(eventFactory.createEndElement("", "", "player"));
+            eventWriter.add(end);
+            */
+
+            //end
+            eventWriter.add(eventFactory.createEndElement("", "", "data"));
+            eventWriter.add(end);
+            eventWriter.add(eventFactory.createEndDocument());
+            eventWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void crEl(XMLEventWriter eventWriter, String name, int location) throws XMLStreamException
+    {
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent end = eventFactory.createDTD("\n");
+        XMLEvent tab = eventFactory.createDTD("\t");
+
+        if (location == 1)
+        {
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            //System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+
+        if (location == 0)
+        {
+            clsEls(eventWriter, 1);
+
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            //System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+
+        if (location == -1)
+        {
+            clsEls(eventWriter, 2);
+
+            for (int x = 0; x < toClose.size(); x++)
+            {
+                eventWriter.add(tab);
+            }
+
+            //System.out.println("start:"+ name);
+
+            eventWriter.add(tab);
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            eventWriter.add(end);
+
+            toClose.add(name);
+        }
+    }
+
+    private void crNd(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException
+    {
+
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent end = eventFactory.createDTD("\n");
+        XMLEvent tab = eventFactory.createDTD("\t");
+        for (int x = 0; x < toClose.size() + 1; x++)
+        {
+            eventWriter.add(tab);
+        }
+        // create Start node
+        eventWriter.add(eventFactory.createStartElement("", "", name));
+        // create Content
+        eventWriter.add(eventFactory.createCharacters(value));
+        // create End node
+        eventWriter.add(eventFactory.createEndElement("", "", name));
+        eventWriter.add(end);
+
+    }
+
+    private void clsEls(XMLEventWriter eventWriter, int amount) throws XMLStreamException
+    {
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent end = eventFactory.createDTD("\n");
+        XMLEvent tab = eventFactory.createDTD("\t");
+
+        Collections.reverse(toClose);
+
+        int indentation = toClose.size();
+        //System.out.println(indentation);
+
+        for (int i = 0; i < amount; i++)
+        {
+            String name = toClose.get(i);
+
+            //System.out.println("indent:"+ indentation);
+            //System.out.println("end:"+ name);
+            for (int x = 0; x < indentation; x++)
+            {
+                eventWriter.add(tab);
+            }
+            eventWriter.add(eventFactory.createEndElement("", "", name));
+            eventWriter.add(end);
+            //System.out.println("toClose:"+ toClose);
+            indentation--;
+        }
+
+        for (int i = amount - 1; i >= 0; i--)
+        {
+            toClose.remove(i);
+        }
+
+        if (toClose != null)
+        {
+            Collections.reverse(toClose);
+        }
+    }
+
+    private void crNds (XMLEventWriter eventWriter, HashMap<String, Object> nodeMap,
+                        int indentation) throws XMLStreamException {
+
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+
+        for ( String name : nodeMap.keySet() ) {
+
+            XMLEvent end = eventFactory.createDTD("\n");
+            XMLEvent tab = eventFactory.createDTD("\t");
+            for (int x = 0; x < indentation; x++)
+            {
+                eventWriter.add(tab);
+            }
+            // create Start node
+            eventWriter.add(eventFactory.createStartElement("", "", name));
+            // create Content
+            eventWriter.add(eventFactory.createCharacters(nodeMap.get(name).toString()));
+            // create End node
+            eventWriter.add(eventFactory.createEndElement("", "", name));
+            eventWriter.add(end);
+        }
+    }
+
+    public void loadSave()
+    {
+        Save saveToLoad = readSave();
+
+        Vector.setGlobalWorldName(saveToLoad.getWorldName());
+        Vector.setWorldVariables(saveToLoad.getCameraXOff(), Vector.worldyPos);
+        Vector.setWorldVariables(Vector.worldxPos, saveToLoad.getCameraYOff());
+        Vector.setPlayerVariables(saveToLoad.getPlayerXOff(), Vector.playeryPos);
+        Vector.setPlayerVariables(Vector.playerxPos, saveToLoad.getPlayerYOff());
+        Timefall.getSettings().setGender(saveToLoad.getGender());
+    }
+
+    public Save readSave()
+    {
+        String worldName = "";
+        int cameraXOff = 0;
+        int cameraYOff = 0;
+        int playerXOff = 0;
+        int playerYOff = 0;
+        int gender = 0;
+
+        try {
+            String inputDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+
+            // create an XMLOutputFactory
+            XMLInputFactory inputFactory= XMLInputFactory.newInstance();
+            // create XMLEventWriter
+            XMLEventReader eventReader = inputFactory.createXMLEventReader(new FileInputStream(inputDirectory + "/" + "save.xml"));
+
+            HashMap<String, Object> currentData = new HashMap<>();
+
+            while (eventReader.hasNext())
+            {
+                XMLEvent event = eventReader.nextEvent();
+
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("name")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("name", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("xOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("xOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("yOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("yOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("xOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("xOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("yOff")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("yOff", event.asCharacters().getData());
+                    }
+                }
+                if (event.isStartElement()) {
+                    if (event.asStartElement().getName().getLocalPart().equals("gender")) {
+                        event = eventReader.nextEvent();
+                        currentData.put("gender", event.asCharacters().getData());
+                    }
+                }
+
+                // If we reach the end of an item element, we add it to the list
+                if (event.isEndElement()) {
+                    if (event.asEndElement().getName().getLocalPart().equals("camera")) {
+                        worldName = String.valueOf(currentData.get("name"));
+                        cameraXOff = Integer.parseInt(String.valueOf(currentData.get("xOff")));
+                        cameraYOff = Integer.parseInt(String.valueOf(currentData.get("yOff")));
+                        currentData.clear();
+                    }
+
+                    if (event.asEndElement().getName().getLocalPart().equals("player")) {
+                        playerXOff = Integer.parseInt(String.valueOf(currentData.get("xOff")));
+                        playerYOff = Integer.parseInt(String.valueOf(currentData.get("yOff")));
+                        gender = Integer.parseInt(String.valueOf(currentData.get("gender")));
+                        currentData.clear();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new Save(worldName, cameraXOff, cameraYOff, playerXOff, playerYOff, gender);
+    }
+
+    public void changeOption(String file, String option, String value)
     {
         BufferedWriter bufferedWriter = null;
+        String mainDirectory;
 
         // Try to open a BufferedWriter using the file paths set in the constructor
         try
         {
-            FileWriter fileWriter = new FileWriter(new File((file.equals("settings") ? settingsPath : lvlPath)));
+            mainDirectory = new File(FileManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/') + "/Timefall";
+            String path = mainDirectory + "/" + file + ".txt";
+
+            FileWriter fileWriter = new FileWriter(new File(path));
             bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Check which file we're writing to
-            if (file.equals("settings"))
-            {
-                /*if (file.equals("max_fps")) bufferedWriter.write("max_fps: " + value + "\n");
-                if (file.equals("sound")) bufferedWriter.write("sound: " + value + "\n");
-                if (file.equals("music")) bufferedWriter.write("music: " + value + "\n");
-                if (file.equals("gender")) bufferedWriter.write("gender: 1" + "\n");
-                if (file.equals("screen_size")) bufferedWriter.write("screen_size: " + value + "\n");
-                if (file.equals("xOff")) bufferedWriter.write("xOff: " + (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX()) + "\n");
-                if (file.equals("yOff")) bufferedWriter.write("yOff: " + (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getY()));*/
+            System.out.println("val " + value);
 
-                System.out.println(setting.equals("gender") ? settings.getGender() : "");
-                System.out.println("val " + value);
-
-                bufferedWriter.write("max_fps: " + (setting.equals("max_fps") ? value : settings.getMaxFPS()) + "\n");
-                bufferedWriter.write("sound: " + (setting.equals("sound") ? value : settings.getSoundSetting()) + "\n");
-                bufferedWriter.write("music: " + (setting.equals("src/main/resources-bin/music") ? value : settings.getMusicSetting()) + "\n");
-                bufferedWriter.write("gender: " + (setting.equals("gender") ? value : settings.getGender()) + "\n");
-                bufferedWriter.write("screen_size: " + (setting.equals("screen_size") ? value : settings.getScreenSize().getID()) + "\n");
-                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getX())) + "\n");
-                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getCurrentWorld().getY())));
-            } else if (file.equals("lvl"))
+            if (file.equals("options"))
             {
-                bufferedWriter.write("world: " + (setting.equals("world") ? value : (Timefall.getTileManager() == null ? "world" : Timefall.getTileManager().getCurrentWorld().getWorldName())) + "\n");
-                bufferedWriter.write("xOff: " + (setting.equals("xOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getxOff())) + "\n");
-                bufferedWriter.write("yOff: " + (setting.equals("yOff") ? value : (Timefall.getTileManager() == null ? 0 : Timefall.getTileManager().getEntityManager().getPlayer().getyOff())));
+                bufferedWriter.write("max_fps: " + (option.equals("max_fps") ? value : options.getMaxFPS()) + "\n");
+                bufferedWriter.write("sound: " + (option.equals("sound") ? value : options.getSoundSetting()) + "\n");
+                bufferedWriter.write("music: " + (option.equals("src/main/resources-bin/music") ? value : options.getMusicSetting()) + "\n");
+                bufferedWriter.write("screen_size: " + (option.equals("screen_size") ? value : options.getScreenSize().getID()) + "\n");
             }
-
             bufferedWriter.close();
-        } catch (IOException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
-        } finally
+        }
+        finally
         {
             try
             {
@@ -149,7 +480,7 @@ public class FileManager
         }
     }
 
-    private String exportSettingsFile(String file) throws Exception
+    private String exportOptionsFile(String file) throws Exception
     {
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -158,7 +489,7 @@ public class FileManager
         // Trying to open an InputStream using the paths set in the constructor and export them
         try
         {
-            inputStream = FileManager.class.getResourceAsStream((file.equals("settings") ? settingsPath : lvlPath));
+            inputStream = FileManager.class.getResourceAsStream((file.equals("options") ? optionsPath : null));
 
             if (inputStream == null)
                 throw new Exception("Cannot fetch " + file + ".txt from Jar");
@@ -191,41 +522,42 @@ public class FileManager
         return mainDirectory + "/" + file + ".txt";
     }
 
-    private void readSettingsFile(String file)
+    private void readOptionsFile(String file)
     {
         System.out.println("  Reading from: " + mainDir + "/" + file + ".txt ...");
+        String path = "/" + file + ".txt";
 
         // Trying to open a BufferedReader to read the files in the main directory outside the JAR
         try
         {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File((file.equals("settings") ? settingsPath : lvlPath))));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(path)));
 
             // Read each line an process it
             while ((readLine = bufferedReader.readLine()) != null)
-                processSettings(file, readLine);
+                processOptions(file, readLine);
 
         } catch (FileNotFoundException exception)
         {
-            System.out.println("Unable to open file '" + mainDir + (file.equals("settings") ? settingsPath : lvlPath) + "'");
+            System.out.println("Unable to open file '" + mainDir + path + "'");
         } catch (IOException exception)
         {
-            System.out.println("Error reading file '" + mainDir + (file.equals("settings") ? settingsPath : lvlPath) + "'" + "\nError details");
+            System.out.println("Error reading file '" + mainDir + path + "'" + "\nError details");
             exception.printStackTrace();
         }
     }
 
-    private void processSettings(String file, String rawSetting)
+    private void processOptions(String file, String rawOption)
     {
-        String[] stringValues = rawSetting.split(":");
+        String[] stringValues = rawOption.split(":");
 
-        // Check if the string can be a setting string
+        // Check if the string can be a option string
         if (stringValues.length != 2) return;
-        String setting = stringValues[0].replaceAll("\\s", "");
+        String option = stringValues[0].replaceAll("\\s", "");
         String value = stringValues[1].replaceAll("\\s", "");
         int intValue = 0;
 
-        // Parse the string to an int if the setting isn't the 'world' setting
-        if (!setting.equals("world"))
+        // Parse the string to an int if the option isn't the 'world' option
+        if (!option.equals("world"))
         {
             try
             {
@@ -237,57 +569,31 @@ public class FileManager
             }
         }
 
-        // Check which in file the settings is and take appropriate 'action'
-        if (file.equals("settings"))
-        {
-            switch (setting)
-            {
+        // Check which in file the options is and take appropriate 'action'
+        if (file.equals("options")) {
+            switch (option) {
                 case "max_fps":
-                    settings.setMaxFPS(intValue);
+                    options.setMaxFPS(intValue);
                     break;
                 case "sound":
-                    settings.setSoundSetting(intValue);
+                    options.setSoundSetting(intValue);
                     break;
                 case "src/main/resources-bin/music":
-                    settings.setMusicSetting(intValue);
+                    options.setMusicSetting(intValue);
                     break;
-                case "gender":
-                    System.out.println(intValue);
-                    settings.setGender(intValue);
-                    break;
+
                 case "screen_size":
-                    settings.setScreenSize(settings.getScreenSize(intValue));
-                    break;
-                case "xOff":
-                    Vector.setWorldVariables(intValue, Vector.worldyPos);
-                    break;
-                case "yOff":
-                    Vector.setWorldVariables(Vector.worldxPos, intValue);
-                    break;
-                default:
-                    break;
-            }
-        } else if (file.equals("lvl"))
-        {
-            switch (setting)
-            {
-                case "world":
-                    Vector.setGlobalWorldName(value);
-                    break;
-                case "xOff":
-                    Vector.setPlayerVariables(intValue, Vector.playeryPos);
-                    break;
-                case "yOff":
-                    Vector.setPlayerVariables(Vector.playerxPos, intValue);
+                    options.setScreenSize(options.getScreenSize(intValue));
                     break;
                 default:
                     break;
             }
         }
 
-        System.out.println("   Set '" + setting + "' from '" + file + ".txt' to '" + value + "'");
+        System.out.println("   Set '" + option + "' from '" + file + ".txt' to '" + value + "'");
     }
 
+    //UNSURE about these
     public HashMap<String, HashMap<String, String>> getFloraConflicts()
     {
         HashMap<String, HashMap<String, String>> floraConflicts = new HashMap<>();
@@ -317,10 +623,10 @@ public class FileManager
                 }
             } catch (FileNotFoundException exception)
             {
-                System.out.println("Unable to open file '" + settingsPath + "'");
+                System.out.println("Unable to open file '" + optionsPath + "'");
             } catch (IOException exception)
             {
-                System.out.println("Error reading file '" + settingsPath + "'" + "\nError details");
+                System.out.println("Error reading file '" + optionsPath + "'" + "\nError details");
                 exception.printStackTrace();
             }
         }

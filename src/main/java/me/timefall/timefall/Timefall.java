@@ -4,8 +4,6 @@ import me.timefall.timefall.display.Display;
 import me.timefall.timefall.events.keys.KeyHandler;
 import me.timefall.timefall.events.mouse.MouseHandler;
 import me.timefall.timefall.files.FileManager;
-import me.timefall.timefall.files.NFileManager;
-import me.timefall.timefall.files.Save;
 import me.timefall.timefall.game.game.Game;
 import me.timefall.timefall.game.screens.Menu;
 import me.timefall.timefall.game.menu.TextOverlay;
@@ -36,7 +34,6 @@ public class Timefall
     private static volatile Display mainDisplay;
     private static Settings settings;
     private static FileManager fileManager;
-    private static NFileManager nFileManager;
     private static KeyHandler keyHandler;
     private static MouseHandler mouseHandler;
     private static ThreadManager threadManager;
@@ -77,8 +74,8 @@ public class Timefall
         mouseHandler = new MouseHandler();
 
         System.out.println(" Reading files and readjusting settings ...");
+        //fileManager = new FileManager(settings);
         fileManager = new FileManager(settings);
-        nFileManager = new NFileManager();
 
         if (arguments.containsKey("screenSize"))
         {
@@ -136,8 +133,6 @@ public class Timefall
 
         System.out.println("All Timefall components loaded!");
         System.out.println("\nTick updates:");
-
-        Save readSave = nFileManager.readSave();
     }
 
     public static void openMenu()
@@ -203,11 +198,6 @@ public class Timefall
     public static FileManager getFileManager()
     {
         return fileManager;
-    }
-
-    public static NFileManager getNFileManager()
-    {
-        return nFileManager;
     }
 
     public static ThreadManager getThreadManager()
