@@ -1,7 +1,5 @@
 package me.timefall.timefall.files;
 
-import me.timefall.timefall.Timefall;
-
 public class Save {
 
     private String worldName;

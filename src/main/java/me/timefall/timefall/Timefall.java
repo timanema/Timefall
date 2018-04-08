@@ -46,6 +46,7 @@ public class Timefall
     private static SoundHandler soundHandler;
 
     public static GameState textOverlay;
+    public static TitleScreen titleScreen;
 
     public static void main(String args[])
     {
@@ -120,17 +121,9 @@ public class Timefall
         //TODO: Load sounds from files
         soundHandler = new SoundHandler((Boolean) arguments.get("disableSounds"));
 
-        if ((Boolean) arguments.get("disableSplash"))
-        {
-            Game game = new Game(settings, new Screen(GAME_X_RES, GAME_Y_RES));
-            settings.setState(game);
-
-            tileManager = game.tileManager;
-            settings.setLightEnabled(true);
-        } else
-        {
-            settings.setState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
-        }
+        // Load titlescreen
+        titleScreen = new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES));
+        settings.setState(titleScreen);
 
         // Setting up text overlay
         textOverlay = new TextOverlay(settings, new Screen(1280, 720),
@@ -158,7 +151,7 @@ public class Timefall
     {
         System.out.println("Opening title screen...");
 
-        settings.switchState(new TitleScreen(settings, new Screen(MENU_X_RES, MENU_Y_RES)));
+        settings.switchState(titleScreen);
     }
 
     public static void startGame()

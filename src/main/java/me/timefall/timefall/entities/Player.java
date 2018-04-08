@@ -231,8 +231,6 @@ public class Player implements Mob
             yCen = false;
         } else
         {
-            //TODO: Fix 'teleporting'
-
             if (yPlayer + height < yAxis || yPlayer + height > yMax - yAxis)
             {
                 // Player is X centered, not Y centered
@@ -287,8 +285,10 @@ public class Player implements Mob
         // Just in case the player somehow gets an offset outside the borders
         if (xOff < 0) xOff = 0;
         if (yOff < 0) yOff = 0;
-        if (xOff > tileManager.getCurrentWorld().getWidth() * 16) xOff = tileManager.getCurrentWorld().getWidth() * 16;
-        if (yOff > tileManager.getCurrentWorld().getHeight() * 16) yOff = tileManager.getCurrentWorld().getHeight() * 16;
+        if (xOff > tileManager.getCurrentWorld().getWidth() * 16)
+            xOff = tileManager.getCurrentWorld().getWidth() * 16 - getCurrentBitmap().width;
+        if (yOff > tileManager.getCurrentWorld().getHeight() * 16)
+            yOff = tileManager.getCurrentWorld().getHeight() * 16 -  - getCurrentBitmap().height;
 
         // Update the current animationCount to set the correct animationStatus
         if (isMoving())
@@ -481,20 +481,12 @@ public class Player implements Mob
     @Override
     public void teleport(World world, float x, float y)
     {
-        // Get current location
-        float currentX = playerLocation.getX();
-        float currentY = playerLocation.getY();
-
         // Make sure x and y are multiplications of .125
         x = x - (((int) Math.round((x * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
         y = y - (((int) Math.round((y * Math.pow(10, 3)) % (Math.pow(10, 3)))) % 125 / 1000);
 
         int xOff = getxOff(new Vector(x, 0));
         int yOff = getyOff(new Vector(0, y));
-
-        // Update player location
-        this.xOff = xOff;
-        this.yOff = yOff;
 
         getLocation().setLocation(world.getWorldName(), x, y);
 
@@ -503,28 +495,33 @@ public class Player implements Mob
         int yOffWorld;
 
         // Calculate max offsets
-        int xMax = 16 * world.getWidth();
-        int yMax = 16 * world.getHeight() - 8;
+        int xMax = 16 * world.getWidth() - (xAxis % 16);
+        int yMax = 16 * world.getHeight() - (yAxis % 16);
 
         // Calculate what the next offsets should be
         boolean xCen = xOff >= xAxis && xOff <= xMax - xAxis;
         boolean yCen = yOff >= yAxis && yOff <= yMax - yAxis;
+        Bitmap currentBitmap = getCurrentBitmap();
+        int width = currentBitmap == null ? 0 : currentBitmap.width / 2;
+        int height = currentBitmap == null ? 0 : currentBitmap.width / 2;
+
+        this.checkCentred(xMax, yMax, getxOff(), getyOff());
 
         if (xCen && yCen)
         {
             // Both X and Y are centered
-            xOffWorld = xOff - xAxis;
-            yOffWorld = yOff - yAxis;
-        } else if (xCen && !yCen)
+            xOffWorld = xOff - xAxis + width;
+            yOffWorld = yOff - yAxis + height;
+        } else if (xCen)
         {
             // Only X is centered
-            xOffWorld = xOff - xAxis;
+            xOffWorld = xOff - xAxis + width;
             yOffWorld = (yOff < yAxis ? 0 : yMax - yAxis * 2);
-        } else if (!xCen && yCen)
+        } else if (yCen)
         {
             // Only Y is centered
             xOffWorld = (xOff < xAxis ? 0 : xMax - xAxis * 2);
-            yOffWorld = yOff - yAxis;
+            yOffWorld = yOff - yAxis + height;
         } else
         {
             // Both X and Y are not centered
@@ -534,7 +531,6 @@ public class Player implements Mob
 
         // Update world
         Timefall.getTileManager().changeWorld(world, xOffWorld, yOffWorld);
-        //world.reloadCollisions();
     }
 
     public int getxOff()
