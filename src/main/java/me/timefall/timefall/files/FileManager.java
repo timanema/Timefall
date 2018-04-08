@@ -453,8 +453,6 @@ public class FileManager
             FileWriter fileWriter = new FileWriter(new File(path));
             bufferedWriter = new BufferedWriter(fileWriter);
 
-            System.out.println("val " + value);
-
             if (file.equals("options"))
             {
                 bufferedWriter.write("max_fps: " + (option.equals("max_fps") ? value : options.getMaxFPS()) + "\n");
@@ -525,7 +523,7 @@ public class FileManager
     private void readOptionsFile(String file)
     {
         System.out.println("  Reading from: " + mainDir + "/" + file + ".txt ...");
-        String path = "/" + file + ".txt";
+        String path = mainDir + "/" + file + ".txt";
 
         // Trying to open a BufferedReader to read the files in the main directory outside the JAR
         try
