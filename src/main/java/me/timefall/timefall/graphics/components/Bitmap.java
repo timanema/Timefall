@@ -233,21 +233,34 @@ public class Bitmap
         {
             if (lightPower == 1.0F)
             {
-                this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, light.getColour(startX, startY));
+                this.renderLightMap(startX - light.getRadius() + xOff,
+                        startY - light.getRadius() + yOff,
+                        light.getColour(startX, startY));
             } else
             {
-                this.renderLightMap(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff, PixelUtils.getColourPower(light.getColour(startX, startY), lightPower));
+                this.renderLightMap(startX - light.getRadius() + xOff,
+                        startY - light.getRadius() + yOff,
+                        PixelUtils.getColourPower(light.getColour(startX, startY),
+                                lightPower));
             }
 
-            if (startX == endX && startY == endY)
+            if (startX == endX &&
+                    startY == endY)
             {
                 break;
             }
 
-            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FULL.type) break;
-            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.OUTSIDE_VIEW.type) continue;
-            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.FADE.type) lightPower -= 0.1F;
-            if (this.getShadow(startX - light.getRadius() + xOff, startY - light.getRadius() + yOff) == ShadowType.TREE_FADE.type) lightPower -= 0.03F;
+            if (this.getShadow(startX - light.getRadius() + xOff,
+                    startY - light.getRadius() + yOff) == ShadowType.FULL.type) break;
+            if (this.getShadow(startX - light.getRadius() + xOff,
+                    startY - light.getRadius() + yOff) == ShadowType.OUTSIDE_VIEW.type) continue;
+            if (this.getShadow(startX - light.getRadius() + xOff,
+                    startY - light.getRadius() + yOff) == ShadowType.FADE.type) lightPower -= 0.1F;
+            if (this.getShadow(startX - light.getRadius() + xOff,
+                    startY - light.getRadius() + yOff) == ShadowType.TREE_FADE.type) lightPower -= 0.03F;
+            if (this.getShadow(startX - light.getRadius() + xOff,
+                    startY - light.getRadius() + yOff) == ShadowType.BUILDING_FADE.type) lightPower -= 0.01F;
+
             if (lightPower <= 0) break;
             e2 = 2 * err;
 

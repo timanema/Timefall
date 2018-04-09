@@ -57,7 +57,8 @@ public class Game extends GameState
         if (Keys.VK_O.isClicked())
         {
             Timefall.getFileManager().getSaveMap();
-            Sheep sheep = new Sheep(new Vector("world", 0, 0));
+            Sheep sheep = new Sheep(new Vector("world", 0, 0), 0.4F);
+
             sheep.spawn(0, 0);
             //saveState();
         }

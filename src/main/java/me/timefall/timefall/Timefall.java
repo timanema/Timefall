@@ -19,8 +19,6 @@ import me.timefall.timefall.time.Time;
 import java.awt.*;
 import java.util.HashMap;
 
-import static java.lang.Thread.sleep;
-
 public class Timefall
 {
     private static HashMap<String, Object> arguments;

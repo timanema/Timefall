@@ -21,6 +21,12 @@ public class Sheep extends NPC {
         super(EntityManager.CHARACTER_SHEEP, location, name);
     }
 
+    public Sheep(Vector location,
+                 float speedModifier)
+    {
+        super(EntityManager.CHARACTER_SHEEP, location, speedModifier);
+    }
+
     @Override
     public void move(Direction direction)
     {

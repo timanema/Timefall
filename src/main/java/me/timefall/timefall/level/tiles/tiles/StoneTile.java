@@ -23,7 +23,7 @@ public class StoneTile implements Block
     @Override
     public ShadowType getShadowType()
     {
-        return ShadowType.FADE;
+        return ShadowType.BUILDING_FADE;
     }
 
     @Override

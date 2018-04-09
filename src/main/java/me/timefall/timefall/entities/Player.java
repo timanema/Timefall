@@ -2,7 +2,6 @@ package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.graphics.components.Bitmap;
-import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.utils.PixelUtils;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.graphics.components.Sprite;
@@ -233,8 +232,7 @@ public class Player implements Mob
         {
             // Player is in lower left corner
             xOff = xPlayer;
-            //yOff = yAxis + (yPlayer - (yMax - yAxis));
-            yOff = Timefall.GAME_Y_RES - (yMax - yPlayer);
+            yOff = yAxis + (yPlayer - (yMax - yAxis));
 
             xCen = false;
             yCen = false;
@@ -252,7 +250,14 @@ public class Player implements Mob
             {
                 // Player is X centered, not Y centered
                 xOff = xAxis - width;
-                yOff = (yPlayer < yAxis ? yPlayer : yAxis + (yPlayer - (yMax - yAxis)));
+
+                if (yPlayer < yAxis)
+                {
+                    yOff = yPlayer;
+                } else
+                {
+                    yOff = yAxis + (yPlayer - (yMax - yAxis));
+                }
 
                 xCen = true;
                 yCen = false;
@@ -341,23 +346,34 @@ public class Player implements Mob
         while ((negativeXMovement ? xMoved > direction.getxChange() : xMoved < direction.getxChange()) ||
                 (negativeYMovement ? yMoved > direction.getyChange() : yMoved < direction.getyChange()))
         {
+            // Calculate max and current values and use these for center calculations
+            int xMax = 16 * tileManager.worldX;// - (xAxis % 16);
+            int yMax = 16 * tileManager.worldY;// - (yAxis % 16);
+            int xPlayer = getxOff();
+            int yPlayer = getyOff();
+
+            this.checkCentred(xMax, yMax, xPlayer, yPlayer);
+
             // Move on x-axis
             if (negativeXMovement ? xMoved > direction.getxChange() : xMoved < direction.getxChange())
             {
-                if (canMove(xMod, 0)) {
+                if (canMove(xMod, 0))
+                {
                     int currentOff = tileManager.getCurrentWorld().getX();
 
                     if (currentOff + xMod >= 0 &&
-                            currentOff + xMod + 16 * Timefall.GAME_X_RES / 16 - Timefall.GAME_X_RES % 16 <= tileManager.getCurrentWorld().getWidth() * 16
+                            currentOff + xMod + Timefall.GAME_X_RES <= tileManager.getCurrentWorld().getWidth() * 16
                             && xCen)
                     {
                         // Screen can move
                         tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX() + xMod, tileManager.getCurrentWorld().getY());
 
                         this.getLocation().add(xMod * .0625F, 0);
-                    } else {
+                    } else
+                    {
                         // Screen cannot move
-                        if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width) {
+                        if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width)
+                        {
                             xCen = false;
                             xOff += xMod;
 
@@ -373,16 +389,22 @@ public class Player implements Mob
             // Move on y-axis
             if (negativeYMovement ? yMoved > direction.getyChange() : yMoved < direction.getyChange())
             {
-                if (canMove(0, yMod)) {
+                if (canMove(0, yMod))
+                {
                     int currentOff = tileManager.getCurrentWorld().getY();
 
-                    if (currentOff + yMod >= 0 && currentOff + yMod + 16 * Timefall.GAME_Y_RES / 16 - Timefall.GAME_Y_RES % 16 <= tileManager.getCurrentWorld().getHeight() * 16 && yCen) {
+                    if (currentOff + yMod >= 0 &&
+                            currentOff + yMod + Timefall.GAME_Y_RES <= tileManager.getCurrentWorld().getHeight() * 16
+                            && yCen)
+                    {
                         // Screen can move
                         tileManager.getCurrentWorld().setOffset(tileManager.getCurrentWorld().getX(), tileManager.getCurrentWorld().getY() + yMod);
                         this.getLocation().add(0, yMod * .0625F);
-                    } else {
+                    } else
+                    {
                         // Screen cannot move
-                        if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height) {
+                        if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height)
+                        {
                             yCen = false;
                             yOff += yMod;
                             this.getLocation().add(0, yMod * .0625F);
@@ -392,14 +414,6 @@ public class Player implements Mob
 
                 yMoved += yMod;
             }
-
-            // Calculate max and current values and use these for center calculations
-            int xMax = 16 * tileManager.worldX - (xAxis % 16);
-            int yMax = 16 * tileManager.worldY - (yAxis % 16);
-            int xPlayer = getxOff();
-            int yPlayer = getyOff();
-
-            this.checkCentred(xMax, yMax, xPlayer, yPlayer);
         }
 
         //TODO: Remove this debug code
@@ -428,7 +442,10 @@ public class Player implements Mob
         int simX = getxOff() + xMod;
         int simY = getyOff() + yMod;
 
-        Rectangle playerRectangle = new Rectangle(simX, simY, 16, 24);
+        Rectangle playerRectangle = new Rectangle(simX,
+                simY + 12,
+                16,
+                24 - 12);
 
         return !Timefall.getTileManager().intersection(playerRectangle);
     }

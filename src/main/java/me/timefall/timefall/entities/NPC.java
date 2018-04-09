@@ -16,6 +16,7 @@ public class NPC implements Mob {
     private int characterIndex;
     private Vector location;
     private String name;
+    private float speedModifier = 1;
 
     private Direction direction;
     private boolean isMoving;
@@ -29,6 +30,17 @@ public class NPC implements Mob {
         this.location = location;
         this.xOff = Timefall.getTileManager().getxOff(location);
         this.yOff = Timefall.getTileManager().getxOff(location);
+    }
+
+    public NPC(int characterIndex,
+               Vector location,
+               float speedModifier)
+    {
+        this.characterIndex = characterIndex;
+        this.location = location;
+        this.xOff = Timefall.getTileManager().getxOff(location);
+        this.yOff = Timefall.getTileManager().getxOff(location);
+        this.speedModifier = speedModifier;
     }
 
     public NPC(int characterIndex,
@@ -57,40 +69,61 @@ public class NPC implements Mob {
         boolean negativeYMovement = direction.getyChange() < 0;
         int xMod = (negativeXMovement ? -1 : 1);
         int yMod = (negativeYMovement ? -1 : 1);
+        int xMoved = 0;
+        int yMoved = 0;
 
-        for (int x = 0; (negativeXMovement ? x > direction.getxChange() : x < direction.getxChange()); x += xMod)
+        int xAdjusted = (int) (direction.getxChange() * this.speedModifier);
+        int yAdjusted = (int) (direction.getyChange() * this.speedModifier);
+
+        if (xAdjusted == 0)
         {
-            // Check if NPC can move
-            if (!canMove(xMod, 0))
-            {
-                break;
-            }
-
-            // Check if NPC will go out of bounds
-            if (xOff + xMod >= 0 && xOff + xMod <= Timefall.GAME_X_RES - getCurrentBitmap().width)
-            {
-                xOff += xMod;
-            }
-
-
-            this.getLocation().add(xMod * .0625F, 0);
+            xAdjusted = xMod;
         }
 
-        for (int y = 0; (negativeYMovement ? y > direction.getyChange() : y < direction.getyChange()); y += yMod)
+        if (yAdjusted == 0)
         {
-            // Check if NPC can move
-            if (!canMove(0, yMod))
+            yAdjusted = yMod;
+        }
+
+        while ((negativeXMovement ? xMoved > xAdjusted : xMoved < xAdjusted) ||
+                (negativeYMovement ? yMoved > yAdjusted : yMoved < yAdjusted))
+        {
+            // Move on x-axis
+            if (negativeXMovement ? xMoved > xAdjusted : xMoved < xAdjusted)
             {
-                break;
+                // Check if NPC can move
+                if (canMove(xMod, 0))
+                {
+                    // Check if NPC moves inside borders
+                    if (xOff + xMod >= 0 &&
+                            xOff + xMod <= Timefall.getTileManager().getCurrentWorld().getWidth() * 16 - getCurrentBitmap().width)
+                    {
+                        xOff += xMod;
+                        this.getLocation().add(xMod * .0625F, 0);
+                    }
+                }
+
+                xMoved += xMod;
             }
 
-            // Check if NPC will go out of bounds
-            if (yOff + yMod >= 0 && yOff + yMod <= Timefall.GAME_Y_RES - getCurrentBitmap().height)
+            // Move on y-axis
+            if (negativeYMovement ? yMoved > yAdjusted : yMoved < yAdjusted)
             {
-                yOff += yMod;
-            }
+                // Check if NPC can move
+                if (canMove(0, yMod))
+                {
+                    // Check if NPC moves inside borders
+                    if (yOff + yMod >= 0 &&
+                            yOff + yMod <= Timefall.getTileManager().getCurrentWorld().getHeight() * 16 - getCurrentBitmap().height)
+                    {
+                        yOff += yMod;
+                        this.getLocation().add(0, yMod * .0625F);
+                    }
+                }
 
-            this.getLocation().add(0,yMod * .0625F);
+                yMoved += yMod;
+
+            }
         }
     }
 
@@ -110,18 +143,6 @@ public class NPC implements Mob {
                 simY,
                 getCurrentBitmap().width,
                 getCurrentBitmap().height);
-
-        Bitmap t = new Bitmap(getCurrentBitmap().width, getCurrentBitmap().height);
-
-        for (int x = 0; x < t.width; x++)
-        {
-            for (int y = 0; y < t.height; y++)
-            {
-                t.draw(Colour.BLUE, x, y);
-            }
-        }
-
-        Timefall.getMainDisplay().getGameCanvas().getScreen().draw(t, xOff, yOff);
 
         return !Timefall.getTileManager().intersection(entityRectangle);
     }
