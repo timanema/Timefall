@@ -47,8 +47,8 @@ public class Timefall
     public static void main(String args[])
     {
         arguments =  new HashMap<>();
-        arguments.put("disableSounds", false);
-        arguments.put("disableSplash", false);
+        arguments.put("disableSounds", true);
+        arguments.put("disableSplash", true);
 
         for (String argument : args)
         {

@@ -24,6 +24,8 @@ public class World
     private int xOff;
     private int yOff;
 
+    private int[][] worldGrid;
+
     public int[][] baseLayer;
     private int[][] floraLayer;
 
@@ -62,6 +64,8 @@ public class World
             this.width = mapImage.getWidth();
             this.height = mapImage.getHeight();
 
+            worldGrid = new int[width][height];
+
             baseLayer = new int[width][height];
             floraLayer = new int[width][height];
 
@@ -90,6 +94,9 @@ public class World
                 for (int x = 0; x < width; x++)
                     for (int y = 0; y < height; y++)
                     {
+                        //Creating empty world grid
+                        worldGrid[x][y] = 0;
+
                         // Getting the hex code and the MapObject
                         int rgbCode = image.getRGB(x, y);
                         int hexCode = rgbCode & 0xFFFFFF;
@@ -237,6 +244,11 @@ public class World
     {
         this.xOff = xOff;
         this.yOff = yOff;
+    }
+
+    public int[][] getWorldGrid()
+    {
+        return worldGrid;
     }
 
     public int[][] getBaseLayer()
