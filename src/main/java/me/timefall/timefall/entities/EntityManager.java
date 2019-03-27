@@ -1,6 +1,9 @@
 package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.entities.behaviors.Behavior;
+import me.timefall.timefall.entities.behaviors.BehaviorAction;
+import me.timefall.timefall.entities.behaviors.Routine;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.Vector;
@@ -16,6 +19,7 @@ public class EntityManager
     // Character index - End
 
     private List<Entity> entities;
+    private List<Behavior> behaviors;
     private Player player;
 
     public EntityManager(int worldX, int worldY)
@@ -24,8 +28,12 @@ public class EntityManager
 
         entities = new ArrayList<>();
 
+
         System.out.println("   Creating player ...");
         player = new Player("TestPlayer", new Vector(Vector.globalWorldName, Vector.playerxPos * .0625F, Vector.playeryPos * .0625F), Direction.NORTH, worldX, worldY, Timefall.getSettings().getGender());
+
+        behaviors = new ArrayList<>();
+        initBehaviors();
     }
 
     public void tickEntities()
@@ -77,8 +85,43 @@ public class EntityManager
         this.entities.remove(npc);
     }
 
+    public List<Entity> getEntities()
+    {
+        return entities;
+    }
+
     public Player getPlayer()
     {
         return player;
+    }
+
+    public void initBehaviors()
+    {
+        //NoBehavior
+        Behavior nobehavior = new Behavior();
+        behaviors.add(nobehavior);
+        //Idle
+        Behavior idle = new Behavior("idle");
+        idle.addAction(new BehaviorAction("randomMove"), 0);
+        idle.addAction();
+        idle.addAction();
+        idle.addAction();
+        idle.addAction();
+        idle.addAction();
+        idle.addAction();
+        idle.addAction();
+        behaviors.add(idle);
+    }
+
+    public Behavior getBehavior(String behaviorName)
+    {
+        for (Behavior behavior : behaviors)
+        {
+            if (behavior.getBehaviorName().equals(behaviorName))
+            {
+                return behavior.copy();
+            }
+        }
+        return null;
     }
 }

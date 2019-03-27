@@ -16,7 +16,14 @@ public enum Keys
     VK_F3(114, 0.2 * GameThread.TICKS),
     VK_ESC(27, 0),
     VK_P(80, 0),
-    VK_O(79, 0);
+    VK_O(79, 0),
+    VK_R(82,0),
+    VK_T(84, 0),
+    VK_Y(89, 0),
+    VK_K(75, 0),
+    VK_L(76, 0),
+    VK_J(74, 0),
+    VK_Q(81, 0);
 
     private int keyID;
     private boolean isPressed;

@@ -3,6 +3,10 @@ package me.timefall.timefall.game.game;
 import me.timefall.timefall.GameState;
 import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.entities.Entity;
+import me.timefall.timefall.entities.NPC;
+import me.timefall.timefall.entities.behaviors.Behavior;
+import me.timefall.timefall.entities.behaviors.BehaviorAction;
 import me.timefall.timefall.entities.mobs.Sheep;
 import me.timefall.timefall.events.keys.Keys;
 import me.timefall.timefall.files.Save;
@@ -46,7 +50,83 @@ public class Game extends GameState
 
         if (Keys.VK_P.isClicked())
         {
-            tileManager.getCurrentWorld().reloadCollisions();
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.NORTH);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_Q.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.NORTHEAST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_R.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.NORTHWEST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_T.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.EAST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_Y.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTH);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_K.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTHEAST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_J.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTHWEST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
+        }
+        if (Keys.VK_L.isClicked())
+        {
+            //tileManager.getCurrentWorld().reloadCollisions();
+
+            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+            Behavior behavior = new Behavior("moveSouth");
+            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.WEST);
+            behavior.addAction(behaviorAction);
+            sheep.getRoutine().giveCommand(behavior);
         }
 
         if (Keys.VK_ESC.isClicked())
@@ -59,7 +139,7 @@ public class Game extends GameState
             Timefall.getFileManager().getSaveMap();
             Sheep sheep = new Sheep(new Vector("world", 0, 0), 0.4F);
 
-            sheep.spawn(0, 0);
+            sheep.spawn(3, 3);
             //saveState();
         }
 

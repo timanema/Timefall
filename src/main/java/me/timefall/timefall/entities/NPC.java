@@ -1,6 +1,7 @@
 package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.entities.behaviors.Routine;
 import me.timefall.timefall.graphics.components.Bitmap;
 import me.timefall.timefall.graphics.components.Colour;
 import me.timefall.timefall.graphics.components.Screen;
@@ -17,6 +18,7 @@ public class NPC implements Mob {
     private Vector location;
     private String name;
     private float speedModifier = 1;
+    private Routine routine;
 
     private Direction direction;
     private boolean isMoving;
@@ -30,6 +32,7 @@ public class NPC implements Mob {
         this.location = location;
         this.xOff = Timefall.getTileManager().getxOff(location);
         this.yOff = Timefall.getTileManager().getxOff(location);
+        this.routine = new Routine();
     }
 
     public NPC(int characterIndex,
@@ -41,6 +44,7 @@ public class NPC implements Mob {
         this.xOff = Timefall.getTileManager().getxOff(location);
         this.yOff = Timefall.getTileManager().getxOff(location);
         this.speedModifier = speedModifier;
+        this.routine = new Routine();
     }
 
     public NPC(int characterIndex,
@@ -52,6 +56,7 @@ public class NPC implements Mob {
         this.xOff = Timefall.getTileManager().getxOff(location);
         this.yOff = Timefall.getTileManager().getxOff(location);
         this.name = name;
+        this.routine = new Routine();
     }
 
     public void moveTo(Vector location)
@@ -59,9 +64,21 @@ public class NPC implements Mob {
 
     }
 
+    public void setRoutine(Routine routine)
+    {
+        this.routine = routine;
+    }
+
+    public Routine getRoutine()
+    {
+        return routine;
+    }
+
     @Override
     public void move(Direction direction)
     {
+        System.out.println("direction: " + direction);
+
         this.direction = direction;
         this.isMoving = true;
 
@@ -72,18 +89,26 @@ public class NPC implements Mob {
         int xMoved = 0;
         int yMoved = 0;
 
-        int xAdjusted = (int) (direction.getxChange() * this.speedModifier);
-        int yAdjusted = (int) (direction.getyChange() * this.speedModifier);
+        System.out.println("xchange: " + direction.getxChange());
+        System.out.println("calc:" + (direction.getxChange() * this.speedModifier));
 
-        if (xAdjusted == 0)
-        {
-            xAdjusted = xMod;
-        }
+        int xAdjusted = Math.round(direction.getxChange() * this.speedModifier);
 
-        if (yAdjusted == 0)
-        {
-            yAdjusted = yMod;
-        }
+        int yAdjusted = Math.round(direction.getyChange() * this.speedModifier);
+
+        System.out.println("xadjusted: " + xAdjusted);
+
+        //if (xAdjusted == 0)
+        //{
+        //    xAdjusted = xMod;
+       // }
+
+        //if (yAdjusted == 0)
+        //{
+         //   yAdjusted = yMod;
+        //}
+
+        System.out.println("xadjusted: " + xAdjusted);
 
         while ((negativeXMovement ? xMoved > xAdjusted : xMoved < xAdjusted) ||
                 (negativeYMovement ? yMoved > yAdjusted : yMoved < yAdjusted))
@@ -186,7 +211,7 @@ public class NPC implements Mob {
     @Override
     public void tick()
     {
-
+        routine.getBehavior(this).getNextAction().execute(this);
     }
 
     @Override

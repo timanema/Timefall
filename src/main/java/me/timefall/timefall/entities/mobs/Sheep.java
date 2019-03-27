@@ -1,7 +1,11 @@
 package me.timefall.timefall.entities.mobs;
 
+import me.timefall.timefall.Timefall;
 import me.timefall.timefall.entities.EntityManager;
 import me.timefall.timefall.entities.NPC;
+import me.timefall.timefall.entities.behaviors.Behavior;
+import me.timefall.timefall.entities.behaviors.BehaviorAction;
+import me.timefall.timefall.entities.behaviors.Routine;
 import me.timefall.timefall.graphics.components.Bitmap;
 import me.timefall.timefall.graphics.components.Screen;
 import me.timefall.timefall.level.Direction;
@@ -13,6 +17,7 @@ public class Sheep extends NPC {
     public Sheep(Vector location)
     {
         super(EntityManager.CHARACTER_SHEEP, location);
+
     }
 
     public Sheep(Vector location,
@@ -25,6 +30,9 @@ public class Sheep extends NPC {
                  float speedModifier)
     {
         super(EntityManager.CHARACTER_SHEEP, location, speedModifier);
+        Routine routine = new Routine("Idle");
+        routine.addBehavior(Timefall.getTileManager().getEntityManager().getBehavior("idle"));
+        super.setRoutine(routine);
     }
 
     @Override
@@ -78,7 +86,9 @@ public class Sheep extends NPC {
     @Override
     public void tick()
     {
-        move(Direction.SOUTHEAST);
+        //move(Direction.SOUTHEAST);
+        //System.out.println(this.getLocation().getX());
+        super.getRoutine().getBehavior(this).getNextAction().execute(this);
     }
 
     @Override
