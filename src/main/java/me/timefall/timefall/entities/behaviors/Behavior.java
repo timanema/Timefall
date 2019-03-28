@@ -1,10 +1,14 @@
 package me.timefall.timefall.entities.behaviors;
 
 import me.timefall.timefall.entities.NPC;
+import me.timefall.timefall.entities.PathTile;
 import me.timefall.timefall.events.conditions.Condition;
+import me.timefall.timefall.level.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.timefall.timefall.level.Direction.NORTH;
 
 public class Behavior {
     private String behaviorName;

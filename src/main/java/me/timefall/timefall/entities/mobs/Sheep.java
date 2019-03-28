@@ -30,9 +30,9 @@ public class Sheep extends NPC {
                  float speedModifier)
     {
         super(EntityManager.CHARACTER_SHEEP, location, speedModifier);
-        Routine routine = new Routine("Idle");
-        routine.addBehavior(Timefall.getTileManager().getEntityManager().getBehavior("idle"));
-        super.setRoutine(routine);
+        //Routine routine = new Routine("Idle");
+        //routine.addBehavior(Timefall.getTileManager().getEntityManager().getBehavior("idle"));
+        //super.setRoutine(routine);
     }
 
     @Override

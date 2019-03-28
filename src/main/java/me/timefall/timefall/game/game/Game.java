@@ -5,6 +5,8 @@ import me.timefall.timefall.Settings;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.entities.Entity;
 import me.timefall.timefall.entities.NPC;
+import me.timefall.timefall.entities.PathTile;
+import me.timefall.timefall.entities.Pathfinding;
 import me.timefall.timefall.entities.behaviors.Behavior;
 import me.timefall.timefall.entities.behaviors.BehaviorAction;
 import me.timefall.timefall.entities.mobs.Sheep;
@@ -18,6 +20,8 @@ import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.Vector;
+
+import java.util.ArrayList;
 
 public class Game extends GameState
 {
@@ -104,7 +108,7 @@ public class Game extends GameState
 
             Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
             Behavior behavior = new Behavior("moveSouth");
-            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTHEAST);
+            BehaviorAction behaviorAction = new BehaviorAction("moveDistance", Direction.SOUTHEAST, 8);
             behavior.addAction(behaviorAction);
             sheep.getRoutine().giveCommand(behavior);
         }
@@ -120,12 +124,20 @@ public class Game extends GameState
         }
         if (Keys.VK_L.isClicked())
         {
-            //tileManager.getCurrentWorld().reloadCollisions();
-
             Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
-            Behavior behavior = new Behavior("moveSouth");
-            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.WEST);
-            behavior.addAction(behaviorAction);
+            Vector s = sheep.getLocation();
+            System.out.println("S: " + s.getX() + " " + s.getY());
+            Vector p = Timefall.getTileManager().getEntityManager().getPlayer().getLocation();
+
+            Pathfinding pathfinding = new Pathfinding(p, s);
+            ArrayList<PathTile> finalPath = pathfinding.getFinalPath();
+
+            for (PathTile pathTile : finalPath)
+            {
+                System.out.println(pathTile.x + " " + pathTile.y);
+            }
+
+            Behavior behavior = pathfinding.getBehaviorFromPath(finalPath, sheep);
             sheep.getRoutine().giveCommand(behavior);
         }
 
@@ -137,11 +149,14 @@ public class Game extends GameState
         if (Keys.VK_O.isClicked())
         {
             Timefall.getFileManager().getSaveMap();
-            Sheep sheep = new Sheep(new Vector("world", 0, 0), 0.4F);
+            Sheep sheep = new Sheep(new Vector("world", 0, 0), 1F);
 
-            sheep.spawn(3, 3);
+            sheep.spawn(41, 15);
             //saveState();
         }
+
+        //Pathfinding pathfinding = new Pathfinding(new Vector(30, 9), new Vector(41, 15));
+        //Pathfinding pathfinding1 = new Pathfinding(new Vector(30, 9), new Vector(41, 15));
 
         // Get which keys are pressed and pair them with direction
         boolean rightKey = Keys.VK_D.isPressed() || Keys.VK_RIGHT.isPressed(), leftKey = Keys.VK_A.isPressed() || Keys.VK_LEFT.isPressed(), upKey = Keys.VK_W.isPressed() || Keys.VK_UP.isPressed(), downKey = Keys.VK_S.isPressed() || Keys.VK_DOWN.isPressed();

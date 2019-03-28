@@ -1,38 +1,37 @@
 package me.timefall.timefall.entities;
 
 import me.timefall.timefall.Timefall;
+import me.timefall.timefall.entities.behaviors.Behavior;
+import me.timefall.timefall.entities.behaviors.BehaviorAction;
 import me.timefall.timefall.entities.behaviors.BehaviorCondition;
+import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.Vector;
 import me.timefall.timefall.level.tiles.base.MapObject;
 
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 public class Pathfinding {
     private PathTile target;
     private PathTile location;
 
-    private ArrayList<Rectangle> collisions;
     private int[][] worldGrid;
-    private HashMap<Integer[], PathTile> allTiles;
+    private TreeMap<int[], PathTile> allTiles;
 
     private ArrayList<PathTile> finalPath;
 
     public Pathfinding(Vector target, Vector location)
     {
-        this.collisions = Timefall.getTileManager().getCurrentWorld().getCollisions();
         this.worldGrid = Timefall.getTileManager().getCurrentWorld().getWorldGrid();
+
+        allTiles = new TreeMap<>(Arrays::compare);
 
         for (int i = 0; i < worldGrid.length; i++)
         {
             for (int j = 0; j < worldGrid[i].length; j++)
             {
-                Integer[] coordinate = {i, j};
                 MapObject[] mapObjects = Timefall.getTileManager().getMapObjectsByLoc(i, j);
                 boolean isTraversable = true;
 
@@ -47,16 +46,13 @@ public class Pathfinding {
 
                 if (isTraversable)
                 {
-                    allTiles.put(coordinate, new PathTile(i, j));
+                    allTiles.put(new int[]{i, j}, new PathTile(i, j));
                 }
             }
         }
 
-        Integer[] targetCoord = {(int) target.getX(), (int) target.getY()};
-        Integer[] locCoord = {(int) location.getX(), (int) location.getY()};
-
-        this.target = allTiles.get(targetCoord);
-        this.location = allTiles.get(locCoord);
+        this.target = allTiles.get(new int[]{(int) target.getX(), (int) target.getY()});
+        this.location = allTiles.get(new int[]{(int) location.getX(), (int) location.getY()});
 
         calculatePath();
     }
@@ -66,11 +62,12 @@ public class Pathfinding {
         ArrayList<PathTile> totalPath = new ArrayList<>();
         totalPath.add(current);
         current = current.cameFrom;
-        while (!(current.x == target.x && current.y == target.y))
+        while (!(current.x == location.x && current.y == location.y))
         {
             totalPath.add(current);
             current = current.cameFrom;
         }
+        Collections.reverse(totalPath);
         this.finalPath = totalPath;
     }
 
@@ -83,7 +80,7 @@ public class Pathfinding {
 
         location.gScore = 0.0;
 
-        location.calculatefScore(target);
+        location.fScore = diagonalDistance(location, target);
 
         while (!openSet.isEmpty())
         {
@@ -115,9 +112,74 @@ public class Pathfinding {
                     continue;
                 }
 
-                neighbor.cameFrom = current;
+                neighbor.setCameFrom(current);
                 neighbor.gScore = tentativegScore;
                 neighbor.fScore = neighbor.gScore + diagonalDistance(neighbor, target);
+            }
+        }
+    }
+
+    public Behavior getBehaviorFromPath (ArrayList<PathTile> path, NPC npc)
+    {
+        Behavior behavior = new Behavior("path");
+        float speedModifier = npc.getSpeedModifier();
+
+        for (int i = 0; i < path.size() - 1; i++)
+        {
+            PathTile current = path.get(i);
+            PathTile next = path.get(i+1);
+            Direction directionToNext = getDirectionFromChange(new int[] {next.x - current.x, next.y - current.y});
+            double distanceToNext = diagonalDistance(current, next);
+
+            double directionMovement = Math.sqrt(Math.pow(directionToNext.getxChange(), 2) + Math.pow(directionToNext.getyChange(), 2)) / 16 * speedModifier;
+            //System.out.println(directionMovement);
+            //System.out.println(distanceToNext);
+
+            int numberMoves = (int) Math.round(distanceToNext / directionMovement);
+            //System.out.println(numberMoves);
+            behavior.addAction(new BehaviorAction("move", directionToNext, numberMoves));
+        }
+
+        return behavior;
+    }
+
+    public Direction getDirectionFromChange(int[] change)
+    {
+        if (change[0] > 0)
+        {
+            if (change[1] > 0)
+            {
+                return Direction.SOUTHEAST;
+            }
+            else if (change[1] < 0)
+            {
+                return Direction.NORTHEAST;
+            }
+            else {
+                return Direction.EAST;
+            }
+        }
+        else if (change[0] < 0)
+        {
+            if (change[1] > 0)
+            {
+                return Direction.SOUTHWEST;
+            }
+            else if (change[1] < 0)
+            {
+                return Direction.NORTHWEST;
+            }
+            else {
+                return Direction.WEST;
+            }
+        }
+        else {
+            if (change[1] > 0)
+            {
+                return Direction.SOUTH;
+            }
+            else {
+                return Direction.NORTH;
             }
         }
     }
@@ -132,7 +194,7 @@ public class Pathfinding {
 
     private ArrayList<PathTile> getNeighbors(PathTile tile)
     {
-        Integer[] tileCoordinate = tile.getCoordinate();
+        int[] tileCoordinate = tile.getCoordinate();
         ArrayList<PathTile> neightbors = new ArrayList<>();
         boolean northFree = false;
         boolean eastFree = false;
@@ -140,7 +202,7 @@ public class Pathfinding {
         boolean westFree = false;
 
         //north
-        Integer[] northCoordinate = {tileCoordinate[0], tileCoordinate[1] - 1};
+        int[] northCoordinate = {tileCoordinate[0], tileCoordinate[1] - 1};
         if (allTiles.containsKey(northCoordinate))
         {
             northFree = true;
@@ -148,7 +210,7 @@ public class Pathfinding {
             neightbors.add(north);
         }
         //east
-        Integer[] eastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1]};
+        int[] eastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1]};
         if (allTiles.containsKey(eastCoordinate))
         {
             eastFree = true;
@@ -156,7 +218,7 @@ public class Pathfinding {
             neightbors.add(east);
         }
         //south
-        Integer[] southCoordinate = {tileCoordinate[0], tileCoordinate[1] + 1};
+        int[] southCoordinate = {tileCoordinate[0], tileCoordinate[1] + 1};
         if (allTiles.containsKey(southCoordinate))
         {
             southFree = true;
@@ -164,7 +226,7 @@ public class Pathfinding {
             neightbors.add(south);
         }
         //west
-        Integer[] westCoordinate = {tileCoordinate[0] - 1, tileCoordinate[1]};
+        int[] westCoordinate = {tileCoordinate[0] - 1, tileCoordinate[1]};
         if (allTiles.containsKey(westCoordinate))
         {
             westFree = true;
@@ -173,28 +235,28 @@ public class Pathfinding {
         }
 
         //northeast
-        Integer[] northeastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] - 1};
+        int[] northeastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] - 1};
         if (allTiles.containsKey(northeastCoordinate) && northFree && eastFree)
         {
             PathTile northeast = allTiles.get(northeastCoordinate);
             neightbors.add(northeast);
         }
         //northwest
-        Integer[] northwestCoordinate = {tileCoordinate[0] - 1, tileCoordinate[1] - 1};
+        int[] northwestCoordinate = {tileCoordinate[0] - 1, tileCoordinate[1] - 1};
         if (allTiles.containsKey(northwestCoordinate) && northFree && westFree)
         {
             PathTile northwest = allTiles.get(northwestCoordinate);
             neightbors.add(northwest);
         }
         //southeast
-        Integer[] southeastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] + 1};
+        int[] southeastCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] + 1};
         if (allTiles.containsKey(southeastCoordinate) && southFree && eastFree)
         {
             PathTile southeast = allTiles.get(southeastCoordinate);
             neightbors.add(southeast);
         }
         //southwest
-        Integer[] southwestCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] - 1};
+        int[] southwestCoordinate = {tileCoordinate[0] + 1, tileCoordinate[1] - 1};
         if (allTiles.containsKey(southwestCoordinate) && southFree && westFree)
         {
             PathTile southwest = allTiles.get(southwestCoordinate);
@@ -204,4 +266,8 @@ public class Pathfinding {
         return neightbors;
     }
 
+    public ArrayList<PathTile> getFinalPath()
+    {
+        return finalPath;
+    }
 }

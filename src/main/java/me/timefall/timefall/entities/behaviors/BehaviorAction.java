@@ -8,6 +8,7 @@ public class BehaviorAction {
     private GameFunctions gameFunctions;
     private String actionName;
     private Direction direction;
+    private float distance;
     public int index;
     public int maxIndex;
 
@@ -25,13 +26,38 @@ public class BehaviorAction {
         index = 0;
         maxIndex = 1;
     }
+    public BehaviorAction(String actionName, int maxIndex)
+    {
+        this.gameFunctions = new GameFunctions();
+        this.actionName = actionName;
+        index = 0;
+        this.maxIndex = maxIndex;
+    }
     public BehaviorAction(String actionName, Direction direction)
     {
         this.gameFunctions = new GameFunctions();
         this.actionName = actionName;
         this.direction = direction;
         index = 0;
-        maxIndex = 15;
+        maxIndex = 1;
+    }
+    public BehaviorAction(String actionName, Direction direction, int maxIndex)
+    {
+        this.gameFunctions = new GameFunctions();
+        this.actionName = actionName;
+        this.direction = direction;
+        index = 0;
+        this.maxIndex = maxIndex;
+    }
+
+    public BehaviorAction(String actionName, Direction direction, float distance)
+    {
+        this.gameFunctions = new GameFunctions();
+        this.actionName = actionName;
+        this.direction = direction;
+        this.distance = distance;
+        index = 0;
+        maxIndex = 1;
     }
 
     public void execute(NPC npc)
@@ -46,8 +72,11 @@ public class BehaviorAction {
             randomWeightedMove(npc, Direction.WEST);
         } else if (actionName.equals("move"))
         {
-
             move(npc, direction);
+        }
+        else if (actionName.equals("moveDistance"))
+        {
+            move(npc, direction, distance);
         }
     }
 
@@ -69,5 +98,10 @@ public class BehaviorAction {
     public void move(NPC npc, Direction direction)
     {
         npc.move(direction);
+    }
+
+    public void move(NPC npc, Direction direction, float distance)
+    {
+        npc.move(direction, distance);
     }
 }

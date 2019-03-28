@@ -74,12 +74,15 @@ public class NPC implements Mob {
         return routine;
     }
 
+    public float getSpeedModifier()
+    {
+        return speedModifier;
+    }
+
     @Override
     public void move(Direction direction)
     {
         //todo fix collision bug
-
-        System.out.println("direction: " + direction);
 
         this.direction = direction;
         this.isMoving = true;
@@ -91,14 +94,9 @@ public class NPC implements Mob {
         int xMoved = 0;
         int yMoved = 0;
 
-        System.out.println("xchange: " + direction.getxChange());
-        System.out.println("calc:" + (direction.getxChange() * this.speedModifier));
-
         int xAdjusted = Math.round(direction.getxChange() * this.speedModifier);
 
         int yAdjusted = Math.round(direction.getyChange() * this.speedModifier);
-
-        System.out.println("xadjusted: " + xAdjusted);
 
         //if (xAdjusted == 0)
         //{
@@ -109,8 +107,6 @@ public class NPC implements Mob {
         //{
          //   yAdjusted = yMod;
         //}
-
-        System.out.println("xadjusted: " + xAdjusted);
 
         while ((negativeXMovement ? xMoved > xAdjusted : xMoved < xAdjusted) ||
                 (negativeYMovement ? yMoved > yAdjusted : yMoved < yAdjusted))
@@ -151,6 +147,18 @@ public class NPC implements Mob {
                 yMoved += yMod;
 
             }
+        }
+    }
+
+    @Override
+    public void move(Direction direction, float distance)
+    {
+        float directionMovement = (float) Math.sqrt(Math.pow(direction.getxChange(), 2) + Math.pow(direction.getyChange(), 2)) * speedModifier;
+        int numberMoves = Math.round(distance / directionMovement);
+
+        for (int i = 0; i < numberMoves; i++)
+        {
+            move(direction);
         }
     }
 
@@ -233,6 +241,7 @@ public class NPC implements Mob {
     {
         this.xOff = x * 16;
         this.yOff = y * 16;
+        this.location.setLocation(Timefall.getTileManager().getCurrentWorld().getWorldName(), x, y);
 
         Timefall.getTileManager().getEntityManager().addNPC(this);
     }

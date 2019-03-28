@@ -13,25 +13,20 @@ public class PathTile {
     {
         this.x = x;
         this.y = y;
+        this.gScore = Double.POSITIVE_INFINITY;
+        this.fScore = Double.POSITIVE_INFINITY;
     }
 
-    public PathTile(Integer[] coordinate)
+    public PathTile(int[] coordinate)
     {
         this.x = coordinate[0];
         this.y = coordinate[1];
+        this.gScore = Double.POSITIVE_INFINITY;
+        this.fScore = Double.POSITIVE_INFINITY;
     }
 
-    public void calculatefScore(PathTile tile2)
-    {
-        gScore = diagonalDistance(this, tile2);
-    }
-
-    private double diagonalDistance(PathTile tile1, PathTile tile2)
-    {
-        int x = Math.abs(tile1.x - tile2.x);
-        int y = Math.abs(tile1.y - tile2.y);
-
-        return Math.sqrt(x*x + y*y);
+    public void setCameFrom(PathTile cameFrom) {
+        this.cameFrom = cameFrom;
     }
 
     public double getgScore() {
@@ -43,9 +38,8 @@ public class PathTile {
         return fScore;
     }
 
-    public Integer[] getCoordinate()
+    public int[] getCoordinate()
     {
-        Integer[] coordinate = {x, y};
-        return coordinate;
+        return new int[]{x, y};
     }
 }
