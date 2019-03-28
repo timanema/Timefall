@@ -3,6 +3,7 @@ package me.timefall.timefall.entities;
 import me.timefall.timefall.Timefall;
 import me.timefall.timefall.entities.behaviors.BehaviorCondition;
 import me.timefall.timefall.level.Vector;
+import me.timefall.timefall.level.tiles.base.MapObject;
 
 import java.awt.*;
 import java.lang.reflect.Array;
@@ -17,16 +18,51 @@ public class Pathfinding {
 
     private ArrayList<Rectangle> collisions;
     private int[][] worldGrid;
+    private HashMap<Integer[], PathTile> allTiles;
 
     public Pathfinding(Vector target, Vector location)
     {
         this.collisions = Timefall.getTileManager().getCurrentWorld().getCollisions();
         this.worldGrid = Timefall.getTileManager().getCurrentWorld().getWorldGrid();
 
-        this.target = new PathTile((int) target.getX(), (int) target.getY());
-        this.location = new PathTile((int) location.getX(), (int) location.getY());
+        for (int i = 0; i < worldGrid.length; i++)
+        {
+            for (int j = 0; j < worldGrid[i].length; j++)
+            {
+                Integer[] coordinate = {i, j};
+                MapObject[] mapObjects = Timefall.getTileManager().getMapObjectsByLoc(i, j);
+                boolean isTraversable = true;
+
+                for (MapObject mapObject : mapObjects)
+                {
+                    if (mapObject.isSolid())
+                    {
+                        isTraversable = false;
+                        break;
+                    }
+                }
+
+                if (isTraversable)
+                {
+                    allTiles.put(coordinate, new PathTile(i, j));
+                }
+            }
+        }
+
+
+
+        Integer[] targetCoord = {(int) target.getX(), (int) target.getY()};
+        Integer[] locCoord = {(int) location.getX(), (int) location.getY()};
+
+        this.target = allTiles.get(targetCoord);
+        this.location = allTiles.get(locCoord);
 
         calculatePath();
+    }
+
+    private void removeSolidTiles()
+    {
+
     }
 
     private void calculatePath()
@@ -54,6 +90,15 @@ public class Pathfinding {
 
             //get neighbors
         }
+    }
+
+    private ArrayList<PathTile> getNeighbors(PathTile tile)
+    {
+        //first non-diagonal
+        //north
+
+
+        return null;
     }
 
 }
