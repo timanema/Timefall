@@ -42,4 +42,10 @@ public class PathTile {
     {
         return fScore;
     }
+
+    public Integer[] getCoordinate()
+    {
+        Integer[] coordinate = {x, y};
+        return coordinate;
+    }
 }

@@ -77,6 +77,8 @@ public class NPC implements Mob {
     @Override
     public void move(Direction direction)
     {
+        //todo fix collision bug
+
         System.out.println("direction: " + direction);
 
         this.direction = direction;
