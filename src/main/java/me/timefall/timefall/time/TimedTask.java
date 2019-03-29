@@ -2,15 +2,17 @@ package me.timefall.timefall.time;
 
 public class TimedTask
 {
-    private int delay, interval, repeats, alive;
+    private int delay, interval, repeats;
     protected Runnable task;
+    boolean done;
 
     public TimedTask(int delay, Runnable task)
     {
         this.delay = delay;
-        this.interval = 1;
-        this.repeats = 1;
+        this.interval = 0;
+        this.repeats = 0;
         this.task = task;
+        this.done = false;
     }
 
     public TimedTask(int delay, int interval, int repeats, Runnable task)
@@ -19,42 +21,42 @@ public class TimedTask
         this.interval = interval;
         this.repeats = repeats;
         this.task = task;
+        this.done = false;
     }
 
-    public TimedTask(int delay, int interval, Runnable task)
+    public TimedTask(int delay, int repeats, Runnable task)
     {
         this.delay = delay;
-        this.interval = interval;
-        this.repeats = -2;
+        this.interval = 0;
+        this.repeats = repeats;
         this.task = task;
+        this.done = false;
     }
 
     public void tick()
     {
-        if (repeats <= 0 && repeats != -2)
+        if (delay == 0)
         {
-            repeats = -1;
-            return;
+            run();
         }
-
-        this.alive++;
-
-        if (alive >= (delay == -1 ? interval : delay))
-        {
-            repeats -= (repeats == -2 ? 0 : 1);
-            delay = -1;
-            alive = 0;
-            this.run();
+        else {
+            delay--;
         }
     }
 
     protected void run()
     {
         this.task.run();
-    }
-
-    public boolean done()
-    {
-        return this.repeats == -1;
+        if (repeats == 0)
+        {
+            this.done = true;
+        }
+        else {
+            repeats--;
+            if (interval > 0)
+            {
+                delay = interval;
+            }
+        }
     }
 }

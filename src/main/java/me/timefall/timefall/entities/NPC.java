@@ -148,6 +148,11 @@ public class NPC implements Mob {
 
             }
         }
+
+        System.out.println(xMoved + "x");
+        System.out.println(yMoved + "y");
+
+
     }
 
     @Override

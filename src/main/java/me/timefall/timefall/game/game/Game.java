@@ -20,6 +20,7 @@ import me.timefall.timefall.graphics.font.FontType;
 import me.timefall.timefall.level.Direction;
 import me.timefall.timefall.level.TileManager;
 import me.timefall.timefall.level.Vector;
+import me.timefall.timefall.time.TimedTask;
 
 import java.util.ArrayList;
 
@@ -116,11 +117,16 @@ public class Game extends GameState
         {
             //tileManager.getCurrentWorld().reloadCollisions();
 
-            Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
-            Behavior behavior = new Behavior("moveSouth");
-            BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTHWEST);
-            behavior.addAction(behaviorAction);
-            sheep.getRoutine().giveCommand(behavior);
+            //Once again - do this only if this is a statelss object!
+            Runnable runnable = () -> {
+                Sheep sheep = (Sheep) Timefall.getTileManager().getEntityManager().getEntities().get(0);
+                Behavior behavior = new Behavior("moveSouth");
+                BehaviorAction behaviorAction = new BehaviorAction("move", Direction.SOUTH);
+                behavior.addAction(behaviorAction);
+                sheep.getRoutine().giveCommand(behavior);
+            };
+            Timefall.getTime().scheduleTask(25, 2, 5, runnable);
+
         }
         if (Keys.VK_L.isClicked())
         {
@@ -149,7 +155,7 @@ public class Game extends GameState
         if (Keys.VK_O.isClicked())
         {
             Timefall.getFileManager().getSaveMap();
-            Sheep sheep = new Sheep(new Vector("world", 0, 0), 1F);
+            Sheep sheep = new Sheep(new Vector("world", 0, 0), 2F);
 
             sheep.spawn(41, 15);
             //saveState();

@@ -67,6 +67,7 @@ public class Pathfinding {
             totalPath.add(current);
             current = current.cameFrom;
         }
+        totalPath.add(current);
         Collections.reverse(totalPath);
         this.finalPath = totalPath;
     }

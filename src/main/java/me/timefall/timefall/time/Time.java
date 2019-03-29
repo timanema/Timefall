@@ -7,11 +7,11 @@ public class Time
 {
     private long daysPassed;
     private int hours, minutes, seconds, ticks;
-    private ArrayList<TimedTask> timedTasks;
+    private ArrayList<TimedTask> scheduledTasks;
 
     public Time(long daysPassed, int hours, int minutes, int seconds, int ticks)
     {
-        this.timedTasks = new ArrayList<>();
+        this.scheduledTasks = new ArrayList<>();
 
         this.daysPassed = daysPassed;
         this.hours = hours;
@@ -48,19 +48,14 @@ public class Time
             }
         }
 
-        Iterator<TimedTask> taskIterator = this.timedTasks.iterator();
-
-        while (taskIterator.hasNext())
+        for (int i = 0; i < scheduledTasks.size(); i++)
         {
-            TimedTask timedTask = taskIterator.next();
+            scheduledTasks.get(i).tick();
 
-            if (timedTask.done())
+            if (scheduledTasks.get(i).done)
             {
-                this.timedTasks.remove(timedTask);
-                continue;
+                scheduledTasks.remove(i);
             }
-
-            timedTask.tick();
         }
     }
 
@@ -97,36 +92,23 @@ public class Time
         return "Week " + (daysPassed / 7 + 1) + " (" + dayString + ") " + hours + ":" + minutes + ":" + seconds + " (" + ticks + ")";
     }
 
-    //// Add tasks ////
-    // Sync tasks //
+    public void scheduleTask(TimedTask task)
+    {
+        scheduledTasks.add(task);
+    }
+
     public void scheduleTask(int delay, Runnable task)
     {
-        this.scheduleTask(delay, 1, 1, task);
+        this.scheduleTask(delay, 0, 0, task);
+    }
+
+    public void scheduleTask(int delay, int repeats, Runnable task)
+    {
+        this.scheduleTask(delay, 0, repeats, task);
     }
 
     public void scheduleTask(int delay, int interval, int repeats, Runnable task)
     {
-        this.timedTasks.add(new TimedTask(delay, interval, repeats, task));
-    }
-
-    public void scheduleTask(int delay, int interval, Runnable task)
-    {
-        this.scheduleTask(delay, interval, -2, task);
-    }
-
-    // ASync tasks
-    public void scheduleASyncTask(int delay, Runnable task)
-    {
-        this.scheduleASyncTask(delay, 1, 1, task);
-    }
-
-    public void scheduleASyncTask(int delay, int interval, int repeats, Runnable task)
-    {
-        this.timedTasks.add(new ASyncTimedTask(delay, interval, repeats, task));
-    }
-
-    public void scheduleASyncTask(int delay, int interval, Runnable task)
-    {
-        this.scheduleASyncTask(delay, interval, -2, task);
+        this.scheduledTasks.add(new TimedTask(delay, interval, repeats, task));
     }
 }
